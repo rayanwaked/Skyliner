@@ -5,8 +5,10 @@
 //  Created by Rayan Waked on 6/29/25.
 //
 
+// MARK: - Imports
 import SwiftUI
 
+// MARK: - View
 struct ContentView: View {
     var body: some View {
         VStack {
@@ -19,6 +21,7 @@ struct ContentView: View {
     }
 }
 
+// MARK: - Preview
 #Preview {
     ContentView()
 }

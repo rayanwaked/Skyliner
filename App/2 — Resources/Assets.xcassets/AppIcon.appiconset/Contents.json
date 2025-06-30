@@ -1,6 +1,7 @@
 {
   "images" : [
     {
+      "filename" : "Skyliner Light.png",
       "idiom" : "universal",
       "platform" : "ios",
       "size" : "1024x1024"
@@ -12,6 +13,7 @@
           "value" : "dark"
         }
       ],
+      "filename" : "Skyliner Dark.png",
       "idiom" : "universal",
       "platform" : "ios",
       "size" : "1024x1024"
@@ -23,6 +25,7 @@
           "value" : "tinted"
         }
       ],
+      "filename" : "Plane.png",
       "idiom" : "universal",
       "platform" : "ios",
       "size" : "1024x1024"
