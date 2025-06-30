@@ -9,7 +9,8 @@
 import SwiftUI
 
 // MARK: - View
-struct PostComponent: View {
+struct PostComponent: View, Hashable {
+    var id: String = ""
     var displayName: String = ""
     var handle: String = ""
     var time: String = ""
@@ -23,7 +24,6 @@ struct PostComponent: View {
                 VStack(alignment: .leading) {
                     account
                     text
-//                    actions
                 }
             }
             .padding(.top, PaddingConstants.smallPadding)
@@ -39,39 +39,10 @@ extension PostComponent {
     // MARK: - Profile Picture
     @ViewBuilder
     var profilePicture: some View {
-//        if let avatarURL = post.author.avatarImageURL {
-//            AsyncImage(url: avatarURL) { phase in
-//                switch phase {
-//                case .empty:
-//                    Circle()
-//                        .foregroundStyle(.blue)
-//                        .frame(maxWidth: 45, maxHeight: 45)
-//                        .glassEffect()
-//                case .success(let image):
-//                    image
-//                        .resizable()
-//                        .scaledToFill()
-//                        .frame(width: 45, height: 45)
-//                        .clipShape(Circle())
-//                        .glassEffect()
-//                case .failure:
-//                    Circle()
-//                        .foregroundStyle(.blue)
-//                        .frame(maxWidth: 45, maxHeight: 45)
-//                        .glassEffect()
-//                @unknown default:
-//                    Circle()
-//                        .foregroundStyle(.blue)
-//                        .frame(maxWidth: 45, maxHeight: 45)
-//                        .glassEffect()
-//                }
-//            }
-//        } else {
-            Circle()
-                .foregroundStyle(.blue)
-                .frame(maxWidth: 45, maxHeight: 45)
-//                .glassEffect()
-//        }
+        Circle()
+            .foregroundStyle(.blue)
+            .frame(maxWidth: 45, maxHeight: 45)
+            .glassEffect()
     }
     
     // MARK: - Account
@@ -87,6 +58,7 @@ extension PostComponent {
             Text(time)
                 .foregroundStyle(.primary.opacity(0.6))
                 .font(.subheadline)
+            Spacer()
         }
         .lineLimit(1)
         .padding(.bottom, PaddingConstants.defaultPadding * 0.05)
@@ -99,51 +71,16 @@ extension PostComponent {
             .fontWeight(.regular)
             .padding(.bottom, PaddingConstants.defaultPadding / 4)
     }
-    
-//    // MARK: - Actions
-//    @ViewBuilder
-//    var actions: some View {
-//        HStack {
-//            HStack {
-//                Image(systemName: "message")
-//                Text("\(post.replyCount)")
-//            }
-//            Spacer()
-//            Image(systemName: "heart")
-//            Text("\(post.likeCount)")
-//                .onTapGesture {
-//                    Task {
-//                        await context.toggleLike()
-//                    }
-//                }
-//            Spacer()
-//            HStack {
-//                Image(systemName: "arrowshape.turn.up.left")
-//                Text("\(post.repostCount)")
-//            }
-//                .onTapGesture {
-//                    Task {
-//                        await context.toggleRepost()
-//                    }
-//                }
-//            Spacer()
-//            Image(systemName: "square.and.arrow.up")
-//            Spacer()
-//            Image(systemName: "option")
-//        }
-//        .foregroundStyle(.primary.opacity(0.55))
-//        .font(.subheadline)
-//        .padding(standardPadding * 0.05)
-//    }
 }
 
 // MARK: - Preview
 #Preview {
-    @Previewable @State var displayName: String = "Joseph Snow"
-    @Previewable @State var handle: String = "joseph.snow"
+    @Previewable @State var id: String = "1"
+    @Previewable @State var displayName: String = "Skyliner"
+    @Previewable @State var handle: String = "skyline.app"
     @Previewable @State var time: String = "1h"
-    @Previewable @State var post: String = "Heyyy"
-    @Previewable @State var context: String = "hey"
-    PostComponent()
+    @Previewable @State var content: String = "Ready for takeoff!"
+    
+    PostComponent(id: id, displayName: displayName, handle: handle, time: time, content: content)
 }
 
