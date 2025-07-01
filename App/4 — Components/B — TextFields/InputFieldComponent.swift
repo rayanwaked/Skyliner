@@ -21,6 +21,7 @@ struct InputFieldComponent: View {
     var body: some View {
         Button(action: {
             isFocused = true
+            hapticFeedback(.soft)
         }) {
             inputField
         }
@@ -47,7 +48,6 @@ extension InputFieldComponent {
         .padding()
         .glassEffect(.regular.tint(.secondary.opacity(0.2)).interactive())
         .contentShape(RoundedRectangle(cornerRadius: 100))
-        .hapticFeedback(.light)
     }
 }
 

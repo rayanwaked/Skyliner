@@ -8,32 +8,61 @@
 // MARK: - Imports
 import SwiftUI
 
-// MARK: - Haptic Class
-final class Haptic {
-    static let shared = Haptic()
-    private init() {}
-    
-    func play(_ style: UIImpactFeedbackGenerator.FeedbackStyle) {
-        let generator = UIImpactFeedbackGenerator(style: style)
-        generator.prepare()
+// MARK: - Haptic Type Enum
+public enum HapticType {
+    case light
+    case medium
+    case heavy
+    case rigid
+    case soft
+    case success
+    case warning
+    case error
+}
+
+// MARK: - Haptic Feedback
+public func hapticFeedback(_ type: HapticType) {
+    #if os(iOS)
+    switch type {
+    case .light:
+        let generator = UIImpactFeedbackGenerator(style: .light)
         generator.impactOccurred()
-    }
-}
-
-// MARK: - Haptic Modifier
-struct HapticOnTapModifier: ViewModifier {
-    let style: UIImpactFeedbackGenerator.FeedbackStyle
-    
-    func body(content: Content) -> some View {
-        content.onTapGesture {
-            Haptic.shared.play(style)
+    case .medium:
+        let generator = UIImpactFeedbackGenerator(style: .medium)
+        generator.impactOccurred()
+    case .heavy:
+        let generator = UIImpactFeedbackGenerator(style: .heavy)
+        generator.impactOccurred()
+    case .rigid:
+        if #available(iOS 13.0, *) {
+            let generator = UIImpactFeedbackGenerator(style: .rigid)
+            generator.impactOccurred()
         }
+    case .soft:
+        if #available(iOS 13.0, *) {
+            let generator = UIImpactFeedbackGenerator(style: .soft)
+            generator.impactOccurred()
+        }
+    case .success:
+        let generator = UINotificationFeedbackGenerator()
+        generator.notificationOccurred(.success)
+    case .warning:
+        let generator = UINotificationFeedbackGenerator()
+        generator.notificationOccurred(.warning)
+    case .error:
+        let generator = UINotificationFeedbackGenerator()
+        generator.notificationOccurred(.error)
     }
+    #endif
 }
 
-// MARK: - Haptic Extension
-extension View {
-    func hapticFeedback(_ style: UIImpactFeedbackGenerator.FeedbackStyle) -> some View {
-        self.modifier(HapticOnTapModifier(style: style))
+// MARK: - View Extension
+public extension View {
+    /// Triggers haptic feedback of the specified type and executes the given action.
+    func hapticAction(_ type: HapticType, perform action: @escaping () -> Void) -> some View {
+        self.onTapGesture {
+            hapticFeedback(type)
+            action()
+        }
     }
 }

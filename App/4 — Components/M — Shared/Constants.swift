@@ -17,7 +17,7 @@ enum SizeConstants {
 // MARK: - Layout Constants
 enum LayoutConstants {
     static let largeRadius: CGFloat = 22
-    static let defaultRadius: CGFloat = 20
+    static let defaultRadius: CGFloat = 28
     static let smallRadius: CGFloat = 18
 }
 

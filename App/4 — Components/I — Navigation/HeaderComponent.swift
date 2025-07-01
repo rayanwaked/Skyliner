@@ -41,7 +41,6 @@ private extension HeaderComponent {
                 }
                 .padding(PaddingConstants.smallPadding)
                 .glassEffect()
-                .hapticFeedback(.light)
                 
                 Button {
 
@@ -52,7 +51,6 @@ private extension HeaderComponent {
                 }
                 .padding(PaddingConstants.smallPadding)
                 .glassEffect()
-                .hapticFeedback(.light)
             }
         }
         .padding([.leading, .trailing], PaddingConstants.defaultPadding)

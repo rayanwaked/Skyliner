@@ -33,6 +33,7 @@ struct CompactButtonComponent: View {
     var body: some View {
         Button() {
             action()
+            hapticFeedback(.medium)
         } label: {
             label
         }
@@ -71,7 +72,6 @@ struct CompactButtonComponentStyle: ButtonStyle {
                 .padding(PaddingConstants.defaultPadding * 0.75)
         }
         .glassEffect(.regular.interactive(true))
-        .hapticFeedback(.light)
     }
 }
 

@@ -27,6 +27,7 @@ struct ButtonComponent: View {
     var body: some View {
         Button(label) {
             action()
+            hapticFeedback(.medium)
         }
         .buttonStyle(ButtonComponentStyle(variation: variation))
     }
@@ -42,9 +43,7 @@ struct ButtonComponentStyle: ButtonStyle {
         ZStack {
             if variation == .primary || variation == .secondary {
                 RoundedRectangle(cornerRadius: 100)
-                    .foregroundStyle(
-                        variation == .primary ? .blue : .blue
-                            .opacity(ColorConstants.defaultOpaque)
+                    .foregroundStyle( variation == .primary ? .blue : .blue .opacity(ColorConstants.defaultOpaque)
                     )
                     .frame(maxWidth: .infinity, maxHeight: 50)
             } else {
@@ -58,7 +57,7 @@ struct ButtonComponentStyle: ButtonStyle {
                 .fontWeight(.semibold)
         }
         .glassEffect(.regular.interactive(true))
-        .hapticFeedback(.medium)
+        
     }
 }
 

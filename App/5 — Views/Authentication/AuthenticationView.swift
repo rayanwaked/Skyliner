@@ -8,18 +8,20 @@
 // MARK: - Import
 import SwiftUI
 
+
 // MARK: - View
 struct AuthenticationView: View {
     // MARK: - Variable
     @Environment(AppState.self) private var appState
     @Environment(\.openURL) var openURL
-    @StateObject public var viewModel = AuthenticationViewModel()
+    @State var viewModel = ViewModel()
     
     // MARK: - Body
     public var body: some View {
         ZStack(alignment: .bottomLeading) {
             // MARK: Background
             BackgroundComponent()
+                .ignoresSafeArea(.keyboard)
 
             // MARK: Content
             VStack {
@@ -44,7 +46,7 @@ struct AuthenticationView: View {
                             reenteredPassword: $viewModel.createReenteredPassword,
                             error: viewModel.createError,
                             onCreateAccount: {
-                                viewModel.createLogic()
+//                                viewModel.createLogic()
                             },
                             onGoBack: {
                                 viewModel.selectedSection = .welcomeSection
@@ -62,7 +64,7 @@ struct AuthenticationView: View {
                             password: $viewModel.signinPassword,
                             error: viewModel.signinError,
                             onSignIn: {
-                                viewModel.signinLogic()
+//                                viewModel.signinLogic()
                             },
                             onGoBack: {
                                 viewModel.selectedSection = .welcomeSection
@@ -82,6 +84,7 @@ struct AuthenticationView: View {
 
             }
         }
+        .background(.blue)
     }
 }
 
