@@ -9,26 +9,17 @@
 import SwiftUI
 
 // MARK: - View
-public struct AuthenticationView: View {
+struct AuthenticationView: View {
     // MARK: - Variable
+    @Environment(AppState.self) private var appState
     @Environment(\.openURL) var openURL
-    @StateObject var viewModel: AuthenticationViewModel
-
-    public init(
-        viewModel: AuthenticationViewModel,
-        createLogic: @escaping () -> Void,
-        signinLogic: @escaping () -> Void
-    ) {
-        _viewModel = StateObject(wrappedValue: viewModel)
-        viewModel.createLogic = createLogic
-        viewModel.signinLogic = signinLogic
-    }
-
+    @StateObject public var viewModel = AuthenticationViewModel()
+    
     // MARK: - Body
     public var body: some View {
         ZStack(alignment: .bottomLeading) {
             // MARK: Background
-//            BackgroundComponent()
+            BackgroundComponent()
 
             // MARK: Content
             VStack {
@@ -38,8 +29,10 @@ public struct AuthenticationView: View {
                     case .welcomeSection:
                         Spacer()
                         welcomeSection(
-                            onGoSignIn: { viewModel.selectedSection = .signinSection },
-                            onGoCreateAccount: { viewModel.selectedSection = .createAccountSection }
+                            onGoSignIn:
+                                { viewModel.selectedSection = .signinSection },
+                            onGoCreateAccount:
+                                { viewModel.selectedSection = .createAccountSection }
                         )
 
                     // MARK: - Create Acount
@@ -94,11 +87,9 @@ public struct AuthenticationView: View {
 
 // MARK: - Preview
 #Preview {
-    let preview = AuthenticationViewModel()
-    AuthenticationView(
-        viewModel: preview,
-        createLogic: { },
-        signinLogic: { }
-    )
+    @Previewable @State var appState: AppState = .init()
+    
+    AuthenticationView()
+        .environment(appState)
 }
 

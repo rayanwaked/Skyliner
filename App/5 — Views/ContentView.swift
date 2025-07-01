@@ -10,18 +10,17 @@ import SwiftUI
 
 // MARK: - View
 struct ContentView: View {
+    @Environment(AppState.self) private var appState
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
-        }
-        .padding()
+        AuthenticationView()
+            .environment(appState)
     }
 }
 
 // MARK: - Preview
 #Preview {
+    @Previewable @State var appState: AppState = .init()
+    
     ContentView()
+        .environment(appState)
 }

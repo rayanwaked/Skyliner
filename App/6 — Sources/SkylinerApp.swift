@@ -11,7 +11,7 @@ import SwiftUI
 // MARK: - Main
 @main
 struct SkylinerApp: App {
-    @State private var appState = AppState()
+    @State var appState = AppState()
     
     var body: some Scene {
         WindowGroup {
