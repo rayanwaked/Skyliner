@@ -5,11 +5,11 @@
 //  Created by Rayan Waked on 6/30/25.
 //
 
-// MARK: - Imports
+// MARK: - IMPORTS
 @preconcurrency import ATProtoKit
 import SwiftUI
 
-// MARK: - Client Manager
+// MARK: - CLIENT MANAGER
 @Observable
 public final class ClientManager: Sendable {
   public let configuration: ATProtocolConfiguration

@@ -71,7 +71,7 @@ struct CompactButtonComponentStyle: ButtonStyle {
                 .fontWeight(.semibold)
                 .padding(
                     placement == .standard ? PaddingConstants.defaultPadding * 0.75 : PaddingConstants
-                        .largePadding)
+                        .defaultPadding)
         }
         .glassEffect(.regular.interactive(true))
     }

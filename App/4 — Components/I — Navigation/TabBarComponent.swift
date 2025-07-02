@@ -11,46 +11,18 @@ import SwiftUI
 // MARK: - VIEWS
 struct TabBarComponent: View {
     @Environment(\.colorScheme) private var colorScheme
-    
-    // MARK: - FUNCTIONS
-    func throwFunc() {
-        print("throw")
-    }
+    @Environment(RouterViewModel.self) private var routerViewModel
     
     // MARK: - BODY
     var body: some View {
         HStack {
-            HStack {
-                // MARK: - Navigation
-                HStack {
-                    TabBarButton(systemImage: "airplane.up.forward") {
-                        
-                    }
-                    Spacer()
-                    TabBarButton(systemImage: "magnifyingglass") {
-                        
-                    }
-                    Spacer()
-                    TabBarButton(systemImage: "bell") {
-                        
-                    }
-                    Spacer()
-                    TabBarButton(systemImage: "person") {
-                        
-                    }
-                }
-                .foregroundStyle(.primary)
-                .padding([.leading, .trailing], PaddingConstants.defaultPadding * 1.5)
-                .padding([.top, .bottom], PaddingConstants.defaultPadding / 2)
-                .glassEffect(.regular.tint(.clear).interactive())
-                
-                // MARK: - Action
-                CompactButtonComponent(
-                    action: throwFunc,
-                    label: Image(systemName: "plus"),
-                    variation: .primary, placement: .tabBar
-                )
-            }
+            tabBarTabs
+            // MARK: - Action
+            CompactButtonComponent(
+                action: {},
+                label: Image(systemName: "plus"),
+                variation: .primary, placement: .tabBar
+            )
         }
         .padding([.leading, .trailing], PaddingConstants.defaultPadding)
         .padding(.bottom, -10)
@@ -65,23 +37,49 @@ struct TabBarComponent: View {
     }
 }
 
+// MARK: - NAVIGATION
+extension TabBarComponent {
+    var tabBarTabs: some View {
+        HStack {
+            ForEach(RouterViewModel.Tabs.allCases) { tab in
+                TabBarButton(
+                    systemImage: tab.systemImage(forSelected: routerViewModel.selectedTab == tab),
+                    selected: routerViewModel.selectedTab == tab,
+                    action: { routerViewModel.selectedTab = tab }
+                )
+            }
+        }
+        .foregroundStyle(.primary)
+        .padding([.leading, .trailing], PaddingConstants.defaultPadding)
+        .padding([.top, .bottom], PaddingConstants.defaultPadding / 3)
+        .glassEffect(.regular.tint(.clear).interactive())
+    }
+}
+
 // MARK: - TAB BAR BUTTON
 private struct TabBarButton: View {
     let systemImage: String
+    let selected: Bool
     let action: () -> Void
     
     var body: some View {
         Button {
             action()
+            hapticFeedback(.soft)
         } label: {
             Image(systemName: systemImage)
                 .font(.title2)
                 .fontWeight(.semibold)
-                .frame(width: SizeConstants.screenWidth * 0.05, height: SizeConstants.screenHeight * 0.05)
+                .frame(maxWidth: .infinity)
+                .frame(height: SizeConstants.screenHeight * 0.05)
         }
     }
 }
 
+// MARK: - PREVIEW
 #Preview {
+    @Previewable @State var routerViewModel: RouterViewModel = .init()
+    
     TabBarComponent()
+        .environment(routerViewModel)
 }

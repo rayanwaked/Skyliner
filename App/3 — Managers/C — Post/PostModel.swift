@@ -11,6 +11,22 @@ import Foundation
 
 // MARK: - POST MODEL
 public struct PostModel: Hashable, Identifiable, Equatable, Sendable {
+    public static func == (lhs: PostModel, rhs: PostModel) -> Bool {
+        return lhs.uri == rhs.uri &&
+               lhs.cid == rhs.cid &&
+               lhs.indexedAt == rhs.indexedAt &&
+               lhs.author == rhs.author &&
+               lhs.content == rhs.content &&
+               lhs.replyCount == rhs.replyCount &&
+               lhs.repostCount == rhs.repostCount &&
+               lhs.likeCount == rhs.likeCount &&
+               lhs.likeURI == rhs.likeURI &&
+               lhs.repostURI == rhs.repostURI &&
+               lhs.indexAtFormatted == rhs.indexAtFormatted
+        // Excludes: contextModel, embed, replyRef, hasReply, uuid
+        // Add more comparisons if those types conform to Equatable and you want to compare them
+    }
+
     public func hash(into hasher: inout Hasher) {
       hasher.combine(uri)
     }
@@ -29,6 +45,7 @@ public struct PostModel: Hashable, Identifiable, Equatable, Sendable {
       public let likeCount: Int
       public let likeURI: String?
       public let repostURI: String?
+      public var contextModel: PostContextModel?
       public let embed: AppBskyLexicon.Feed.PostViewDefinition.EmbedUnion?
       public let replyRef: AppBskyLexicon.Feed.PostRecord.ReplyReference?
 
@@ -196,6 +213,33 @@ extension PostModel {
           repostURI: nil,
           embed: nil,
           replyRef: nil)
+    }
+}
+
+// MARK: - POST CONTEXT MODEL (DATA MODEL)
+public final class PostContextModel: @unchecked Sendable {
+    public var likeURI: String?
+    public var repostURI: String?
+    public var baseLikeCount: Int
+    public var baseRepostCount: Int
+
+    public init(likeURI: String?, repostURI: String?, likeCount: Int, repostCount: Int) {
+        self.likeURI = likeURI
+        self.repostURI = repostURI
+        self.baseLikeCount = likeCount
+        self.baseRepostCount = repostCount
+    }
+
+    public var isLiked: Bool { likeURI != nil }
+    public var isReposted: Bool { repostURI != nil }
+    public var likeCount: Int { baseLikeCount + (isLiked ? 1 : 0) }
+    public var repostCount: Int { baseRepostCount + (isReposted ? 1 : 0) }
+
+    public func update(likeURI: String?, repostURI: String?, likeCount: Int, repostCount: Int) {
+        self.likeURI = likeURI
+        self.repostURI = repostURI
+        self.baseLikeCount = likeCount
+        self.baseRepostCount = repostCount
     }
 }
 

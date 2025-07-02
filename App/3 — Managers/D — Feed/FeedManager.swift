@@ -32,13 +32,12 @@ public class FeedManager {
         }
         
         let client = await ATProtoKit(sessionConfiguration: configuration)
-        let manager = await Skyliner.ClientManager(configuration: configuration)
+        let manager = await ClientManager(configuration: configuration)
         
         // MARK: - IMPLEMENT SAVED FEEDS
         do {
             let output = try await client.getPopularFeedGenerators(matching: nil, limit: 15)
-            await print(
-                try client.getUserSession()?.sessionDID ?? "No Session DID"
+            await print("🍄✅ FeedManager: \(try client.getUserSession()?.sessionDID ?? "No Session DID")"
             )
 
             savedFeeds = output.feeds.compactMap {

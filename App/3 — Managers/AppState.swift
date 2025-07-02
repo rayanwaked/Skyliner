@@ -8,9 +8,12 @@
 import SwiftUI
 import ATProtoKit
 
-// MARK: - App State
+// MARK: - APP STATE
 @Observable
 class AppState {
+    // MARK: - PRIVATE KEYS
+    /// Key used for storing the user's DID in UserDefaults.
+    private let userDIDKey = "userDID"
     
     // MARK: - PROPERTIES
     /// Core properties that represent the current state of the app.
@@ -24,24 +27,30 @@ class AppState {
                 Task { @MainActor in
                     self.clientManager = await ClientManager(configuration: configuration)
                     
-                    // MARK: - Set Manager
+                    // Update the stored user DID from the current configuration.
+                    await updateUserDIDFromConfiguration()
+                    
+                    // MARK: - SET MANAGER
                     /// Update models with the latest data after configuration changes.
                     /// This keeps the UI and data in sync with the active account.
                     /// Add similar updates here if more models are added in the future.
                     postModel = await postManager.getFeed()
                     trendModel = await trendManager.fetchTrends()
                     feedModel = await feedManager.fetchSavedFeeds()
+                    profileModel = await profileManager
+                        .fetchCurrentUserProfile()
                 }
             } else {
                 clientManager = nil
             }
-            // MARK: - Set Configuration
+            // MARK: - SET CONFIGURATION
             /// Ensure each manager is updated with the new configuration
             /// so they operate with the correct session and data.
             /// Remember to update these assignments if new managers are added in the future.
             postManager.configuration = configuration
             trendManager.configuration = configuration
             feedManager.configuration = configuration
+            profileManager.configuration = configuration
         }
     }
     
@@ -53,6 +62,7 @@ class AppState {
     var postManager = PostManager()
     var trendManager = TrendManager()
     var feedManager = FeedManager()
+    var profileManager = ProfileManager()
     
     // MARK: - MODELS
     /// Data models representing the current state of posts, trends, and feeds.
@@ -60,6 +70,30 @@ class AppState {
     var postModel: [PostModel] = PostModel.placeholders
     var trendModel: [TrendModel] = TrendModel.placeholders
     var feedModel: [FeedModel] = FeedModel.placeholders
+    var profileModel: [ProfileModel] = ProfileModel.placeholders
+    
+    // MARK: - USER DID STORAGE
+    /// Retrieves the stored user DID from UserDefaults.
+    /// This allows other parts of the app to access the user's DID persistent storage.
+    var userDID: String? {
+        UserDefaults.standard.string(forKey: userDIDKey)
+    }
+    
+    /// Fetches the user DID from the current client session and stores it in UserDefaults.
+    private func updateUserDIDFromConfiguration() async {
+        // Attempt to retrieve the client instance from the current configuration.
+        if let configuration {
+            let client = await ATProtoKit(sessionConfiguration: configuration)
+            do {
+                if let did = try await client.getUserSession()?.sessionDID {
+                    UserDefaults.standard.set(did, forKey: userDIDKey)
+                }
+            } catch {
+                // Handle or log the error as needed. For now, just print it.
+                print("Error fetching user session: \(error)")
+            }
+        }
+    }
     
     // MARK: - INITIALIZATION
     /// Initializes the AppState and starts listening for configuration updates.
@@ -72,4 +106,3 @@ class AppState {
         }
     }
 }
-

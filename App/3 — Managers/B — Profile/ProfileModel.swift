@@ -73,7 +73,7 @@ public struct Profile: @MainActor Codable, Hashable, Sendable {
   }
 }
 
-// MARK: - PROFILEVIEWDETAILEDDEFINITION EXTENSION
+// MARK: - PROFILE VIEW DETAILED DEFINITION EXTENSION
 extension AppBskyLexicon.Actor.ProfileViewDetailedDefinition {
   public var profile: Profile {
     Profile(
@@ -83,4 +83,50 @@ extension AppBskyLexicon.Actor.ProfileViewDetailedDefinition {
       avatarImageURL: avatarImageURL
     )
   }
+}
+
+// MARK: PROFILE MODEL PLACEHOLDERS
+extension ProfileModel {
+    public static let placeholders: [ProfileModel] = [
+        ProfileModel(from: AppBskyLexicon.Actor.ProfileViewDetailedDefinition(
+            actorDID: "placeholder1",
+            actorHandle: "placeholder1@bsky",
+            displayName: "Placeholder One",
+            description: "This is a placeholder profile.",
+            avatarImageURL: nil,
+            bannerImageURL: nil,
+            followerCount: 42,
+            followCount: 7,
+            postCount: 3,
+            associated: nil,
+            joinedViaStarterPack: nil,
+            indexedAt: nil,
+            createdAt: nil,
+            viewer: nil,
+            labels: nil,
+            pinnedPost: nil,
+            verificationState: nil,
+            status: nil
+        )),
+        ProfileModel(from: AppBskyLexicon.Actor.ProfileViewDetailedDefinition(
+            actorDID: "placeholder2",
+            actorHandle: "placeholder2@bsky",
+            displayName: "Placeholder Two",
+            description: "Another sample placeholder profile.",
+            avatarImageURL: nil,
+            bannerImageURL: nil,
+            followerCount: 13,
+            followCount: 2,
+            postCount: 1,
+            associated: nil,
+            joinedViaStarterPack: nil,
+            indexedAt: nil,
+            createdAt: nil,
+            viewer: nil,
+            labels: nil,
+            pinnedPost: nil,
+            verificationState: nil,
+            status: nil
+        ))
+    ].compactMap { $0 }
 }
