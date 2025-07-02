@@ -5,10 +5,10 @@
 //  Created by Rayan Waked on 6/30/25.
 //
 
-// MARK: - Imports
+// MARK: - IMPORTS
 import SwiftUI
 
-// MARK: - Haptic Type Enum
+// MARK: - HAPTIC TYPE ENUM
 public enum HapticType {
     case light
     case medium
@@ -20,7 +20,7 @@ public enum HapticType {
     case error
 }
 
-// MARK: - Haptic Feedback
+// MARK: - HAPTIC FEEDBACK
 public func hapticFeedback(_ type: HapticType) {
     #if os(iOS)
     switch type {
@@ -56,7 +56,7 @@ public func hapticFeedback(_ type: HapticType) {
     #endif
 }
 
-// MARK: - View Extension
+// MARK: - VIEW EXTENSION
 public extension View {
     /// Triggers haptic feedback of the specified type and executes the given action.
     func hapticAction(_ type: HapticType, perform action: @escaping () -> Void) -> some View {

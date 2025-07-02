@@ -5,15 +5,15 @@
 //  Created by Rayan Waked on 6/24/25.
 //
 
-// MARK: - Import
+// MARK: - IMPORT
 import SwiftUI
 
-// MARK: - View
+// MARK: - VIEW
 struct HeaderComponent: View {
-    @State var feeds: [String] = []
-    @State var trends: [String] = []
+    var feeds: [FeedModel] = []
+    var trends: [TrendModel] = []
     
-    // MARK: - Body
+    // MARK: - BODY
     var body: some View {
         VStack(spacing: 0) {
             settingsSection
@@ -26,7 +26,7 @@ struct HeaderComponent: View {
 }
 
 private extension HeaderComponent {
-    // MARK: - Settings Section
+    // MARK: - SETTINGS SECTION
     @ViewBuilder
     private var settingsSection: some View {
         HStack {
@@ -64,13 +64,13 @@ private extension HeaderComponent {
         .padding(.leading, PaddingConstants.defaultPadding)
     }
 
-    // MARK: - Feed Section
+    // MARK: - FEED SECTION
     @ViewBuilder
     private var feedSection: some View {
         ScrollView(.horizontal) {
             HStack(spacing: PaddingConstants.horizontalPadding) {
                 ForEach(feeds, id: \.self) { feed in
-                    Text(feed)
+                    Text(feed.displayName)
                 }
             }
             .font(.callout)
@@ -81,7 +81,7 @@ private extension HeaderComponent {
         .scrollIndicators(.hidden)
     }
 
-    // MARK: - Trending Section
+    // MARK: - TRENDING SECTION
     @ViewBuilder
     private var trendingSection: some View {
         ScrollView(.horizontal) {
@@ -90,7 +90,7 @@ private extension HeaderComponent {
                     .foregroundStyle(.accent)
                 
                 ForEach(trends, id: \.self) { trend in
-                    Text(trend)
+                    Text(trend.displayName ?? "")
                         .font(.subheadline)
                         .fontWeight(.medium)
                         .foregroundStyle(
@@ -105,10 +105,8 @@ private extension HeaderComponent {
     }
 }
 
-// MARK: - Preview
+// MARK: - PREVIEW
 #Preview {
-    @Previewable @State var feeds = ["Discover", "Trending", "Development", "Science", "Nature", "Memes"]
-    @Previewable @State var trends = ["Caturday", "WWDC25", "TSMC", "Bluesky", "Tokyo", "Cockatoo"]
-    
-    HeaderComponent(feeds: feeds, trends: trends)
+    HeaderComponent(feeds: FeedModel.placeholders, trends: TrendModel.placeholders)
 }
+

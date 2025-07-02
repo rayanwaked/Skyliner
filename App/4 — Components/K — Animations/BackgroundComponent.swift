@@ -7,11 +7,11 @@
 
 // BackgroundComponent provides a dynamic, animated background with moving clouds for the Skyliner app.
 
-// MARK: - Import
+// MARK: - IMPORT
 import SwiftUI
 internal import Combine
 
-// MARK: - View
+// MARK: - VIEW
 /// Main animated background view with gradient and animated clouds.
 struct BackgroundComponent: View {
     // Handles all cloud animation state and logic.
@@ -19,7 +19,7 @@ struct BackgroundComponent: View {
     // Track system light/dark mode for adaptive coloring.
     @Environment(\.colorScheme) var colorScheme
 
-    // MARK: - Body
+    // MARK: - BODY
     var body: some View {
         // Use geometry to size/position clouds relative to screen.
         GeometryReader { geo in
@@ -36,7 +36,7 @@ struct BackgroundComponent: View {
     }
 }
 
-// MARK: - Gradient Background
+// MARK: - GRADIENT BACKGROUND
 extension BackgroundComponent {
     /// Sky gradient image, fills the background.
     var gradientBackground: some View {
@@ -48,7 +48,7 @@ extension BackgroundComponent {
 }
 
 private extension BackgroundComponent {
-    // MARK: - Cloud View
+    // MARK: - CLOUD VIEW
     /// Displays all cloud images using current animation offsets.
     @ViewBuilder
     private func cloud(geo: GeometryProxy) -> some View {
@@ -57,7 +57,7 @@ private extension BackgroundComponent {
         }
     }
 
-    // MARK: - Cloud Image
+    // MARK: - CLOUD IMAGE
     /// Renders a single cloud image with current position, blur, and color.
     @ViewBuilder
     private func cloudImage(i: Int) -> some View {
@@ -75,7 +75,7 @@ private extension BackgroundComponent {
     }
 }
 
-// MARK: - Clouds Animator ObservableObject
+// MARK: - CLOUDS ANIMATOR OBSERVABLEOBJECT
 /// Observable object for managing cloud positions, speeds, and animation loops.
 @MainActor
 class CloudsAnimator: ObservableObject {
@@ -122,8 +122,9 @@ class CloudsAnimator: ObservableObject {
     }
 }
 
-// MARK: - Preview
+// MARK: - PREVIEW
 /// Preview for live canvas and testing.
 #Preview {
     BackgroundComponent()
 }
+

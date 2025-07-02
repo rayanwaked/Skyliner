@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-// MARK: - Modifier
+// MARK: - MODIFIER
 /// A view modifier that applies a standardized card style to any view, including padding, background, and rounded corners.
 struct StandardCardModifier: ViewModifier {
     /// Modifies the given content with standard padding, card background, rounded corners, and extra padding.

@@ -5,24 +5,27 @@
 //  Created by Rayan Waked on 6/30/25.
 //
 
-// MARK: - Imports
+// MARK: - IMPORTS
 import SwiftUI
 
+// MARK: - VIEW
 struct FeedComponent: View {
-    var posts: [PostComponent] = []
+    var feed: [PostModel]
     
+    // MARK: - BODY
     var body: some View {
-        ForEach(posts, id:\.id) { post in
-            PostComponent(id: post.id, displayName: post.displayName, handle: post.handle, time: post.time, content: post.content)
+        ScrollView {
+            LazyVStack {
+                ForEach(feed, id:\.self) { post in
+                    PostComponent(post: post.self)
+                }
+            }
         }
+        .scrollIndicators(.hidden)
     }
 }
 
+// MARK: - PREVIEW
 #Preview {
-    @Previewable @State var posts: [PostComponent] = [
-        .init(id: "1", displayName: "Skyliner", handle: "skyline.app", time: "1h", content: "Hello, World!"),
-        .init(id: "1", displayName: "Skyliner", handle: "skyline.app", time: "1h", content: "Ready for takeoff!"),
-    ]
-    
-    FeedComponent(posts: posts)
+    FeedComponent(feed: PostModel.placeholders)
 }

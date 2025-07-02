@@ -5,17 +5,28 @@
 //  Created by Rayan Waked on 6/30/25.
 //
 
+// MARK: - IMPORTS
 import SwiftUI
+import ATProtoKit
 
+// MARK: - VIEW
 struct HomeView: View {
+    @Environment(AppState.self) private var appState
+    
+    // MARK: - BODY
     var body: some View {
         VStack {
-            HeaderComponent()
-            
+            HeaderComponent(feeds: appState.feedModel, trends: appState.trendModel)
+            FeedComponent(feed: appState.postModel)
         }
+        .background(.defaultBackground)
     }
 }
 
+// MARK: - PREVIEW
 #Preview {
+    @Previewable @State var appState: AppState = .init()
+    
     HomeView()
+        .environment(appState)
 }

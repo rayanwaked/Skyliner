@@ -5,19 +5,19 @@
 //  Created by Rayan Waked on 6/23/25.
 //
 
-// MARK: - Import
+// MARK: - IMPORT
 import SwiftUI
 
-// MARK: - View
+// MARK: - VIEW
 struct InputFieldComponent: View {
-    // MARK: - Variable
+    // MARK: - VARIABLE
     var secure: Bool = false
     var icon: Image
     var title: String
     @Binding var text: String
     @FocusState private var isFocused: Bool
     
-    // MARK: - Body
+    // MARK: - BODY
     var body: some View {
         Button(action: {
             isFocused = true
@@ -29,9 +29,9 @@ struct InputFieldComponent: View {
     }
 }
 
-// MARK: - Extension
+// MARK: - EXTENSION
 extension InputFieldComponent {
-    // MARK: - Text Field
+    // MARK: - TEXT FIELD
     var inputField: some View {
         HStack {
             icon
@@ -51,18 +51,18 @@ extension InputFieldComponent {
     }
 }
 
-// MARK: - Preview
+// MARK: - PREVIEW
 #Preview {
     @Previewable @State var previewText: String = "Preview"
 
-    // MARK: - Standard
+    // MARK: - STANDARD
     InputFieldComponent(
         icon: Image(systemName: "at"),
         title: "Title",
         text: $previewText
     )
     
-    // MARK: - Secure
+    // MARK: - SECURE
     InputFieldComponent(
         secure: true,
         icon: Image(systemName: "lock"),
@@ -70,3 +70,4 @@ extension InputFieldComponent {
         text: $previewText
     )
 }
+

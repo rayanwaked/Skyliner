@@ -5,29 +5,29 @@
 //  Created by Rayan Waked on 6/30/25.
 //
 
-// MARK: - Import
+// MARK: - IMPORT
 import SwiftUI
 
 
-// MARK: - View
+// MARK: - VIEW
 struct AuthenticationView: View {
-    // MARK: - Variable
+    // MARK: - VARIABLE
     @Environment(AppState.self) private var appState
     @Environment(\.openURL) var openURL
     @State var viewModel = ViewModel()
     
-    // MARK: - Body
+    // MARK: - BODY
     public var body: some View {
         ZStack(alignment: .bottomLeading) {
-            // MARK: Background
+            // MARK: BACKGROUND
             BackgroundComponent()
                 .ignoresSafeArea(.keyboard)
 
-            // MARK: Content
+            // MARK: CONTENT
             VStack {
                 VStack {
                     switch viewModel.selectedSection {
-                    // MARK: - Welcome
+                    // MARK: - WELCOME
                     case .welcomeSection:
                         Spacer()
                         welcomeSection(
@@ -37,7 +37,7 @@ struct AuthenticationView: View {
                                 { viewModel.selectedSection = .createAccountSection }
                         )
 
-                    // MARK: - Create Acount
+                    // MARK: - CREATE ACOUNT
                     case .createAccountSection:
                         Spacer()
                         createAccountSection(
@@ -46,7 +46,7 @@ struct AuthenticationView: View {
                             reenteredPassword: $viewModel.createReenteredPassword,
                             error: viewModel.createError,
                             onCreateAccount: {
-//                                viewModel.createLogic()
+                                
                             },
                             onGoBack: {
                                 viewModel.selectedSection = .welcomeSection
@@ -56,7 +56,7 @@ struct AuthenticationView: View {
                             }
                         )
 
-                    // MARK: - Sign In
+                    // MARK: - SIGN IN
                     case .signinSection:
                         Spacer()
                         signinSection(
@@ -64,7 +64,14 @@ struct AuthenticationView: View {
                             password: $viewModel.signinPassword,
                             error: viewModel.signinError,
                             onSignIn: {
-//                                viewModel.signinLogic()
+                                Task {
+                                    try await appState.authenticationManager
+                                        .authenticate(
+                                            handle: viewModel.signinHandle,
+                                            password: viewModel.signinPassword
+                                        )
+                                    print("🌸 Authentication View: Authenticate function called")
+                                }
                             },
                             onGoBack: {
                                 viewModel.selectedSection = .welcomeSection
@@ -77,7 +84,7 @@ struct AuthenticationView: View {
                 .padding(.bottom, -PaddingConstants.defaultPadding)
                 .animation(.easeInOut(duration: 0.25), value: viewModel.selectedSection)
 
-                // MARK: Document
+                // MARK: DOCUMENT
                 documentSection
                     .standardCardStyle()
                     .ignoresSafeArea(.keyboard)
@@ -88,7 +95,7 @@ struct AuthenticationView: View {
     }
 }
 
-// MARK: - Preview
+// MARK: - PREVIEW
 #Preview {
     @Previewable @State var appState: AppState = .init()
     

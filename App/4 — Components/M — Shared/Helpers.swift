@@ -5,11 +5,11 @@
 //  Created by Rayan Waked on 6/30/25.
 //
 
-// MARK: - Imports
+// MARK: - IMPORTS
 import SwiftUI
 import UIKit
 
-// MARK: - Dismiss Keyboard
+// MARK: - DISMISS KEYBOARD
 #if canImport(UIKit)
 extension View {
     func dismissKeyboard() {
@@ -17,3 +17,4 @@ extension View {
     }
 }
 #endif
+

@@ -5,25 +5,25 @@
 //  Created by Rayan Waked on 6/22/25.
 //
 
-// MARK: - Import
+// MARK: - IMPORT
 import SwiftUI
 import UIKit
 
-// MARK: - Enum
+// MARK: - ENUM
 enum ButtonVariation {
     case primary
     case secondary
     case tertiary
 }
 
-// MARK: - View
+// MARK: - VIEW
 struct ButtonComponent: View {
-    // MARK: - Variable
+    // MARK: - VARIABLE
     var action: () -> Void
     var label: String
     var variation: ButtonVariation
     
-    // MARK: - Body
+    // MARK: - BODY
     var body: some View {
         Button(label) {
             action()
@@ -33,12 +33,12 @@ struct ButtonComponent: View {
     }
 }
 
-// MARK: - Style
+// MARK: - STYLE
 struct ButtonComponentStyle: ButtonStyle {
-    // MARK: - Variable
+    // MARK: - VARIABLE
     var variation: ButtonVariation = .primary
     
-    // MARK: - Body
+    // MARK: - BODY
     func makeBody(configuration: Configuration) -> some View {
         ZStack {
             if variation == .primary || variation == .secondary {
@@ -61,7 +61,7 @@ struct ButtonComponentStyle: ButtonStyle {
     }
 }
 
-// MARK: - Preview
+// MARK: - PREVIEW
 #Preview {
     ButtonComponent(action: {
         print("Pressed")

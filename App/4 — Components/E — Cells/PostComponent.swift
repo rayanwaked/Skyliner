@@ -5,18 +5,14 @@
 //  Created by Rayan Waked on 6/26/25.
 //
 
-// MARK: - Import
+// MARK: - IMPORT
 import SwiftUI
 
-// MARK: - View
+// MARK: - VIEW
 struct PostComponent: View, Hashable {
-    var id: String = ""
-    var displayName: String = ""
-    var handle: String = ""
-    var time: String = ""
-    var content: String = ""
+    var post: PostModel
 
-    // MARK: - Body
+    // MARK: - BODY
     var body: some View {
         GlassEffectContainer {
             HStack(alignment: .top) {
@@ -34,9 +30,9 @@ struct PostComponent: View, Hashable {
     }
 }
 
-// MARK: - Extension
+// MARK: - EXTENSION
 extension PostComponent {
-    // MARK: - Profile Picture
+    // MARK: - PROFILE PICTURE
     @ViewBuilder
     var profilePicture: some View {
         Circle()
@@ -45,17 +41,17 @@ extension PostComponent {
             .glassEffect()
     }
     
-    // MARK: - Account
+    // MARK: - ACCOUNT
     var account: some View {
         HStack {
-            Text(displayName)
+            Text(post.author.displayName ?? "")
                 .bold()
                 .fixedSize()
-            Text("@\(handle)")
+            Text("@\(post.author.handle)")
                 .foregroundStyle(.primary.opacity(0.6))
                 .font(.subheadline)
             Text("·")
-            Text(time)
+            Text(post.indexAtFormatted)
                 .foregroundStyle(.primary.opacity(0.6))
                 .font(.subheadline)
             Spacer()
@@ -64,23 +60,17 @@ extension PostComponent {
         .padding(.bottom, PaddingConstants.defaultPadding * 0.05)
     }
     
-    // MARK: - Text
+    // MARK: - TEXT
     var text: some View {
-        Text(content)
+        Text(post.content)
             .font(.subheadline)
             .fontWeight(.regular)
             .padding(.bottom, PaddingConstants.defaultPadding / 4)
     }
 }
 
-// MARK: - Preview
+// MARK: - PREVIEW
 #Preview {
-    @Previewable @State var id: String = "1"
-    @Previewable @State var displayName: String = "Skyliner"
-    @Previewable @State var handle: String = "skyline.app"
-    @Previewable @State var time: String = "1h"
-    @Previewable @State var content: String = "Ready for takeoff!"
-    
-    PostComponent(id: id, displayName: displayName, handle: handle, time: time, content: content)
+    PostComponent(post: PostModel.placeholders.first!)
 }
 

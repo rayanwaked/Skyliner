@@ -5,10 +5,10 @@
 //  Created by Rayan Waked on 6/30/25.
 //
 
-// MARK: - Imports
+// MARK: - IMPORTS
 import ATProtoKit
 
-// MARK: - Authentication Functions
+// MARK: - AUTHENTICATION FUNCTIONS
 public final class AuthenticationFunctions {
     private let secureKeychain: AppleSecureKeychain
 
@@ -16,22 +16,23 @@ public final class AuthenticationFunctions {
         self.secureKeychain = secureKeychain
     }
 
-    // MARK: - Authenticate
+    // MARK: - AUTHENTICATE
     public func authenticate(handle: String, password: String) async throws -> ATProtocolConfiguration {
         let config = ATProtocolConfiguration(keychainProtocol: secureKeychain)
         try await config.authenticate(with: handle, password: password)
         return config
     }
 
-    // MARK: - Refresh
+    // MARK: - REFRESH
     public func refresh() async throws -> ATProtocolConfiguration {
         let config = ATProtocolConfiguration(keychainProtocol: secureKeychain)
         try await config.refreshSession()
         return config
     }
 
-    // MARK: - Log Out
+    // MARK: - LOG OUT
     public func logout(configuration: ATProtocolConfiguration?) async throws {
         try await configuration?.deleteSession()
     }
 }
+

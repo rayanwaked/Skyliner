@@ -11,27 +11,14 @@ internal import Combine
 extension AuthenticationView {
     @Observable
     class ViewModel {
-        // MARK: - Enum
+        // MARK: - ENUM
         public enum AuthenticationSections {
             case welcomeSection
             case createAccountSection
             case signinSection
         }
         
-        // MARK: - Logic Closure
-        public var createLogic: () -> Void
-        public var signinLogic: () -> Void
-        
-        // MARK: - Initialize
-        public init(
-            createLogic: (() -> Void)? = nil,
-            signinLogic: (() -> Void)? = nil
-        ) {
-            self.createLogic = createLogic ?? { print("🧊 Authentication View Model: Create Logic Called") }
-            self.signinLogic = signinLogic ?? { print("🧊 Authentication View Model: Sign In Logic Called") }
-        }
-        
-        // MARK: - UI State
+        // MARK: - UI STATE
         var selectedSection: AuthenticationSections = .welcomeSection
         var createHandle: String = ""
         var createPassword: String = ""

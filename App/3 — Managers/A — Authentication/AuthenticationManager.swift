@@ -31,7 +31,7 @@ public final class AuthenticationManager: @unchecked Sendable {
             guard keychain.set(newUUID, forKey: "session_uuid"),
                   let realUUID = UUID(uuidString: newUUID) else {
                 hapticFeedback(.error)
-                fatalError("🍄⛔️ AuthenticationManager: Failed to create or store session_uuid.")
+                fatalError("Authentication Manager: Failed to create or store session_uuid.")
             }
             self.ATProtoKeychain = AppleSecureKeychain(identifier: realUUID)
         }
@@ -82,11 +82,11 @@ public final class AuthenticationManager: @unchecked Sendable {
             await MainActor.run {
                 self.configuration = config
                 self.configurationContinuation.yield(config)
-                print("🍄✅ AuthenticationManager: Session restored")
+                print("🍄✅ Authentication Manager: Session restored")
                 hapticFeedback(.success)
             }
         } catch {
-            print("🍄⛔️ AuthenticationManager: Session restoration failed: \(error)")
+            print("🍄⛔️ Authentication Manager: Session restoration failed: \(error)")
             await MainActor.run {
                 self.configuration = nil
                 self.configurationContinuation.yield(nil)

@@ -5,19 +5,19 @@
 //  Created by Rayan Waked on 6/30/25.
 //
 
-// MARK: - Import
+// MARK: - IMPORT
 import SwiftUI
 
-// MARK: - Welcome Section
+// MARK: - WELCOME SECTION
 extension AuthenticationView {
     func welcomeSection(
         onGoSignIn: @escaping () -> Void,
         onGoCreateAccount: @escaping () -> Void) -> some View {
         VStack(alignment: .leading) {
-            // MARK: Header
+            // MARK: HEADER
             headerSection
             
-            // MARK: Action
+            // MARK: ACTION
             HStack {
                 ButtonComponent(action: {
                     onGoCreateAccount()
@@ -33,12 +33,12 @@ extension AuthenticationView {
     }
 }
 
-// MARK: - Header Section
+// MARK: - HEADER SECTION
 extension AuthenticationView {
     var headerSection: some View {
         VStack(alignment: .leading) {
             switch viewModel.selectedSection {
-            // MARK: Welcome
+            // MARK: WELCOME
             case .welcomeSection:
                 VStack(alignment: .leading) {
                     Text("Skyliner")
@@ -51,7 +51,7 @@ extension AuthenticationView {
                         .padding(.bottom, PaddingConstants.defaultPadding * 1.5)
                 }
                 
-            // MARK: Create Account
+            // MARK: CREATE ACCOUNT
             case .createAccountSection:
                 VStack(alignment: .leading) {
                     Text("Welcome!")
@@ -64,7 +64,7 @@ extension AuthenticationView {
                         .padding(.bottom, PaddingConstants.defaultPadding * 1.5)
                 }
                 
-            // MARK: Sign In
+            // MARK: SIGN IN
             case .signinSection:
                 VStack(alignment: .leading) {
                     Text("Hey!")
@@ -81,7 +81,7 @@ extension AuthenticationView {
     }
 }
 
-// MARK: - Create Account Section
+// MARK: - CREATE ACCOUNT SECTION
 extension AuthenticationView {
     func createAccountSection(
         handle: Binding<String>,
@@ -91,10 +91,10 @@ extension AuthenticationView {
         onCreateAccount: @escaping () -> Void,
         onGoBack: @escaping () -> Void) -> some View {
         VStack(alignment: .leading) {
-            // MARK: Header
+            // MARK: HEADER
             headerSection
             
-            // MARK: Input
+            // MARK: INPUT
             InputFieldComponent(
                 icon: Image(systemName: "at"),
                 title: "Create new handle",
@@ -115,9 +115,9 @@ extension AuthenticationView {
             )
             .padding(.bottom, SizeConstants.screenHeight * 0.02)
             
-            // MARK: Button
+            // MARK: BUTTON
             HStack {
-                // MARK: - Go Back
+                // MARK: - GO BACK
                 CompactButtonComponent(
                     action: {
                         onGoBack()
@@ -128,7 +128,7 @@ extension AuthenticationView {
                     variation: .secondary,
                     placement: .standard)
                 
-                // MARK: Create Account
+                // MARK: CREATE ACCOUNT
                 ButtonComponent(
                     action: {
                         onCreateAccount()
@@ -137,7 +137,7 @@ extension AuthenticationView {
                     variation: .primary)
             }
             
-            // MARK: Error
+            // MARK: ERROR
             if !error.isEmpty {
                 Text(error)
                     .foregroundColor(.red)
@@ -158,7 +158,7 @@ extension AuthenticationView {
     }
 }
 
-// MARK: - Sign In Section
+// MARK: - SIGN IN SECTION
 extension AuthenticationView {
     func signinSection(
         handle: Binding<String>,
@@ -167,10 +167,10 @@ extension AuthenticationView {
         onSignIn: @escaping () -> Void,
         onGoBack: @escaping () -> Void) -> some View {
         VStack(alignment: .leading) {
-            // MARK: Header
+            // MARK: HEADER
             headerSection
             
-            // MARK: Input
+            // MARK: INPUT
             InputFieldComponent(
                 icon: Image(systemName: "at"),
                 title: "Account handle",
@@ -186,7 +186,7 @@ extension AuthenticationView {
             .padding(.bottom, SizeConstants.screenHeight * 0.02)
             
             HStack {
-                // MARK: Go back
+                // MARK: GO BACK
                 CompactButtonComponent(
                     action: {
                         dismissKeyboard()
@@ -198,13 +198,13 @@ extension AuthenticationView {
                     variation: .secondary,
                     placement: .standard)
                 
-                // MARK: Sign In
+                // MARK: SIGN IN
                 ButtonComponent(action: {
                     onSignIn()
                 }, label: "Sign in", variation: .primary)
             }
             
-            // MARK: Error
+            // MARK: ERROR
             if !error.isEmpty {
                 Text(error)
                     .foregroundColor(.red)
@@ -219,7 +219,7 @@ extension AuthenticationView {
     }
 }
 
-// MARK: - Icon
+// MARK: - ICON
 extension AuthenticationView {
     @ViewBuilder
     var skylinerIcon: some View {
@@ -230,7 +230,7 @@ extension AuthenticationView {
             .padding(PaddingConstants.defaultPadding * 2)
     }
 
-    // MARK: - Document Section
+    // MARK: - DOCUMENT SECTION
     @ViewBuilder
     var documentSection: some View {
         HStack {

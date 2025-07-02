@@ -5,10 +5,10 @@
 //  Created by Rayan Waked on 6/22/25.
 //
 
-// MARK: - Import
+// MARK: - IMPORT
 import SwiftUI
 
-// MARK: - Enum
+// MARK: - ENUM
 enum CompactButtonVariation {
     case primary
     case secondary
@@ -21,15 +21,15 @@ enum CompactButtonPlacement {
     case tabBar
 }
 
-// MARK: - View
+// MARK: - VIEW
 struct CompactButtonComponent: View {
-    // MARK: - Variable
+    // MARK: - VARIABLE
     var action: () -> Void
     var label: Image
     var variation: CompactButtonVariation
     var placement: CompactButtonPlacement
     
-    // MARK: - Body
+    // MARK: - BODY
     var body: some View {
         Button() {
             action()
@@ -42,13 +42,13 @@ struct CompactButtonComponent: View {
     }
 }
 
-// MARK: - Style
+// MARK: - STYLE
 struct CompactButtonComponentStyle: ButtonStyle {
-    // MARK: - Variable
+    // MARK: - VARIABLE
     var variation: CompactButtonVariation = .primary
     var placement: CompactButtonPlacement = .standard
     
-    // MARK: - Body
+    // MARK: - BODY
     func makeBody(configuration: Configuration) -> some View {
         ZStack {
             switch variation {
@@ -69,15 +69,17 @@ struct CompactButtonComponentStyle: ButtonStyle {
                 .foregroundStyle((variation == .primary) ? .white : .blue)
                 .font(placement == .standard ? .subheadline : .title2)
                 .fontWeight(.semibold)
-                .padding(PaddingConstants.defaultPadding * 0.75)
+                .padding(
+                    placement == .standard ? PaddingConstants.defaultPadding * 0.75 : PaddingConstants
+                        .largePadding)
         }
         .glassEffect(.regular.interactive(true))
     }
 }
 
-// MARK: - Preview
+// MARK: - PREVIEW
 #Preview {
-    // MARK: - Standard
+    // MARK: - STANDARD
     CompactButtonComponent(
         action: {
             print("Pressed")
@@ -96,7 +98,7 @@ struct CompactButtonComponentStyle: ButtonStyle {
             print("Pressed")
         }, label: Image(systemName: "chevron.right"), variation: .quaternary, placement: .standard)
     
-    // MARK: - Tab Bar
+    // MARK: - TAB BAR
     CompactButtonComponent(
         action: {
             print("Pressed")
@@ -116,4 +118,3 @@ struct CompactButtonComponentStyle: ButtonStyle {
             print("Pressed")
         }, label: Image(systemName: "chevron.right"), variation: .quaternary, placement: .tabBar)
 }
-

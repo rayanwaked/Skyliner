@@ -5,10 +5,10 @@
 //  Created by Rayan Waked on 6/27/25.
 //
 
-// MARK: - Import
+// MARK: - IMPORT
 import SwiftUI
 
-// MARK: - View
+// MARK: - VIEW
 struct SeperatorComponent: View {
     var body: some View {
         Rectangle()
@@ -17,7 +17,7 @@ struct SeperatorComponent: View {
     }
 }
 
-// MARK: - Preview
+// MARK: - PREVIEW
 #Preview {
     SeperatorComponent()
         .frame(height: 100)

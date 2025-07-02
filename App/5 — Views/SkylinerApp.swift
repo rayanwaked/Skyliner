@@ -5,17 +5,17 @@
 //  Created by Rayan Waked on 6/29/25.
 //
 
-// MARK: - Imports
+// MARK: - IMPORTS
 import SwiftUI
 
-// MARK: - Main
+// MARK: - MAIN
 @main
 struct SkylinerApp: App {
-    @State var appState = AppState()
+    @State private var appState = AppState()
     
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            RouterView()
                 .environment(appState)
         }
     }

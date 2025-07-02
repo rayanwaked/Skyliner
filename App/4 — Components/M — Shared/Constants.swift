@@ -5,23 +5,23 @@
 //  Created by Rayan Waked on 6/30/25.
 //
 
-// MARK: - Imports
+// MARK: - IMPORTS
 import SwiftUI
 
-// MARK: - Size Constants
+// MARK: - SIZE CONSTANTS
 enum SizeConstants {
     static let screenWidth = UIScreen.main.bounds.width
     static let screenHeight = UIScreen.main.bounds.height
 }
 
-// MARK: - Layout Constants
+// MARK: - LAYOUT CONSTANTS
 enum LayoutConstants {
     static let largeRadius: CGFloat = 22
     static let defaultRadius: CGFloat = 28
     static let smallRadius: CGFloat = 18
 }
 
-// MARK: - Padding Constants
+// MARK: - PADDING CONSTANTS
 enum PaddingConstants {
     // General purpose padding, usually used to pad between componants/views and the stack
     static let largePadding: CGFloat = 20
@@ -33,7 +33,7 @@ enum PaddingConstants {
     static let horizontalPadding: CGFloat = 14
 }
 
-// MARK: - Color Constants
+// MARK: - COLOR CONSTANTS
 enum ColorConstants {
     static let darkOpaque: CGFloat = 0.65
     static let heavyOpaque: CGFloat = 0.5
