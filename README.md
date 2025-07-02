@@ -1,7 +1,5 @@
 # Skyliner ✈️
 
-&#x20;*Skyliner app icon concept (airplane logo) used in the app’s branding.*
-
 ## Overview
 
 **Skyliner** is a native iOS client for [BlueSky](https://blueskyweb.xyz), built with Swift and SwiftUI. It utilizes the [ATProtoKit](https://github.com/MasterJ93/ATProtoKit) framework to connect to BlueSky’s AT Protocol network. The app focuses on a refined user interface and smooth user experience, with an emphasis on minimalistic and maintainable code. Skyliner demonstrates a modern SwiftUI architecture and provides a solid foundation for further customization and new features.
