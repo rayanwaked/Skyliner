@@ -168,33 +168,6 @@ Below is a breakdown of each major file and directory, along with a brief descri
 
   * **Skyliner.icon/Assets/06-22-2025\_X-Design.png:** An image of a white fluffy **cloud** on a transparent background. This appears to be a concept or asset related to BlueSky’s theme (a cloud icon). It might have been used in designing the app’s icon or as a logo element (BlueSky’s motif is often a cloud).
   * **Skyliner.icon/Assets/Plane Design with Body Paint.png:** An image of an **airplane** (top-down view with blue and white coloring). This is likely the primary icon graphic for Skyliner (as seen in the embedded image above). It was used to create the app’s actual icon. The “body paint” refers to the blue accent coloring on the plane’s body.
-  * **.DS\_Store:** A hidden file created by macOS Finder to store folder display metadata. It has no effect on the project and can be ignored or removed.
-
-* **Hidden Files: .DS\_Store, .git/**
-
-  * **.DS\_Store:** This file appears in the root (and in the SkylinerIcon folder). These are macOS system files that record folder view preferences (icon positions, etc.) in Finder. They are not used by the app and are safe to ignore or delete in a non-macOS context.
-  * **.git/** – The Git repository data directory. It contains version control history for the project. Notable contents:
-
-    * **config:** Git configuration for this repository.
-
-    * **description:** (Typically used in bare repos; can be ignored for a normal repo).
-
-    * **HEAD:** Reference to the current branch (e.g., `refs/heads/main`).
-
-    * **objects/** and **pack/**: The Git object database storing all commits, blobs (file contents), etc., often in pack files for efficiency.
-
-    * **refs/**: Pointers to commit references. In this project, you’ll see `refs/heads/main` (the main branch pointer) and `refs/remotes/origin/main` (tracking the origin’s main branch).
-
-    * **logs/**: History of changes to branch heads (useful for `git reflog`). Contains logs for HEAD and each ref (e.g., commit history for `main`).
-
-    * **hooks/**: Sample Git hook scripts (e.g., pre-commit, pre-push) provided by Git – none are active by default unless configured.
-
-    * **info/**: Contains global exclude patterns (in `info/exclude`) which is like a local .gitignore.
-
-  > **Note:** The `.git` folder is only relevant if you are working with the project’s Git repository. If you obtained the code via a zip download (as in this case), the presence of this folder indicates it was included in the archive, but it may not be needed unless you plan to use Git for version control on this project.
-
-* **\_\_MACOSX/** (Zip archive artifact)
-  If you see a folder named `__MACOSX` in the archive, note that this is an artifact of how macOS zips files. It contains **resource forks and metadata** for the files in the archive (with filenames like `._Filename`). For example, `__MACOSX/Skyliner/App/4 — Components/._ButtonComponent.swift` is a hidden file storing extended attributes for `ButtonComponent.swift`. These `__MACOSX` files are **not part of the actual project** and can be ignored or deleted after unzipping. They do not affect the iOS app’s code or functionality.
 
 ## Assets
 
@@ -254,6 +227,10 @@ The Skyliner codebase is kept intentionally **minimalistic and modular**:
 * Comments and MARKs (sections within files) are used to denote important parts of the code (such as `// MARK: - Imports` or `// MARK: - Authentication Functions` in the managers).
 
 The combination of clear structure, logging conventions, and SwiftUI previews makes it easier for any developer to onboard onto the project or navigate the code. The emphasis is on **clarity** – so if a change needs to be made (say, altering how a post is displayed), the developer can find `PostComponent.swift` quickly and modify it, without unexpected side-effects in unrelated parts of the app.
+
+### License
+
+The legalities pertaining to this repository and whatever it may contain are detailed in LICENSE.MD.
 
 ---
 
