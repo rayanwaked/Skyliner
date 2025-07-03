@@ -11,6 +11,7 @@
 		B968C2892E13153E00DA7661 /* ATMacro in Frameworks */ = {isa = PBXBuildFile; productRef = B968C2882E13153E00DA7661 /* ATMacro */; };
 		B968C28B2E13153E00DA7661 /* ATProtoKit in Frameworks */ = {isa = PBXBuildFile; productRef = B968C28A2E13153E00DA7661 /* ATProtoKit */; };
 		B968C28E2E13154900DA7661 /* KeychainSwift in Frameworks */ = {isa = PBXBuildFile; productRef = B968C28D2E13154900DA7661 /* KeychainSwift */; };
+		B97588D32E170A5C00CD7360 /* FancyScrollView in Frameworks */ = {isa = PBXBuildFile; productRef = B97588D22E170A5C00CD7360 /* FancyScrollView */; };
 		B98C2C8E2E16E0A700D96DCA /* BezelKit in Frameworks */ = {isa = PBXBuildFile; productRef = B98C2C8D2E16E0A700D96DCA /* BezelKit */; };
 /* End PBXBuildFile section */
 
@@ -31,6 +32,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B97588D32E170A5C00CD7360 /* FancyScrollView in Frameworks */,
 				B968C28E2E13154900DA7661 /* KeychainSwift in Frameworks */,
 				B968C2892E13153E00DA7661 /* ATMacro in Frameworks */,
 				B92B33392E1657AE004D4656 /* Glur in Frameworks */,
@@ -83,6 +85,7 @@
 				B968C28D2E13154900DA7661 /* KeychainSwift */,
 				B92B33382E1657AE004D4656 /* Glur */,
 				B98C2C8D2E16E0A700D96DCA /* BezelKit */,
+				B97588D22E170A5C00CD7360 /* FancyScrollView */,
 			);
 			productName = Skyliner;
 			productReference = B9D5550F2E1216FD00D9BD69 /* Skyliner.app */;
@@ -117,6 +120,7 @@
 				B968C28C2E13154900DA7661 /* XCRemoteSwiftPackageReference "keychain-swift" */,
 				B92B33372E1657AE004D4656 /* XCRemoteSwiftPackageReference "Glur" */,
 				B98C2C8C2E16E0A700D96DCA /* XCRemoteSwiftPackageReference "BezelKit" */,
+				B97588D12E170A5C00CD7360 /* XCRemoteSwiftPackageReference "FancyScrollView" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = B9D555102E1216FD00D9BD69 /* Products */;
@@ -394,6 +398,14 @@
 				minimumVersion = 24.0.0;
 			};
 		};
+		B97588D12E170A5C00CD7360 /* XCRemoteSwiftPackageReference "FancyScrollView" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/nerdsupremacist/FancyScrollView";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.1.4;
+			};
+		};
 		B98C2C8C2E16E0A700D96DCA /* XCRemoteSwiftPackageReference "BezelKit" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/markbattistella/BezelKit";
@@ -424,6 +436,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = B968C28C2E13154900DA7661 /* XCRemoteSwiftPackageReference "keychain-swift" */;
 			productName = KeychainSwift;
+		};
+		B97588D22E170A5C00CD7360 /* FancyScrollView */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = B97588D12E170A5C00CD7360 /* XCRemoteSwiftPackageReference "FancyScrollView" */;
+			productName = FancyScrollView;
 		};
 		B98C2C8D2E16E0A700D96DCA /* BezelKit */ = {
 			isa = XCSwiftPackageProductDependency;

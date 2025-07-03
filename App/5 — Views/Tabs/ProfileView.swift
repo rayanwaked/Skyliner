@@ -9,6 +9,7 @@
 import SwiftUI
 import Glur
 import BezelKit
+import FancyScrollView
 import ATProtoKit
 
 // MARK: - VIEW
@@ -19,19 +20,25 @@ struct ProfileView: View {
 
     // MARK: BODY
     var body: some View {
-        ScrollView {
+        FancyScrollView(scrollUpHeaderBehavior: .parallax,
+                        scrollDownHeaderBehavior: .offset,
+                        header: {
             bannerSection
-            
-            subBannerSection
-            
-            descriptionSection
-            
-            postsSection
+                .frame(width: SizeConstants.screenWidth)
+                .glassEffect(.regular, in: .rect(
+                    topLeadingRadius: RadiusConstants.glassRadius,
+                    topTrailingRadius: RadiusConstants.glassRadius))}) {
+            VStack {
+                subBannerSection
+                
+                descriptionSection
+                
+                postsSection
+            }
         }
         .background(.defaultBackground)
         .scrollIndicators(.hidden)
         .ignoresSafeArea(.container)
-        .refreshable {}
     }
 }
 
@@ -47,31 +54,19 @@ extension ProfileView {
                     .clipShape(Rectangle())
                     .scaledToFill()
             }
-            .frame(width: SizeConstants.screenWidth * 1, height: SizeConstants.screenHeight * 0.2)
             
             // Reflection
             ZStack(alignment: .top) {
                 AsyncImage(url: profile?.banner) { result in
                     result.image?
                         .resizable()
+                        .glur(radius: 5, offset: 0.7, direction: .up)
                         .clipShape(Rectangle())
                         .scaledToFill()
-                        .scaleEffect(x: 1.2, y: -1)
+                        .scaleEffect(x: 1, y: -1)
                 }
             }
-            .frame(height: SizeConstants.screenHeight * 0.1, alignment: .top)
         }
-        .glur(radius: 5, interpolation: 1.0, direction: .down)
-        .clipShape(
-            .rect(
-                topLeadingRadius: RadiusConstants.glassRadius,
-                topTrailingRadius: RadiusConstants.glassRadius
-            )
-        )
-        .glassEffect(.regular, in: .rect(
-            topLeadingRadius: RadiusConstants.glassRadius,
-            topTrailingRadius: RadiusConstants.glassRadius
-        ))
     }
 }
 
@@ -89,7 +84,7 @@ extension ProfileView {
             }
             .glassEffect()
             .frame(width: SizeConstants.screenWidth * 0.3, height: SizeConstants.screenWidth * 0.3)
-            .padding(.top, SizeConstants.screenHeight * -0.08)
+            .padding(.top, SizeConstants.screenHeight * -0.05)
             .shadow(
                 color: .defaultBackground.opacity(ColorConstants.darkOpaque),
                 radius: 2

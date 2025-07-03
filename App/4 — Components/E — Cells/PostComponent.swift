@@ -62,6 +62,7 @@ extension PostComponent {
             Text("@\(post.author.handle)")
                 .foregroundStyle(.primary.opacity(0.6))
                 .font(.subheadline)
+            Spacer()
             Text("·")
             Text(DateHelper.formattedRelativeDate(from: post.indexedAt))
                 .foregroundStyle(.primary.opacity(0.6))

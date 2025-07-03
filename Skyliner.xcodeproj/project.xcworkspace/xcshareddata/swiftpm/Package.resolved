@@ -1,5 +1,5 @@
 {
-  "originHash" : "ba9c1fd7de39ca96482841305364aac1287d744718b38ff7b29bb090338f22ba",
+  "originHash" : "0053a537a4d3b3d6c52c0c137771acae1310b1cdf10987e7119f66af7eacba11",
   "pins" : [
     {
       "identity" : "atprotokit",
@@ -17,6 +17,15 @@
       "state" : {
         "revision" : "bfa3e305a418096ce9d159b178330b49e46699e8",
         "version" : "4.0.0"
+      }
+    },
+    {
+      "identity" : "fancyscrollview",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/nerdsupremacist/FancyScrollView",
+      "state" : {
+        "revision" : "7f8194b23dc209cdb5b0ebc9799a8de487166fdf",
+        "version" : "0.1.4"
       }
     },
     {
