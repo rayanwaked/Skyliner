@@ -46,8 +46,10 @@ extension InputFieldComponent {
             }
         }
         .padding()
-        .glassEffect(.regular.tint(.secondary.opacity(0.2)).interactive())
-        .contentShape(RoundedRectangle(cornerRadius: 100))
+        .glassEffect(
+            .regular.tint(.secondary.opacity(0.2)).interactive(),
+            in: RoundedRectangle(cornerRadius: 100)
+        )
     }
 }
 

@@ -7,6 +7,8 @@
 
 // MARK: - IMPORTS
 import SwiftUI
+import Glur
+import BezelKit
 import ATProtoKit
 
 // MARK: - VIEW
@@ -26,6 +28,8 @@ struct ProfileView: View {
             
             profileSection
         }
+        .background(.defaultBackground)
+        .scrollIndicators(.hidden)
         .ignoresSafeArea(.container)
     }
 }
@@ -35,13 +39,34 @@ extension ProfileView {
     var bannerSection: some View {
         @State var profile = appState.profileModel.first
         
-        return AsyncImage(url: profile?.banner) { result in
-            result.image?
-                .resizable()
-                .clipShape(Rectangle())
-                .scaledToFill()
+        return VStack(spacing: 0) {
+            AsyncImage(url: profile?.banner) { result in
+                result.image?
+                    .resizable()
+                    .clipShape(Rectangle())
+                    .scaledToFill()
+            }
+            .frame(width: SizeConstants.screenWidth * 1, height: SizeConstants.screenHeight * 0.2)
+            
+            // Reflection
+            ZStack(alignment: .top) {
+                AsyncImage(url: profile?.banner) { result in
+                    result.image?
+                        .resizable()
+                        .clipShape(Rectangle())
+                        .scaledToFill()
+                        .scaleEffect(x: 1, y: -1)
+                }
+            }
+            .frame(height: SizeConstants.screenHeight * 0.1, alignment: .top)
         }
-        .frame(width: SizeConstants.screenWidth * 1, height: SizeConstants.screenHeight * 0.2)
+        .glur(radius: 5, interpolation: 1.0, direction: .down)
+        .glassEffect(.regular, in: .rect(cornerRadius: LayoutConstants.smallRadius)
+        )
+        .clipShape(
+            RoundedRectangle(
+                cornerRadius: LayoutConstants.glassRadius)
+        )
     }
 }
 
@@ -56,7 +81,13 @@ extension ProfileView {
                 .clipShape(Circle())
                 .scaledToFit()
         }
-        .frame(width: SizeConstants.screenWidth * 0.2, height: SizeConstants.screenWidth * 0.2)
+        .glassEffect()
+        .frame(width: SizeConstants.screenWidth * 0.3, height: SizeConstants.screenWidth * 0.3)
+        .padding(.top, SizeConstants.screenHeight * -0.12)
+        .shadow(
+            color: .defaultBackground.opacity(ColorConstants.darkOpaque),
+            radius: 2
+        )
     }
 }
 
@@ -67,12 +98,30 @@ extension ProfileView {
         
         return VStack {
             Text(profile?.displayName ?? "")
-            Text(profile?.description ?? "")
+                .font(.title2)
+                .fontWeight(.bold)
             Text(profile?.handle ?? "")
-            Text("\(profile?.followCount ?? 0)")
-            Text("\(profile?.followerCount ?? 0)")
-            Text("\(profile?.postCount ?? 0)")
+                .foregroundStyle(.primary.opacity(ColorConstants.darkOpaque))
+                .fontWeight(.medium)
+            HStack {
+                HStack(spacing: 5) {
+                    Text("\(profile?.followerCount ?? 0)").bold()
+                    Text("followers")
+                }
+                HStack(spacing: 5) {
+                    Text("\(profile?.followCount ?? 0)").bold()
+                    Text("following")
+                }
+                HStack(spacing: 5) {
+                    Text("\(profile?.postCount ?? 0)").bold()
+                    Text("posts")
+                }
+            }
+            Text(profile?.description ?? "")
         }
+        .font(.callout)
+        .multilineTextAlignment(.center)
+        .padding([.leading, .trailing, .bottom], PaddingConstants.defaultPadding)
     }
 }
 

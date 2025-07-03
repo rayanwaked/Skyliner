@@ -7,6 +7,7 @@
 
 // MARK: - IMPORTS
 import SwiftUI
+import BezelKit
 
 // MARK: - SIZE CONSTANTS
 enum SizeConstants {
@@ -19,16 +20,18 @@ enum LayoutConstants {
     static let largeRadius: CGFloat = 22
     static let defaultRadius: CGFloat = 28
     static let smallRadius: CGFloat = 18
+    /// Special corner radius utilized BezelKit added with SizeConstant Width to acheive glassEffect to bezel
+    static let glassRadius: CGFloat = (.deviceBezel + SizeConstants.screenWidth * 0.005)
 }
 
 // MARK: - PADDING CONSTANTS
 enum PaddingConstants {
-    // General purpose padding, usually used to pad between componants/views and the stack
+    /// General purpose padding, usually used to pad between componants/views and the stack
     static let largePadding: CGFloat = 20
     static let defaultPadding: CGFloat = 18
     static let smallPadding: CGFloat = 9
     
-    // Inline padding, usually used to pad between elements inside a componant or view
+    /// Inline padding, usually used to pad between elements inside a componant or view
     static let verticalPadding: CGFloat = 12
     static let horizontalPadding: CGFloat = 14
 }

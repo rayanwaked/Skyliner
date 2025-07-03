@@ -35,10 +35,22 @@ extension PostComponent {
     // MARK: - PROFILE PICTURE
     @ViewBuilder
     var profilePicture: some View {
-        Circle()
-            .foregroundStyle(.blue)
-            .frame(maxWidth: 45, maxHeight: 45)
-            .glassEffect()
+        if post.author.avatarImageURL != nil {
+            AsyncImage(url: post.author.avatarImageURL) { result in
+                result.image?
+                    .resizable()
+                    .clipShape(Circle())
+                    .scaledToFit()
+                    .foregroundStyle(.blue)
+                    .frame(maxWidth: 45, maxHeight: 45)
+                    .glassEffect()
+            }
+        } else {
+            Circle()
+                .foregroundStyle(.blue)
+                .frame(maxWidth: 45, maxHeight: 45)
+                .glassEffect()
+        }
     }
     
     // MARK: - ACCOUNT
@@ -51,9 +63,10 @@ extension PostComponent {
                 .foregroundStyle(.primary.opacity(0.6))
                 .font(.subheadline)
             Text("·")
-            Text(post.indexAtFormatted)
+            Text(DateHelper.formattedRelativeDate(from: post.indexedAt))
                 .foregroundStyle(.primary.opacity(0.6))
                 .font(.subheadline)
+                .fixedSize()
             Spacer()
         }
         .lineLimit(1)

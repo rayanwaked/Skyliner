@@ -7,9 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		B92B33392E1657AE004D4656 /* Glur in Frameworks */ = {isa = PBXBuildFile; productRef = B92B33382E1657AE004D4656 /* Glur */; };
 		B968C2892E13153E00DA7661 /* ATMacro in Frameworks */ = {isa = PBXBuildFile; productRef = B968C2882E13153E00DA7661 /* ATMacro */; };
 		B968C28B2E13153E00DA7661 /* ATProtoKit in Frameworks */ = {isa = PBXBuildFile; productRef = B968C28A2E13153E00DA7661 /* ATProtoKit */; };
 		B968C28E2E13154900DA7661 /* KeychainSwift in Frameworks */ = {isa = PBXBuildFile; productRef = B968C28D2E13154900DA7661 /* KeychainSwift */; };
+		B98C2C8E2E16E0A700D96DCA /* BezelKit in Frameworks */ = {isa = PBXBuildFile; productRef = B98C2C8D2E16E0A700D96DCA /* BezelKit */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -31,7 +33,9 @@
 			files = (
 				B968C28E2E13154900DA7661 /* KeychainSwift in Frameworks */,
 				B968C2892E13153E00DA7661 /* ATMacro in Frameworks */,
+				B92B33392E1657AE004D4656 /* Glur in Frameworks */,
 				B968C28B2E13153E00DA7661 /* ATProtoKit in Frameworks */,
+				B98C2C8E2E16E0A700D96DCA /* BezelKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -77,6 +81,8 @@
 				B968C2882E13153E00DA7661 /* ATMacro */,
 				B968C28A2E13153E00DA7661 /* ATProtoKit */,
 				B968C28D2E13154900DA7661 /* KeychainSwift */,
+				B92B33382E1657AE004D4656 /* Glur */,
+				B98C2C8D2E16E0A700D96DCA /* BezelKit */,
 			);
 			productName = Skyliner;
 			productReference = B9D5550F2E1216FD00D9BD69 /* Skyliner.app */;
@@ -109,6 +115,8 @@
 			packageReferences = (
 				B968C2872E13153E00DA7661 /* XCRemoteSwiftPackageReference "ATProtoKit" */,
 				B968C28C2E13154900DA7661 /* XCRemoteSwiftPackageReference "keychain-swift" */,
+				B92B33372E1657AE004D4656 /* XCRemoteSwiftPackageReference "Glur" */,
+				B98C2C8C2E16E0A700D96DCA /* XCRemoteSwiftPackageReference "BezelKit" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = B9D555102E1216FD00D9BD69 /* Products */;
@@ -362,6 +370,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		B92B33372E1657AE004D4656 /* XCRemoteSwiftPackageReference "Glur" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/joogps/Glur";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.4;
+			};
+		};
 		B968C2872E13153E00DA7661 /* XCRemoteSwiftPackageReference "ATProtoKit" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/MasterJ93/ATProtoKit";
@@ -378,9 +394,22 @@
 				minimumVersion = 24.0.0;
 			};
 		};
+		B98C2C8C2E16E0A700D96DCA /* XCRemoteSwiftPackageReference "BezelKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/markbattistella/BezelKit";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 4.0.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		B92B33382E1657AE004D4656 /* Glur */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = B92B33372E1657AE004D4656 /* XCRemoteSwiftPackageReference "Glur" */;
+			productName = Glur;
+		};
 		B968C2882E13153E00DA7661 /* ATMacro */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = B968C2872E13153E00DA7661 /* XCRemoteSwiftPackageReference "ATProtoKit" */;
@@ -395,6 +424,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = B968C28C2E13154900DA7661 /* XCRemoteSwiftPackageReference "keychain-swift" */;
 			productName = KeychainSwift;
+		};
+		B98C2C8D2E16E0A700D96DCA /* BezelKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = B98C2C8C2E16E0A700D96DCA /* XCRemoteSwiftPackageReference "BezelKit" */;
+			productName = BezelKit;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

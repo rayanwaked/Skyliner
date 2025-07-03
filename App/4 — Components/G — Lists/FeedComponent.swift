@@ -20,6 +20,7 @@ struct FeedComponent: View {
                     PostComponent(post: post.self)
                 }
             }
+            .padding(.bottom, SizeConstants.screenHeight * 0.1)
         }
         .scrollIndicators(.hidden)
     }

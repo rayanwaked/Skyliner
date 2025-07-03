@@ -37,6 +37,10 @@ struct RouterView: View {
                     BackgroundComponent()
                     SplashComponent()
                 }
+                .glassEffect(in: RoundedRectangle(
+                    cornerRadius: LayoutConstants.glassRadius
+                ))
+                .ignoresSafeArea()
                 .animation(.easeInOut(duration: 3), value: configurationState)
             }
         }

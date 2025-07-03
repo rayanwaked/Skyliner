@@ -64,11 +64,10 @@ private extension BackgroundComponent {
         Image("CloudIcon")
             .resizable()
             .frame(width: 350 * cloudsAnimator.cloudScales[i], height: 350 * cloudsAnimator.cloudScales[i])
-            .blur(radius: 6)
             .offset(x: cloudsAnimator.cloudOffsets[i], y: cloudsAnimator.cloudYPositions[i])
             .shadow(radius: 10)
             .animation(.linear(duration: cloudsAnimator.cloudSpeeds[i]), value: cloudsAnimator.cloudOffsets[i])
-            .blur(radius: 10)
+            .blur(radius: 15)
             .colorMultiply(
                 colorScheme == .light ? .white : .gray.opacity(ColorConstants.defaultOpaque)
             )

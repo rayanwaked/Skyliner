@@ -1,5 +1,5 @@
 {
-  "originHash" : "49084241769f898d56ab708e34cbd0811a90129dcbb26221875d9ce9a6c25289",
+  "originHash" : "ba9c1fd7de39ca96482841305364aac1287d744718b38ff7b29bb090338f22ba",
   "pins" : [
     {
       "identity" : "atprotokit",
@@ -8,6 +8,24 @@
       "state" : {
         "revision" : "721692be3e77f0c47de4b96dbc5f14097dcd841b",
         "version" : "0.30.0"
+      }
+    },
+    {
+      "identity" : "bezelkit",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/markbattistella/BezelKit",
+      "state" : {
+        "revision" : "bfa3e305a418096ce9d159b178330b49e46699e8",
+        "version" : "4.0.0"
+      }
+    },
+    {
+      "identity" : "glur",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/joogps/Glur",
+      "state" : {
+        "revision" : "9e00ff79da318f2c78b749b1027e54a9d4de2e33",
+        "version" : "1.0.4"
       }
     },
     {

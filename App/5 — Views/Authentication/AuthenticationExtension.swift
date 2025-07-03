@@ -101,6 +101,7 @@ extension AuthenticationView {
                 text: handle
             )
             .keyboardType(.emailAddress)
+            .autocapitalization(.none)
             InputFieldComponent(
                 secure: true,
                 icon: Image(systemName: "lock"),
@@ -120,6 +121,7 @@ extension AuthenticationView {
                 // MARK: - GO BACK
                 CompactButtonComponent(
                     action: {
+                        dismissKeyboard()
                         onGoBack()
                     },
                     label: Image(
@@ -177,6 +179,7 @@ extension AuthenticationView {
                 text: handle
             )
             .keyboardType(.emailAddress)
+            .autocapitalization(.none)
             InputFieldComponent(
                 secure: true,
                 icon: Image(systemName: "lock"),

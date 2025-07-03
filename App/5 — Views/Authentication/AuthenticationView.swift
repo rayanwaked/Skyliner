@@ -22,6 +22,10 @@ struct AuthenticationView: View {
             // MARK: BACKGROUND
             BackgroundComponent()
                 .ignoresSafeArea(.keyboard)
+                .glassEffect(in: RoundedRectangle(
+                    cornerRadius: LayoutConstants.glassRadius
+                ))
+                .ignoresSafeArea()
 
             // MARK: CONTENT
             VStack {
