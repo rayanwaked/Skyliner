@@ -7,6 +7,7 @@
 
 // MARK: - IMPORT
 import SwiftUI
+import NukeUI
 
 // MARK: - VIEW
 struct PostComponent: View, Hashable {
@@ -22,6 +23,7 @@ struct PostComponent: View, Hashable {
                     text
                 }
             }
+            .frame(maxWidth: .infinity, alignment: .leading)
             .padding(.top, PaddingConstants.smallPadding)
             .padding([.leading, .trailing], PaddingConstants.defaultPadding)
             
@@ -36,19 +38,18 @@ extension PostComponent {
     @ViewBuilder
     var profilePicture: some View {
         if post.author.avatarImageURL != nil {
-            AsyncImage(url: post.author.avatarImageURL) { result in
+            LazyImage(url: post.author.avatarImageURL) { result in
                 result.image?
                     .resizable()
                     .clipShape(Circle())
                     .scaledToFit()
-                    .foregroundStyle(.blue)
-                    .frame(maxWidth: 45, maxHeight: 45)
+                    .frame(maxWidth: SizeConstants.screenWidth * 0.125, maxHeight: SizeConstants.screenWidth * 0.125)
                     .glassEffect()
             }
         } else {
             Circle()
                 .foregroundStyle(.blue)
-                .frame(maxWidth: 45, maxHeight: 45)
+                .frame(maxWidth: SizeConstants.screenWidth * 0.125, maxHeight: SizeConstants.screenWidth * 0.125)
                 .glassEffect()
         }
     }
@@ -62,13 +63,11 @@ extension PostComponent {
             Text("@\(post.author.handle)")
                 .foregroundStyle(.primary.opacity(0.6))
                 .font(.subheadline)
-            Spacer()
             Text("·")
             Text(DateHelper.formattedRelativeDate(from: post.indexedAt))
                 .foregroundStyle(.primary.opacity(0.6))
                 .font(.subheadline)
                 .fixedSize()
-            Spacer()
         }
         .lineLimit(1)
         .padding(.bottom, PaddingConstants.defaultPadding * 0.05)
