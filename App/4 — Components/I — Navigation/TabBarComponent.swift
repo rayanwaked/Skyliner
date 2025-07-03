@@ -30,7 +30,7 @@ struct TabBarComponent: View {
             color: colorScheme == .light ? .black
                 .opacity(0.25) : .black
                 .opacity(0.8),
-            radius: LayoutConstants.defaultRadius,
+            radius: RadiusConstants.defaultRadius,
             x: 0,
             y: PaddingConstants.defaultPadding * 2.5
         )

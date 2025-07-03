@@ -21,7 +21,7 @@ struct SplashComponent: View {
             let width = geometry.size.width
             let height = geometry.size.height
             
-            let curveX = -width * 0.55 + width * 1.5 * animationProgress
+            let curveX = -width * 0.55 + width * 1.6 * animationProgress
             let curveY = height * 0.05 - height * 0.25 * pow(animationProgress, 1.7)
             let rotation = -25 * animationProgress
             

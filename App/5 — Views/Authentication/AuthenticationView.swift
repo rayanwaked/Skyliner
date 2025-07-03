@@ -23,7 +23,7 @@ struct AuthenticationView: View {
             BackgroundComponent()
                 .ignoresSafeArea(.keyboard)
                 .glassEffect(in: RoundedRectangle(
-                    cornerRadius: LayoutConstants.glassRadius
+                    cornerRadius: RadiusConstants.glassRadius
                 ))
                 .ignoresSafeArea()
 

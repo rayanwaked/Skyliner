@@ -15,13 +15,13 @@ enum SizeConstants {
     static let screenHeight = UIScreen.main.bounds.height
 }
 
-// MARK: - LAYOUT CONSTANTS
-enum LayoutConstants {
+// MARK: - RADIUS CONSTANTS
+enum RadiusConstants {
     static let largeRadius: CGFloat = 22
     static let defaultRadius: CGFloat = 28
     static let smallRadius: CGFloat = 18
     /// Special corner radius utilized BezelKit added with SizeConstant Width to acheive glassEffect to bezel
-    static let glassRadius: CGFloat = (.deviceBezel + SizeConstants.screenWidth * 0.005)
+    static let glassRadius: CGFloat = (.deviceBezel)
 }
 
 // MARK: - PADDING CONSTANTS

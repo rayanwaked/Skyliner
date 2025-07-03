@@ -22,15 +22,16 @@ struct ProfileView: View {
         ScrollView {
             bannerSection
             
-            pictureSection
+            subBannerSection
             
-            detailsSection
+            descriptionSection
             
-            profileSection
+            postsSection
         }
         .background(.defaultBackground)
         .scrollIndicators(.hidden)
         .ignoresSafeArea(.container)
+        .refreshable {}
     }
 }
 
@@ -55,79 +56,88 @@ extension ProfileView {
                         .resizable()
                         .clipShape(Rectangle())
                         .scaledToFill()
-                        .scaleEffect(x: 1, y: -1)
+                        .scaleEffect(x: 1.2, y: -1)
                 }
             }
             .frame(height: SizeConstants.screenHeight * 0.1, alignment: .top)
         }
         .glur(radius: 5, interpolation: 1.0, direction: .down)
-        .glassEffect(.regular, in: .rect(cornerRadius: LayoutConstants.smallRadius)
-        )
         .clipShape(
-            RoundedRectangle(
-                cornerRadius: LayoutConstants.glassRadius)
+            .rect(
+                topLeadingRadius: RadiusConstants.glassRadius,
+                topTrailingRadius: RadiusConstants.glassRadius
+            )
         )
+        .glassEffect(.regular, in: .rect(
+            topLeadingRadius: RadiusConstants.glassRadius,
+            topTrailingRadius: RadiusConstants.glassRadius
+        ))
     }
 }
 
-// MARK: - PICTURE SECTION
+// MARK: - SUB BANNER SECTION SECTION
 extension ProfileView {
-    var pictureSection: some View {
+    var subBannerSection: some View {
         @State var profile = appState.profileModel.first
         
-        return AsyncImage(url: profile?.avatar) { result in
-            result.image?
-                .resizable()
-                .clipShape(Circle())
-                .scaledToFit()
-        }
-        .glassEffect()
-        .frame(width: SizeConstants.screenWidth * 0.3, height: SizeConstants.screenWidth * 0.3)
-        .padding(.top, SizeConstants.screenHeight * -0.12)
-        .shadow(
-            color: .defaultBackground.opacity(ColorConstants.darkOpaque),
-            radius: 2
-        )
-    }
-}
-
-// MARK: - DETAILS SECTION
-extension ProfileView {
-    var detailsSection: some View {
-        @State var profile = appState.profileModel.first
-        
-        return VStack {
-            Text(profile?.displayName ?? "")
-                .font(.title2)
-                .fontWeight(.bold)
-            Text(profile?.handle ?? "")
-                .foregroundStyle(.primary.opacity(ColorConstants.darkOpaque))
-                .fontWeight(.medium)
+        return HStack {
+            AsyncImage(url: profile?.avatar) { result in
+                result.image?
+                    .resizable()
+                    .clipShape(Circle())
+                    .scaledToFit()
+            }
+            .glassEffect()
+            .frame(width: SizeConstants.screenWidth * 0.3, height: SizeConstants.screenWidth * 0.3)
+            .padding(.top, SizeConstants.screenHeight * -0.08)
+            .shadow(
+                color: .defaultBackground.opacity(ColorConstants.darkOpaque),
+                radius: 2
+            )
             HStack {
-                HStack(spacing: 5) {
+                VStack {
                     Text("\(profile?.followerCount ?? 0)").bold()
                     Text("followers")
                 }
-                HStack(spacing: 5) {
+                Spacer()
+                VStack{
                     Text("\(profile?.followCount ?? 0)").bold()
                     Text("following")
                 }
-                HStack(spacing: 5) {
+                Spacer()
+                VStack {
                     Text("\(profile?.postCount ?? 0)").bold()
                     Text("posts")
                 }
             }
-            Text(profile?.description ?? "")
         }
-        .font(.callout)
-        .multilineTextAlignment(.center)
-        .padding([.leading, .trailing, .bottom], PaddingConstants.defaultPadding)
+        .padding([.leading, .trailing], PaddingConstants.defaultPadding)
     }
 }
 
-// MARK: - PROFILE SECTION
+// MARK: - DESCRIPTION SECTION
 extension ProfileView {
-    var profileSection: some View {
+    var descriptionSection: some View {
+        @State var profile = appState.profileModel.first
+        
+        return VStack(alignment: .leading) {
+            Text(profile?.displayName ?? "")
+                .font(.title2)
+                .fontWeight(.bold)
+            Text("@\(profile?.handle ?? "")")
+                .foregroundStyle(.primary.opacity(ColorConstants.darkOpaque))
+                .fontWeight(.medium)
+            Text(profile?.description ?? "")
+        }
+        .font(.callout)
+        .padding([.leading, .trailing, .bottom], PaddingConstants.defaultPadding)
+        .frame(width: SizeConstants.screenWidth, alignment: .leading)
+    }
+}
+
+// MARK: - POSTS SECTION
+extension ProfileView {
+    var postsSection: some View {
         if appState.postManager.configuration != nil {
             AnyView(
                 FeedComponent(feed: authorFeed)

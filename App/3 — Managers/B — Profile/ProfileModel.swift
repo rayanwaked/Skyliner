@@ -88,16 +88,19 @@ extension AppBskyLexicon.Actor.ProfileViewDetailedDefinition {
 // MARK: PROFILE MODEL PLACEHOLDERS
 extension ProfileModel {
     public static let placeholders: [ProfileModel] = [
-        ProfileModel(from: AppBskyLexicon.Actor.ProfileViewDetailedDefinition(
-            actorDID: "placeholder1",
-            actorHandle: "placeholder1@bsky",
-            displayName: "Placeholder One",
+        ProfileModel(
+from: AppBskyLexicon.Actor.ProfileViewDetailedDefinition(
+            actorDID: "did:plc:lkeohgqyet42i3ihmb4iuar6",
+            actorHandle: "Porpoise",
+            displayName: "worthy.porpoise",
             description: "This is a placeholder profile.",
-            avatarImageURL: nil,
-            bannerImageURL: nil,
-            followerCount: 42,
-            followCount: 7,
-            postCount: 3,
+            avatarImageURL: URL(
+                string: "https://cdn.bsky.app/img/avatar/plain/did:plc:lkeohgqyet42i3ihmb4iuar6/bafkreibdivivwijfyxzelu366zu7zkuek5cdayjkrarpifci7iatq4hzym@jpeg"
+            ),
+            bannerImageURL: URL(string: "https://cdn.bsky.app/img/banner/plain/did:plc:lkeohgqyet42i3ihmb4iuar6/bafkreiexoelyzolyaftn73z3m4ag3rfbnmayfb5gubxxewkwynqjyree4y@jpeg"),
+            followerCount: 42000,
+            followCount: 732,
+            postCount: 334,
             associated: nil,
             joinedViaStarterPack: nil,
             indexedAt: nil,
@@ -107,7 +110,8 @@ extension ProfileModel {
             pinnedPost: nil,
             verificationState: nil,
             status: nil
-        )),
+        )
+),
         ProfileModel(from: AppBskyLexicon.Actor.ProfileViewDetailedDefinition(
             actorDID: "placeholder2",
             actorHandle: "placeholder2@bsky",
