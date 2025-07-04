@@ -19,6 +19,50 @@ enum CompactButtonVariation {
 enum CompactButtonPlacement {
     case standard
     case tabBar
+    case header
+}
+
+// MARK: - ENUM EXTENSIONS
+extension CompactButtonVariation {
+    @ViewBuilder
+    func background(for placement: CompactButtonPlacement) -> some View {
+        switch self {
+        case .primary:
+            RoundedRectangle(cornerRadius: 100)
+                .foregroundStyle(.blue)
+        case .secondary:
+            RoundedRectangle(cornerRadius: 100)
+                .foregroundStyle(.blue.opacity(ColorConstants.defaultOpaque))
+        case .tertiary:
+            RoundedRectangle(cornerRadius: 100)
+                .strokeBorder(Color.blue, lineWidth: 2)
+        case .quaternary:
+            RoundedRectangle(cornerRadius: 100)
+                .foregroundStyle(.defaultBackground)
+        }
+    }
+
+    var labelForegroundColor: Color {
+        self == .primary ? .white : .blue
+    }
+}
+
+extension CompactButtonPlacement {
+    func font(for placement: CompactButtonPlacement) -> Font {
+        switch self {
+        case .standard: Font.subheadline
+        case .tabBar: Font.title2
+        case .header: Font.title3
+        }
+    }
+
+    func padding(for placement: CompactButtonPlacement) -> CGFloat {
+        switch self {
+        case .standard: PaddingConstants.defaultPadding * 0.75
+        case .tabBar: PaddingConstants.defaultPadding * 0.8
+        case .header: PaddingConstants.defaultPadding * 0.5
+        }
+    }
 }
 
 // MARK: - VIEW
@@ -28,7 +72,7 @@ struct CompactButtonComponent: View {
     var label: Image
     var variation: CompactButtonVariation
     var placement: CompactButtonPlacement
-    
+
     // MARK: - BODY
     var body: some View {
         Button() {
@@ -47,31 +91,16 @@ struct CompactButtonComponentStyle: ButtonStyle {
     // MARK: - VARIABLE
     var variation: CompactButtonVariation = .primary
     var placement: CompactButtonPlacement = .standard
-    
+
     // MARK: - BODY
     func makeBody(configuration: Configuration) -> some View {
         ZStack {
-            switch variation {
-            case .primary:
-                RoundedRectangle(cornerRadius: 100)
-                    .foregroundStyle(.blue)
-            case .secondary:
-                RoundedRectangle(cornerRadius: 100)
-                    .foregroundStyle(.blue.opacity(ColorConstants.defaultOpaque))
-            case .tertiary:
-                RoundedRectangle(cornerRadius: 100)
-                    .strokeBorder(Color.blue, lineWidth: 2)
-            case .quaternary:
-                RoundedRectangle(cornerRadius: 100)
-                    .foregroundStyle(.defaultBackground)
-            }
+            variation.background(for: placement)
             configuration.label
-                .foregroundStyle((variation == .primary) ? .white : .blue)
-                .font(placement == .standard ? .subheadline : .title2)
+                .foregroundStyle(variation.labelForegroundColor)
+                .font(placement.font(for: placement))
                 .fontWeight(.semibold)
-                .padding(
-                    placement == .standard ? PaddingConstants.defaultPadding * 0.75 : PaddingConstants
-                        .defaultPadding)
+                .padding(placement.padding(for: placement))
         }
         .glassEffect(.regular.interactive(true))
     }
@@ -84,11 +113,11 @@ struct CompactButtonComponentStyle: ButtonStyle {
         action: {
             print("Pressed")
         }, label: Image(systemName: "chevron.right"), variation: .primary, placement: .standard)
-    
+
     CompactButtonComponent(action: {
         print("Pressed")
     }, label: Image(systemName: "chevron.right"), variation: .secondary, placement: .standard)
-    
+
     CompactButtonComponent(
         action: {
             print("Pressed")
@@ -97,24 +126,25 @@ struct CompactButtonComponentStyle: ButtonStyle {
         action: {
             print("Pressed")
         }, label: Image(systemName: "chevron.right"), variation: .quaternary, placement: .standard)
-    
+
     // MARK: - TAB BAR
     CompactButtonComponent(
         action: {
             print("Pressed")
         }, label: Image(systemName: "chevron.right"), variation: .primary, placement: .tabBar)
-    
+
     CompactButtonComponent(action: {
         print("Pressed")
     }, label: Image(systemName: "chevron.right"), variation: .secondary, placement: .tabBar)
-    
+
     CompactButtonComponent(
         action: {
             print("Pressed")
         }, label: Image(systemName: "chevron.right"), variation: .tertiary, placement: .tabBar)
-    
+
     CompactButtonComponent(
         action: {
             print("Pressed")
         }, label: Image(systemName: "chevron.right"), variation: .quaternary, placement: .tabBar)
 }
+

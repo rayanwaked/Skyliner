@@ -10,7 +10,8 @@ import SwiftUI
 import NukeUI
 
 // MARK: - VIEW
-struct PostComponent: View, Hashable {
+struct PostComponent: View {
+    @Environment(AppState.self) var appState
     var post: PostModel
 
     // MARK: - BODY
@@ -21,6 +22,7 @@ struct PostComponent: View, Hashable {
                 VStack(alignment: .leading) {
                     account
                     text
+                    actions
                 }
             }
             .frame(maxWidth: .infinity, alignment: .leading)
@@ -84,6 +86,9 @@ extension PostComponent {
 
 // MARK: - PREVIEW
 #Preview {
+    @Previewable @State var appState: AppState = .init()
+    
     PostComponent(post: PostModel.placeholders.first!)
+        .environment(appState)
 }
 

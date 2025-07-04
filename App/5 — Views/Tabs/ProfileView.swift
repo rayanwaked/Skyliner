@@ -18,6 +18,9 @@ struct ProfileView: View {
     // MARK: VARIABLES
     @Environment(AppState.self) private var appState
     @State var authorFeed: [PostModel] = []
+    var isUser: Bool {
+        appState.profileModel.first?.did == UserDefaults.standard.string(forKey: "userDID")
+    }
     var profile: ProfileModel? {
         appState.profileModel.first
     }
@@ -28,7 +31,7 @@ struct ProfileView: View {
             scrollUpHeaderBehavior: .parallax,
             scrollDownHeaderBehavior: .sticky,
             header: {
-                bannerSection
+                BannerComponent(bannerURL: profile?.banner)
                     .frame(width: SizeConstants.screenWidth)
                     .clipShape(.rect(
                         topLeadingRadius: RadiusConstants.glassRadius,
@@ -42,9 +45,7 @@ struct ProfileView: View {
                         topTrailingRadius: RadiusConstants.glassRadius))}) {
             VStack {
                 subBannerSection
-                
                 descriptionSection
-                
                 postsSection
             }
             .background(.defaultBackground)
@@ -54,32 +55,6 @@ struct ProfileView: View {
         .scrollIndicators(.hidden)
         .refreshable {
             //
-        }
-    }
-}
-
-// MARK: - BANNER SECTION
-extension ProfileView {
-    var bannerSection: some View {
-        return VStack(spacing: 0) {
-            LazyImage(url: profile?.banner) { result in
-                result.image?
-                    .resizable()
-                    .clipShape(Rectangle())
-                    .scaledToFill()
-            }
-            
-            // Reflection
-            ZStack(alignment: .top) {
-                LazyImage(url: profile?.banner) { result in
-                    result.image?
-                        .resizable()
-                        .glur(radius: 7, offset: 0.7, direction: .up)
-                        .clipShape(Rectangle())
-                        .scaledToFill()
-                        .scaleEffect(x: 1, y: -1)
-                }
-            }
         }
     }
 }
@@ -96,7 +71,7 @@ extension ProfileView {
         }
         .glassEffect()
         .frame(width: SizeConstants.screenWidth * 0.3, height: SizeConstants.screenWidth * 0.3)
-        .padding(.top, SizeConstants.screenHeight * -0.075)
+        .padding(.top, SizeConstants.screenHeight * -0.065)
         .shadow(
             color: .defaultBackground.opacity(ColorConstants.darkOpaque),
             radius: 2
@@ -117,10 +92,16 @@ extension ProfileView {
                     Text("followers")
                 }
                 Spacer()
+                Divider()
+                    .frame(maxHeight: SizeConstants.screenHeight * 0.03)
+                Spacer()
                 VStack{
                     Text("\(profile?.followCount ?? 0)").bold()
                     Text("following")
                 }
+                Spacer()
+                Divider()
+                    .frame(maxHeight: SizeConstants.screenHeight * 0.03)
                 Spacer()
                 VStack {
                     Text("\(profile?.postCount ?? 0)").bold()
@@ -152,7 +133,7 @@ extension ProfileView {
                 ButtonComponent(
                     action: {
                     },
-                    label: "Edit",
+                    label: (isUser ? "Edit" : "Follow"),
                     variation: .primary)
                 .frame(
                     maxWidth: SizeConstants.screenWidth * 0.2,
@@ -186,9 +167,12 @@ extension ProfileView {
                 Spacer()
             }
             .padding(.leading, PaddingConstants.defaultPadding)
+            
             SeperatorComponent()
+            
             if let configuration = appState.postManager.configuration {
                 FeedComponent(feed: authorFeed)
+                    .environment(appState)
                     .task(id: configuration.instanceUUID) {
                         let did = UserDefaults.standard.string(forKey: "userDID") ?? ""
                         authorFeed = await appState.postManager.getAuthorFeed(by: did, shouldIncludePins: false)

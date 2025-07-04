@@ -18,7 +18,6 @@ struct HeaderComponent: View {
         VStack(spacing: 0) {
             settingsSection
             feedSection
-            SeperatorComponent()
             trendingSection
             SeperatorComponent()
         }
@@ -32,25 +31,19 @@ private extension HeaderComponent {
         HStack {
             Spacer()
             HStack {
-                Button {
-                    
-                } label: {
-                    Image(systemName: "command")
-                        .font(.title3)
-                        .fontWeight(.semibold)
-                }
-                .padding(PaddingConstants.smallPadding)
-                .glassEffect()
+                CompactButtonComponent(
+                    action: {},
+                    label: Image(systemName: "command"),
+                    variation: .secondary,
+                    placement: .header
+                )
                 
-                Button {
-
-                } label: {
-                    Image(systemName: "number")
-                        .font(.title3)
-                        .fontWeight(.semibold)
-                }
-                .padding(PaddingConstants.smallPadding)
-                .glassEffect()
+                CompactButtonComponent(
+                    action: {},
+                    label: Image(systemName: "number"),
+                    variation: .secondary,
+                    placement: .header
+                )
             }
         }
         .padding([.leading, .trailing], PaddingConstants.defaultPadding)
@@ -58,7 +51,7 @@ private extension HeaderComponent {
             HStack {
                 Text("Skyliner")
                     .font(.title)
-                    .fontWeight(.semibold)
+                    .fontWeight(.bold)
                     .foregroundStyle(.blue)
             }, alignment: .bottomLeading)
         .padding(.leading, PaddingConstants.defaultPadding)
@@ -72,12 +65,18 @@ private extension HeaderComponent {
                 ForEach(feeds, id: \.self) { feed in
                     Text(feed.displayName)
                 }
+                .padding(PaddingConstants.smallPadding)
+                .glassEffect(
+                    .regular
+                        .interactive()
+                        .tint(.defaultBackground.opacity(ColorConstants.softOpaque))
+                )
             }
             .font(.callout)
+            .fontWeight(.medium)
             .padding([.leading, .trailing], PaddingConstants.defaultPadding)
         }
         .padding(.top, PaddingConstants.verticalPadding)
-        .padding(.bottom, PaddingConstants.verticalPadding)
         .scrollIndicators(.hidden)
     }
 

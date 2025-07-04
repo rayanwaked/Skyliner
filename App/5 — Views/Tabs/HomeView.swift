@@ -17,12 +17,8 @@ struct HomeView: View {
     var body: some View {
         VStack {
             HeaderComponent(feeds: appState.feedModel, trends: appState.trendModel)
-            Button("Log Out") {
-                Task {
-                    try await appState.authenticationManager.logout()
-                }
-            }
             FeedComponent(feed: appState.postModel)
+                .environment(appState)
         }
         .background(.defaultBackground)
     }

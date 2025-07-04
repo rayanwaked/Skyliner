@@ -7,11 +7,13 @@
 
 // MARK: - IMPORTS
 import SwiftUI
+import NukeUI
 
 // MARK: - VIEWS
 struct TabBarComponent: View {
-    @Environment(\.colorScheme) private var colorScheme
     @Environment(RouterViewModel.self) private var routerViewModel
+    @Environment(AppState.self) private var appState
+    @Environment(\.colorScheme) private var colorScheme
     
     // MARK: - BODY
     var body: some View {
@@ -42,11 +44,21 @@ extension TabBarComponent {
     var tabBarTabs: some View {
         HStack {
             ForEach(RouterViewModel.Tabs.allCases) { tab in
-                TabBarButton(
-                    systemImage: tab.systemImage(forSelected: routerViewModel.selectedTab == tab),
-                    selected: routerViewModel.selectedTab == tab,
-                    action: { routerViewModel.selectedTab = tab }
-                )
+                if tab == .profile {
+                    TabBarButton(
+                        systemImage: "",
+                        avatarURL: appState.profileModel.first?.avatar,
+                        selected: routerViewModel.selectedTab == tab,
+                        action: { routerViewModel.selectedTab = tab }
+                    )
+                } else {
+                    TabBarButton(
+                        systemImage: tab.systemImage(forSelected: routerViewModel.selectedTab == tab),
+                        avatarURL: nil,
+                        selected: routerViewModel.selectedTab == tab,
+                        action: { routerViewModel.selectedTab = tab }
+                    )
+                }
             }
         }
         .foregroundStyle(.primary)
@@ -59,6 +71,7 @@ extension TabBarComponent {
 // MARK: - TAB BAR BUTTON
 private struct TabBarButton: View {
     let systemImage: String
+    let avatarURL: URL?
     let selected: Bool
     let action: () -> Void
     
@@ -67,19 +80,31 @@ private struct TabBarButton: View {
             action()
             hapticFeedback(.soft)
         } label: {
-            Image(systemName: systemImage)
-                .font(.title2)
-                .fontWeight(.semibold)
-                .frame(maxWidth: .infinity)
-                .frame(height: SizeConstants.screenHeight * 0.05)
+            if let avatarURL {
+                LazyImage(url: avatarURL) { result in
+                    result.image?
+                        .resizable()
+                        .clipShape(Circle())
+                        .frame(width: SizeConstants.screenWidth * 0.08, height: SizeConstants.screenWidth * 0.08)
+                        .padding([.leading, .trailing], SizeConstants.screenWidth * 0.04)
+                }
+            } else {
+                Image(systemName: systemImage)
+                    .font(.title2)
+                    .fontWeight(.semibold)
+                    .frame(maxWidth: .infinity)
+                    .frame(height: SizeConstants.screenHeight * 0.05)
+            }
         }
     }
 }
 
 // MARK: - PREVIEW
 #Preview {
+    @Previewable @State var appState: AppState = .init()
     @Previewable @State var routerViewModel: RouterViewModel = .init()
     
     TabBarComponent()
         .environment(routerViewModel)
+        .environment(appState)
 }

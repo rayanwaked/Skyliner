@@ -10,6 +10,7 @@ import SwiftUI
 
 // MARK: - VIEW
 struct FeedComponent: View {
+    @Environment(AppState.self) private var appState
     var feed: [PostModel]
     
     // MARK: - BODY
@@ -18,6 +19,7 @@ struct FeedComponent: View {
             LazyVStack {
                 ForEach(feed, id:\.self) { post in
                     PostComponent(post: post.self)
+                        .environment(appState)
                 }
             }
             .padding(.bottom, SizeConstants.screenHeight * 0.1)
@@ -28,5 +30,8 @@ struct FeedComponent: View {
 
 // MARK: - PREVIEW
 #Preview {
+    @Previewable @State var appState: AppState = .init()
+    
     FeedComponent(feed: PostModel.placeholders)
+        .environment(appState)
 }

@@ -185,7 +185,6 @@ extension PostModel {
           "Sky's the limit—unless you're a penguin. 🐧",
           "Who else codes in pajamas? 🙋‍♂️",
           "Pizza for breakfast, lunch, AND dinner. 🍕",
-          "Just saw a double rainbow! 🌈🌈 Lucky day?",
           "Did someone say cat videos? Send links! 📹",
           "Exploring the universe, one post at a time. 🌌"
         ]
@@ -243,3 +242,13 @@ public final class PostContextModel: @unchecked Sendable {
     }
 }
 
+// MARK: - POST CONTEXT MODEL PLACEHOLDERS
+extension PostContextModel {
+    public static let placeholders: [PostContextModel] = [
+        PostContextModel(likeURI: nil, repostURI: nil, likeCount: 12, repostCount: 3),
+        PostContextModel(likeURI: "at://user/like/123", repostURI: nil, likeCount: 45, repostCount: 5),
+        PostContextModel(likeURI: nil, repostURI: "at://user/repost/456", likeCount: 78, repostCount: 10),
+        PostContextModel(likeURI: "at://user/like/789", repostURI: "at://user/repost/1011", likeCount: 102, repostCount: 17),
+        PostContextModel(likeURI: nil, repostURI: nil, likeCount: 0, repostCount: 0)
+    ]
+}

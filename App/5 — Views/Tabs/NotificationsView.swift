@@ -8,11 +8,16 @@
 // MARK: - IMPORTS
 import SwiftUI
 
+// MARK: - VIEW
 struct NotificationsView: View {
     @Environment(AppState.self) private var appState
     
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        Button("Log Out") {
+            Task {
+                try await appState.authenticationManager.logout()
+            }
+        }
     }
 }
 

@@ -81,6 +81,7 @@ extension RouterView {
             }
             TabBarComponent()
                 .environment(routerViewModel)
+                .environment(appState)
         }
     }
 }
@@ -100,9 +101,9 @@ class RouterViewModel: Observable, ObservableObject {
         func systemImage(forSelected selected: Bool) -> String {
             switch self {
             case .home:
-                return selected ? "airplane.up.right" : "airplane"
+                return selected ? "cloud.fill" : "cloud"
             case .search:
-                return selected ? "magnifyingglass.circle.fill" : "magnifyingglass"
+                return selected ? "binoculars.fill" : "binoculars"
             case .notifications:
                 return selected ? "bell.fill" : "bell"
             case .profile:

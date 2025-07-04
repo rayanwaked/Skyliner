@@ -30,6 +30,7 @@ enum PaddingConstants {
     static let largePadding: CGFloat = 20
     static let defaultPadding: CGFloat = 18
     static let smallPadding: CGFloat = 9
+    static let tinyPadding: CGFloat = 5
     
     /// Inline padding, usually used to pad between elements inside a componant or view
     static let verticalPadding: CGFloat = 12

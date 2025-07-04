@@ -79,66 +79,72 @@ public class PostManager {
             return []
         }
     }
-}
-
-// MARK: - POST CONTEXT MODEL
-@MainActor
-@Observable
-public final class PostContextManager: Sendable {
-  private var post: PostModel
-  private let client: ClientManager
-    private let model: PostContextModel
-
-    public init(post: PostModel, client: ClientManager, model: PostContextModel) {
-    self.post = post
-    self.client = client
-      self.model = model
-
-      model.likeURI = post.likeURI
-      model.repostURI = post.repostURI
-  }
-
-  public func update(with post: PostModel) {
-    self.post = post
-
-      model.likeURI = post.likeURI
-      model.repostURI = post.repostURI
-  }
-
-  public func toggleLike() async {
-      let previousState = model.likeURI
-    do {
-        if model.likeURI != nil {
-            self.model.likeURI = nil
-            try await client.blueskyClient
-                .deleteRecord(.recordURI(atURI: model.likeURI ?? ""))
-      } else {
-          model.likeURI = "ui.optimistic.like"
-          model.likeURI = try await client.blueskyClient.createLikeRecord(
-          .init(recordURI: post.uri, cidHash: post.cid)
-        ).recordURI
-      }
-    } catch {
-        model.likeURI = previousState
+  
+    public func contextManager(forURI uri: String, client: ClientManager) -> PostContextManager? {
+        guard let post = posts.first(where: { $0.uri == uri }) else { return nil }
+        let context = get(for: post, client: client)
+        return PostContextManager(post: post, client: client, model: context)
     }
-  }
-
-//  public func toggleRepost() async {
-//    // TODO: IMPLEMENT
-//      let previousState = repostURI
-//      do {
-//          if let repostURI {
-//              self.repostURI = nil
-//              try await client.blueskyClient.deleteRecord(.recordURI(atURI: repostURI))
-//          } else {
-//              self.repostURI = "ui.optimistic.repost"
-//              self.repostURI = try await client.blueskyClient.createRepostRecord(
-//                .init(recordURI: post.uri, cidHash: post.cid
-//                     ).recordURI
-//          }
-//      } catch {
-//          self.repostURI = previousState
-//      }
-//  }
 }
 
+extension PostManager {
+    @MainActor
+    @Observable
+    public final class PostContextManager: Sendable {
+        /// The post associated with this context manager.
+        /// This should be a shared reference obtained from PostManager's posts.
+        private var post: PostModel
+        /// The client used for network actions.
+        private let client: ClientManager
+        /// The shared PostContextModel instance for this post.
+        /// This should be obtained via PostManager and is intended to be a shared reference.
+        private let model: PostContextModel
+
+        public init(post: PostModel, client: ClientManager, model: PostContextModel) {
+            self.post = post
+            self.client = client
+            self.model = model
+        }
+
+        public func update(with post: PostModel) {
+            self.post = post
+            model.likeURI = post.likeURI
+            model.repostURI = post.repostURI
+        }
+
+        public func toggleLike() async {
+            let previousState = model.likeURI
+            do {
+                if model.likeURI != nil {
+                    self.model.likeURI = nil
+                    try await client.blueskyClient.deleteRecord(.recordURI(atURI: model.likeURI ?? ""))
+                } else {
+                    model.likeURI = "ui.optimistic.like"
+                    model.likeURI = try await client.blueskyClient.createLikeRecord(
+                        .init(recordURI: post.uri, cidHash: post.cid)
+                    ).recordURI
+                }
+            } catch {
+                model.likeURI = previousState
+            }
+        }
+
+        //  public func toggleRepost() async {
+        //    // TODO: IMPLEMENT
+        //      let previousState = repostURI
+        //      do {
+        //          if let repostURI {
+        //              self.repostURI = nil
+        //              try await client.blueskyClient.deleteRecord(.recordURI(atURI: repostURI))
+        //          } else {
+        //              self.repostURI = "ui.optimistic.repost"
+        //              self.repostURI = try await client.blueskyClient.createRepostRecord(
+        //                .init(recordURI: post.uri, cidHash: post.cid
+        //                     ).recordURI
+        //          }
+        //      } catch {
+        //          self.repostURI = previousState
+        //      }
+        //  }
+    }
+}
