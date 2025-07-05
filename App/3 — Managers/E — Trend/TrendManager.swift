@@ -9,6 +9,7 @@
 import SwiftUI
 import ATProtoKit
 
+// MARK: - TREND MANAGER
 @MainActor
 @Observable
 public class TrendManager {
@@ -23,7 +24,11 @@ public class TrendManager {
     public init(configuration: ATProtocolConfiguration? = nil) {
         self.configuration = configuration
     }
+}
 
+// MARK: - TREND MANAGER FUNCTIONS
+extension TrendManager {
+    // MARK: - FETCH TRENDS
     /// Fetches trending topics from the network (stub implementation).
     public func fetchTrends() async -> [TrendModel] {
         guard let configuration = configuration else {
@@ -32,10 +37,10 @@ public class TrendManager {
         }
         let client = await ATProtoKit(sessionConfiguration: configuration)
         let manager = await Skyliner.ClientManager(configuration: configuration)
-
+        
         do {
             let trendingTopics = try await client.getTrendingTopics()
-//            print("Fetched trending topics: \(trendingTopics)")
+            //            print("Fetched trending topics: \(trendingTopics)")
             trends = trendingTopics.topics.map {
                 TrendModel(
                     topic: $0.topic,

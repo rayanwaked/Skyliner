@@ -20,6 +20,7 @@ enum CompactButtonPlacement {
     case standard
     case tabBar
     case header
+    case explore
 }
 
 // MARK: - ENUM EXTENSIONS
@@ -53,6 +54,7 @@ extension CompactButtonPlacement {
         case .standard: Font.subheadline
         case .tabBar: Font.title2
         case .header: Font.title3
+        case .explore: Font.subheadline
         }
     }
 
@@ -61,6 +63,7 @@ extension CompactButtonPlacement {
         case .standard: PaddingConstants.defaultPadding * 0.75
         case .tabBar: PaddingConstants.defaultPadding * 1.15
         case .header: PaddingConstants.defaultPadding * 0.5
+        case .explore: PaddingConstants.defaultPadding * 1.1
         }
     }
 }

@@ -57,7 +57,7 @@ private extension HeaderComponent {
                     .frame(width: SizeConstants.screenWidth * 0.08, height: SizeConstants.screenWidth * 0.08)
                 Text("Skyliner")
                     .font(.title)
-                    .fontWeight(.heavy)
+                    .fontWeight(.bold)
                     .foregroundStyle(.primary)
             }, alignment: .bottomLeading)
         .padding(.leading, PaddingConstants.defaultPadding)
@@ -76,14 +76,14 @@ private extension HeaderComponent {
     @ViewBuilder
     private var trendingSection: some View {
         ScrollView(.horizontal) {
-            HStack(spacing: PaddingConstants.defaultPadding) {
+            HStack(spacing: PaddingConstants.smallPadding) {
                 Image(systemName: "flame.fill")
                     .foregroundStyle(.accent)
                 
                 ForEach(trends, id: \.self) { trend in
                     Text(trend.displayName ?? "")
                         .font(.subheadline)
-                        .fontWeight(.semibold)
+                        .fontWeight(.medium)
                         .foregroundStyle(
                             .primary.opacity(ColorConstants.darkOpaque)
                         )

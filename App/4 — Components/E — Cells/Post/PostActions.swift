@@ -12,9 +12,9 @@ import SwiftUI
 extension PostComponent {
     var actions: some View {
         HStack {
-            commentButton
-            Spacer()
             repostButton
+            Spacer()
+            commentButton
             Spacer()
             likeButton
             Spacer()
@@ -27,18 +27,6 @@ extension PostComponent {
     }
 }
 
-// MARK: - COMMENT BUTTON
-extension PostComponent {
-    var commentButton: some View {
-        HStack(spacing: 4) {
-            Image(systemName: "message")
-                .padding(7)
-                .hapticAction(.soft, perform: {})
-            Text(post.replyCount.abbreviated)
-        }
-    }
-}
-
 // MARK: - REPOST BUTTON
 extension PostComponent {
     var repostButton: some View {
@@ -47,6 +35,18 @@ extension PostComponent {
                 .padding(7)
                 .hapticAction(.soft, perform: {})
             Text(post.repostCount.abbreviated)
+        }
+    }
+}
+
+// MARK: - COMMENT BUTTON
+extension PostComponent {
+    var commentButton: some View {
+        HStack(spacing: 4) {
+            Image(systemName: "message")
+                .padding(7)
+                .hapticAction(.soft, perform: {})
+            Text(post.replyCount.abbreviated)
         }
     }
 }

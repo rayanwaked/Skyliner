@@ -13,16 +13,17 @@ import Foundation
 public struct PostModel: Hashable, Identifiable, Equatable, Sendable {
     public static func == (lhs: PostModel, rhs: PostModel) -> Bool {
         return lhs.uri == rhs.uri &&
-               lhs.cid == rhs.cid &&
-               lhs.indexedAt == rhs.indexedAt &&
-               lhs.author == rhs.author &&
-               lhs.content == rhs.content &&
-               lhs.replyCount == rhs.replyCount &&
-               lhs.repostCount == rhs.repostCount &&
-               lhs.likeCount == rhs.likeCount &&
-               lhs.likeURI == rhs.likeURI &&
-               lhs.repostURI == rhs.repostURI &&
-               lhs.indexAtFormatted == rhs.indexAtFormatted
+        lhs.cid == rhs.cid &&
+        lhs.indexedAt == rhs.indexedAt &&
+        lhs.author == rhs.author &&
+        lhs.content == rhs.content &&
+        lhs.embed == rhs.embed &&
+        lhs.replyCount == rhs.replyCount &&
+        lhs.repostCount == rhs.repostCount &&
+        lhs.likeCount == rhs.likeCount &&
+        lhs.likeURI == rhs.likeURI &&
+        lhs.repostURI == rhs.repostURI &&
+        lhs.indexAtFormatted == rhs.indexAtFormatted
         // Excludes: contextModel, embed, replyRef, hasReply, uuid
         // Add more comparisons if those types conform to Equatable and you want to compare them
     }
@@ -252,3 +253,4 @@ extension PostContextModel {
         PostContextModel(likeURI: nil, repostURI: nil, likeCount: 0, repostCount: 0)
     ]
 }
+

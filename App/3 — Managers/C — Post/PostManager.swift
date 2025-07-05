@@ -27,7 +27,11 @@ public class PostManager {
   public init(configuration: ATProtocolConfiguration? = nil) {
     self.configuration = configuration
   }
+}
 
+// MARK: - POST MANAGER FUNCTIONS
+extension PostManager {
+    // MARK: - GET POST
     public func get(for post: PostModel, client: ClientManager) -> PostContextModel {
         if let context = contexts[post.uri] {
             return context
@@ -37,7 +41,8 @@ public class PostManager {
             return context
         }
     }
-
+    
+    // MARK: - GET FEED
     public func getFeed() async -> [PostModel] {
         guard let configuration = configuration else {
             print("PostManager.getFeed() returning early: configuration is nil")
@@ -52,8 +57,9 @@ public class PostManager {
         posts = timeline.feed.compactMap { $0.postModel }
         clientManager = manager
         return posts
-      }
+    }
     
+    // MARK: - GET AUTHOR FEED
     public func getAuthorFeed(by did: String, shouldIncludePins: Bool) async -> [PostModel] {
         guard let configuration = configuration else {
             print("PostManager.getFeed() returning early: configuration is nil")
@@ -61,7 +67,7 @@ public class PostManager {
         }
         let client = await ATProtoKit(sessionConfiguration: configuration)
         let manager = await ClientManager(configuration: configuration)
-
+        
         do {
             let profileFeed = try await client.getAuthorFeed(
                 by: did,
@@ -79,7 +85,8 @@ public class PostManager {
             return []
         }
     }
-  
+    
+    // MARK:  - GET CONTEXT MANAGER
     public func contextManager(forURI uri: String, client: ClientManager) -> PostContextManager? {
         guard let post = posts.first(where: { $0.uri == uri }) else { return nil }
         let context = get(for: post, client: client)
@@ -87,6 +94,7 @@ public class PostManager {
     }
 }
 
+// MARK: - POST CONTEXT MANAGER
 extension PostManager {
     @MainActor
     @Observable
@@ -106,12 +114,14 @@ extension PostManager {
             self.model = model
         }
 
+        // MARK: - UPDATE CONTEXT
         public func update(with post: PostModel) {
             self.post = post
             model.likeURI = post.likeURI
             model.repostURI = post.repostURI
         }
 
+        // MARK: - LIKE POST
         public func toggleLike() async {
             let previousState = model.likeURI
             do {

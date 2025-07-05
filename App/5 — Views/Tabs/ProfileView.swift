@@ -153,7 +153,6 @@ extension ProfileView {
         }
         .font(.callout)
         .padding([.leading, .trailing], PaddingConstants.defaultPadding)
-        .padding(.bottom, PaddingConstants.tinyPadding)
         .frame(width: SizeConstants.screenWidth, alignment: .leading)
     }
 }
@@ -166,6 +165,8 @@ extension ProfileView {
                 feeds: ["Post"].map {_ in FeedItem(displayName: "Post")
                 },
                 action: {})
+            .padding(.top, -PaddingConstants.tinyPadding)
+            .padding(.bottom, PaddingConstants.tinyPadding)
             
             SeperatorComponent()
             

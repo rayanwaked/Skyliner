@@ -27,7 +27,11 @@ public class ProfileManager {
     public init(configuration: ATProtocolConfiguration? = nil) {
         self.configuration = configuration
     }
-    
+}
+
+// MARK: - PROFILE MANAGER FUNCTIONS
+extension ProfileManager {
+    // MARK: - FETCH CURRENT USER PROFILE
     /// Fetches the current user's profile using the current session DID, if available.
     public func fetchCurrentUserProfile() async -> [ProfileModel] {
         guard let configuration = configuration else {
@@ -59,6 +63,7 @@ public class ProfileManager {
         }
     }
     
+    // MARK: - GET PROFILES
     // Populates the profiles array and contexts from an array of detailed definitions
     public func getProfiles(from detailedProfiles: [AppBskyLexicon.Actor.ProfileViewDetailedDefinition?]) {
         let validProfiles = detailedProfiles.compactMap { ProfileModel(from: $0) }
@@ -66,6 +71,7 @@ public class ProfileManager {
         self.contexts = Dictionary(uniqueKeysWithValues: validProfiles.map { ($0.did, $0) })
     }
     
+    // MARK: - ADD OR UPDATE PROFILE
     // Adds or updates a single profile from a detailed definition
     public func addOrUpdateProfile(from detailed: AppBskyLexicon.Actor.ProfileViewDetailedDefinition?) {
         guard let profile = ProfileModel(from: detailed) else { return }
@@ -77,10 +83,10 @@ public class ProfileManager {
         contexts[profile.did] = profile
     }
     
+    // MARK: - CLEAR PROFILES
     // Clears all profiles and contexts
     public func clearProfiles() {
         profiles.removeAll()
         contexts.removeAll()
     }
 }
-

@@ -70,7 +70,7 @@ extension RouterView {
                 HomeView()
                     .environment(appState)
                     .transition(.move(edge: .bottom))
-            case .search:
+            case .explore:
                 SearchView()
                     .environment(appState)
                     .transition(.move(edge: .bottom))
@@ -98,7 +98,7 @@ class RouterViewModel: Observable, ObservableObject {
         var id: Self { self }
         
         case home
-        case search
+        case explore
         case notifications
         case profile
         
@@ -106,7 +106,7 @@ class RouterViewModel: Observable, ObservableObject {
             switch self {
             case .home:
                 return selected ? "cloud.fill" : "cloud"
-            case .search:
+            case .explore:
                 return selected ? "binoculars.fill" : "binoculars"
             case .notifications:
                 return selected ? "bell.fill" : "bell"

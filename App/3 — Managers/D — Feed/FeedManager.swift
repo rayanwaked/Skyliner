@@ -24,7 +24,11 @@ public class FeedManager {
     public init(configuration: ATProtocolConfiguration? = nil) {
         self.configuration = configuration
     }
-    
+}
+
+// MARK: - FEED MANAGER FUNCTIONS
+extension FeedManager {
+    // MARK: - FETCH SAVED FEEDS
     public func fetchSavedFeeds() async -> [FeedModel] {
         guard let configuration = configuration else {
             print("🍄⛔️ FeedManager: Configuration is nil")
@@ -39,7 +43,7 @@ public class FeedManager {
             let output = try await client.getPopularFeedGenerators(matching: nil, limit: 15)
             await print("🍄✅ FeedManager: \(try client.getUserSession()?.sessionDID ?? "No Session DID")"
             )
-
+            
             savedFeeds = output.feeds.compactMap {
                 FeedModel(
                     uri: $0.feedURI,

@@ -14,11 +14,12 @@ struct TabBarComponent: View {
     @Environment(RouterViewModel.self) private var routerViewModel
     @Environment(AppState.self) private var appState
     @Environment(\.colorScheme) private var colorScheme
+    @State private var exploreSearch: String = ""
     
     // MARK: - BODY
     var body: some View {
         HStack {
-            tabBarTabs
+            tabBarManager
             // MARK: - Action
             CompactButtonComponent(
                 action: {},
@@ -41,7 +42,19 @@ struct TabBarComponent: View {
 
 // MARK: - NAVIGATION
 extension TabBarComponent {
-    var tabBarTabs: some View {
+    var tabBarManager: some View {
+        HStack {
+            if routerViewModel.selectedTab != .explore {
+                tabBar
+            } else {
+                exploreBar
+            }
+        }
+    }
+}
+
+extension TabBarComponent {
+    var tabBar: some View {
         HStack {
             ForEach(RouterViewModel.Tabs.allCases) { tab in
                 if tab == .profile {
@@ -69,6 +82,27 @@ extension TabBarComponent {
         .padding([.leading, .trailing], PaddingConstants.defaultPadding)
         .padding([.top, .bottom], PaddingConstants.defaultPadding / 3)
         .glassEffect(.regular.tint(.clear).interactive())
+    }
+}
+
+extension TabBarComponent {
+    var exploreBar: some View {
+        HStack {
+            CompactButtonComponent(
+                action: {
+                    withAnimation(.easeInOut(duration: 0.2)) {
+                        routerViewModel.selectedTab = .home
+                    }
+                },
+                label: Image(systemName: "chevron.left"),
+                variation: .secondary,
+                placement: .explore)
+            InputFieldComponent(
+                icon: Image(systemName: "magnifyingglass"),
+                title: "Explore the skies",
+                text: $exploreSearch
+            )
+        }
     }
 }
 
