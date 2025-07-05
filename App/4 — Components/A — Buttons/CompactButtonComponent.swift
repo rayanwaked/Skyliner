@@ -59,7 +59,7 @@ extension CompactButtonPlacement {
     func padding(for placement: CompactButtonPlacement) -> CGFloat {
         switch self {
         case .standard: PaddingConstants.defaultPadding * 0.75
-        case .tabBar: PaddingConstants.defaultPadding * 0.8
+        case .tabBar: PaddingConstants.defaultPadding * 1.15
         case .header: PaddingConstants.defaultPadding * 0.5
         }
     }

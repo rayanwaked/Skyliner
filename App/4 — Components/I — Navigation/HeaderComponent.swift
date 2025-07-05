@@ -7,6 +7,7 @@
 
 // MARK: - IMPORT
 import SwiftUI
+import NukeUI
 
 // MARK: - VIEW
 struct HeaderComponent: View {
@@ -21,6 +22,7 @@ struct HeaderComponent: View {
             trendingSection
             SeperatorComponent()
         }
+        .background(.defaultBackground)
     }
 }
 
@@ -34,14 +36,14 @@ private extension HeaderComponent {
                 CompactButtonComponent(
                     action: {},
                     label: Image(systemName: "command"),
-                    variation: .secondary,
+                    variation: .quaternary,
                     placement: .header
                 )
                 
                 CompactButtonComponent(
                     action: {},
                     label: Image(systemName: "number"),
-                    variation: .secondary,
+                    variation: .quaternary,
                     placement: .header
                 )
             }
@@ -49,10 +51,14 @@ private extension HeaderComponent {
         .padding([.leading, .trailing], PaddingConstants.defaultPadding)
         .overlay(
             HStack {
+                Image("SkylinerEmoji")
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: SizeConstants.screenWidth * 0.08, height: SizeConstants.screenWidth * 0.08)
                 Text("Skyliner")
                     .font(.title)
-                    .fontWeight(.bold)
-                    .foregroundStyle(.blue)
+                    .fontWeight(.heavy)
+                    .foregroundStyle(.primary)
             }, alignment: .bottomLeading)
         .padding(.leading, PaddingConstants.defaultPadding)
     }
@@ -60,38 +66,24 @@ private extension HeaderComponent {
     // MARK: - FEED SECTION
     @ViewBuilder
     private var feedSection: some View {
-        ScrollView(.horizontal) {
-            HStack(spacing: PaddingConstants.horizontalPadding) {
-                ForEach(feeds, id: \.self) { feed in
-                    Text(feed.displayName)
-                }
-                .padding(PaddingConstants.smallPadding)
-                .glassEffect(
-                    .regular
-                        .interactive()
-                        .tint(.defaultBackground.opacity(ColorConstants.softOpaque))
-                )
-            }
-            .font(.callout)
-            .fontWeight(.medium)
-            .padding([.leading, .trailing], PaddingConstants.defaultPadding)
-        }
-        .padding(.top, PaddingConstants.verticalPadding)
-        .scrollIndicators(.hidden)
+        ArrayButtonComponent(
+            feeds: feeds.map { FeedItem(displayName: $0.displayName)
+            },
+            action: {})
     }
 
     // MARK: - TRENDING SECTION
     @ViewBuilder
     private var trendingSection: some View {
         ScrollView(.horizontal) {
-            HStack(spacing: PaddingConstants.horizontalPadding) {
+            HStack(spacing: PaddingConstants.defaultPadding) {
                 Image(systemName: "flame.fill")
                     .foregroundStyle(.accent)
                 
                 ForEach(trends, id: \.self) { trend in
                     Text(trend.displayName ?? "")
                         .font(.subheadline)
-                        .fontWeight(.medium)
+                        .fontWeight(.semibold)
                         .foregroundStyle(
                             .primary.opacity(ColorConstants.darkOpaque)
                         )
@@ -99,7 +91,7 @@ private extension HeaderComponent {
             }
             .padding([.leading, .trailing], PaddingConstants.defaultPadding)
         }
-        .padding([.top, .bottom], PaddingConstants.verticalPadding)
+        .padding([.top, .bottom], PaddingConstants.smallPadding)
         .scrollIndicators(.hidden)
     }
 }

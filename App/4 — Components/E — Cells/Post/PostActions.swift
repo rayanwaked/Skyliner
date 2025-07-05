@@ -22,6 +22,8 @@ extension PostComponent {
             Spacer()
             optionsButton
         }
+        .font(.custom("actions", size: 14))
+        .foregroundStyle(.primary.opacity(ColorConstants.darkOpaque))
     }
 }
 
@@ -31,11 +33,9 @@ extension PostComponent {
         HStack(spacing: 4) {
             Image(systemName: "message")
                 .padding(7)
-                .glassEffect(.regular.interactive(), in: Circle())
                 .hapticAction(.soft, perform: {})
-            Text(post.replyCount.description)
+            Text(post.replyCount.abbreviated)
         }
-        .font(.callout)
     }
 }
 
@@ -45,11 +45,9 @@ extension PostComponent {
         HStack(spacing: 4) {
             Image(systemName: "arrow.trianglehead.2.clockwise")
                 .padding(7)
-                .glassEffect(.regular.interactive(), in: Circle())
                 .hapticAction(.soft, perform: {})
-            Text(post.repostCount.description)
+            Text(post.repostCount.abbreviated)
         }
-        .font(.callout)
     }
 }
 
@@ -59,7 +57,6 @@ extension PostComponent {
         HStack(spacing: 4) {
             Image(systemName: "heart")
                 .padding(7)
-                .glassEffect(.regular.interactive(), in: Circle())
                 .hapticAction(
                     .soft,
                     perform: {
@@ -72,9 +69,8 @@ extension PostComponent {
                         }
                     }
                 )
-            Text(post.likeCount.description)
+            Text(post.likeCount.abbreviated)
         }
-        .font(.callout)
     }
 }
 
@@ -82,10 +78,8 @@ extension PostComponent {
 extension PostComponent {
     var shareButton: some View {
         Image(systemName: "square.and.arrow.up")
-            .font(.callout)
             .padding(.bottom, 4)
             .padding(7)
-            .glassEffect(.regular.interactive(), in: Circle())
             .hapticAction(.soft, perform: {})
     }
 }
@@ -94,9 +88,7 @@ extension PostComponent {
 extension PostComponent {
     var optionsButton: some View {
         Image(systemName: "command")
-            .font(.callout)
             .padding(7)
-            .glassEffect(.regular.interactive(), in: Circle())
             .hapticAction(.soft, perform: {})
     }
 }

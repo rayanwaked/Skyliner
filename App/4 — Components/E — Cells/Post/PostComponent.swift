@@ -16,21 +16,26 @@ struct PostComponent: View {
 
     // MARK: - BODY
     var body: some View {
-        GlassEffectContainer {
+        Group {
             HStack(alignment: .top) {
                 profilePicture
-                VStack(alignment: .leading) {
+                VStack(alignment: .leading, spacing:         PaddingConstants.tinyPadding) {
                     account
                     text
                     actions
                 }
+                .padding(.leading, PaddingConstants.smallPadding)
             }
             .frame(maxWidth: .infinity, alignment: .leading)
             .padding(.top, PaddingConstants.smallPadding)
-            .padding([.leading, .trailing], PaddingConstants.defaultPadding)
-            
-            SeperatorComponent()
+            .padding([.leading, .trailing], PaddingConstants.smallPadding)
         }
+        .background(.defaultBackground)
+        .clipShape(
+            RoundedRectangle(cornerRadius: RadiusConstants.smallRadius)
+        )
+        .glassEffect(.regular, in: RoundedRectangle(cornerRadius: RadiusConstants.smallRadius))
+        .padding([.leading, .trailing], PaddingConstants.tinyPadding)
     }
 }
 
@@ -71,8 +76,8 @@ extension PostComponent {
                 .font(.subheadline)
                 .fixedSize()
         }
+        .padding(.bottom, PaddingConstants.tinyPadding)
         .lineLimit(1)
-        .padding(.bottom, PaddingConstants.defaultPadding * 0.05)
     }
     
     // MARK: - TEXT
@@ -80,7 +85,6 @@ extension PostComponent {
         Text(post.content)
             .font(.subheadline)
             .fontWeight(.regular)
-            .padding(.bottom, PaddingConstants.defaultPadding / 4)
     }
 }
 

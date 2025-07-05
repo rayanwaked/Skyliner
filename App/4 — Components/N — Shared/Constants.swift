@@ -28,13 +28,9 @@ enum RadiusConstants {
 enum PaddingConstants {
     /// General purpose padding, usually used to pad between componants/views and the stack
     static let largePadding: CGFloat = 20
-    static let defaultPadding: CGFloat = 18
+    static let defaultPadding: CGFloat = 16
     static let smallPadding: CGFloat = 9
     static let tinyPadding: CGFloat = 5
-    
-    /// Inline padding, usually used to pad between elements inside a componant or view
-    static let verticalPadding: CGFloat = 12
-    static let horizontalPadding: CGFloat = 14
 }
 
 // MARK: - COLOR CONSTANTS

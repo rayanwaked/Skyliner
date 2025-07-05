@@ -152,7 +152,8 @@ extension ProfileView {
             Text(profile?.description ?? "")
         }
         .font(.callout)
-        .padding([.leading, .trailing, .bottom], PaddingConstants.defaultPadding)
+        .padding([.leading, .trailing], PaddingConstants.defaultPadding)
+        .padding(.bottom, PaddingConstants.tinyPadding)
         .frame(width: SizeConstants.screenWidth, alignment: .leading)
     }
 }
@@ -160,13 +161,11 @@ extension ProfileView {
 // MARK: - POSTS SECTION
 extension ProfileView {
     var postsSection: some View {
-        Group {
-            HStack {
-                Text("Posts")
-                    .fontWeight(.bold)
-                Spacer()
-            }
-            .padding(.leading, PaddingConstants.defaultPadding)
+        VStack(spacing: 0) {
+            ArrayButtonComponent(
+                feeds: ["Post"].map {_ in FeedItem(displayName: "Post")
+                },
+                action: {})
             
             SeperatorComponent()
             

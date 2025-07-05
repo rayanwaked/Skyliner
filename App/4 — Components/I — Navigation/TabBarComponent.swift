@@ -27,7 +27,7 @@ struct TabBarComponent: View {
             )
         }
         .padding([.leading, .trailing], PaddingConstants.defaultPadding)
-        .padding(.bottom, -10)
+        .padding(.bottom, -PaddingConstants.defaultPadding)
         .shadow(
             color: colorScheme == .light ? .black
                 .opacity(0.25) : .black
@@ -49,14 +49,18 @@ extension TabBarComponent {
                         systemImage: "",
                         avatarURL: appState.profileModel.first?.avatar,
                         selected: routerViewModel.selectedTab == tab,
-                        action: { routerViewModel.selectedTab = tab }
+                        action: {
+                            withAnimation(.easeInOut(duration: 0.2)) {
+                                routerViewModel.selectedTab = tab
+                            }
+                        }
                     )
                 } else {
                     TabBarButton(
                         systemImage: tab.systemImage(forSelected: routerViewModel.selectedTab == tab),
                         avatarURL: nil,
                         selected: routerViewModel.selectedTab == tab,
-                        action: { routerViewModel.selectedTab = tab }
+                        action: { withAnimation(.easeInOut(duration: 0.2)) { routerViewModel.selectedTab = tab } }
                     )
                 }
             }
@@ -108,3 +112,4 @@ private struct TabBarButton: View {
         .environment(routerViewModel)
         .environment(appState)
 }
+

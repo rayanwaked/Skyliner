@@ -69,15 +69,19 @@ extension RouterView {
             case .home:
                 HomeView()
                     .environment(appState)
+                    .transition(.move(edge: .bottom))
             case .search:
                 SearchView()
                     .environment(appState)
+                    .transition(.move(edge: .bottom))
             case .notifications:
                 NotificationsView()
                     .environment(appState)
+                    .transition(.move(edge: .bottom))
             case .profile:
                 ProfileView()
                     .environment(appState)
+                    .transition(.push(from: .bottom))
             }
             TabBarComponent()
                 .environment(routerViewModel)

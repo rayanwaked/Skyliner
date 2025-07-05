@@ -12,13 +12,13 @@ import SwiftUI
 // MARK: - CLIENT MANAGER
 @Observable
 public final class ClientManager: Sendable {
-  public let configuration: ATProtocolConfiguration
-  public let protoClient: ATProtoKit
-  public let blueskyClient: ATProtoBluesky
-
-  public init(configuration: ATProtocolConfiguration) async {
-    self.configuration = configuration
-    self.protoClient = await ATProtoKit(sessionConfiguration: configuration)
-    self.blueskyClient = ATProtoBluesky(atProtoKitInstance: protoClient)
-  }
+    public let configuration: ATProtocolConfiguration
+    public let protoClient: ATProtoKit
+    public let blueskyClient: ATProtoBluesky
+    
+    public init(configuration: ATProtocolConfiguration) async {
+        self.configuration = configuration
+        self.protoClient = await ATProtoKit(sessionConfiguration: configuration)
+        self.blueskyClient = ATProtoBluesky(atProtoKitInstance: protoClient)
+    }
 }

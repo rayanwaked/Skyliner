@@ -13,7 +13,7 @@ struct StandardCardModifier: ViewModifier {
     /// Modifies the given content with standard padding, card background, rounded corners, and extra padding.
     func body(content: Content) -> some View {
         content
-            .padding(PaddingConstants.defaultPadding)
+            .padding(PaddingConstants.largePadding)
             .background(.defaultBackground)
             .clipShape(RoundedRectangle(cornerRadius: RadiusConstants.defaultRadius))
             .padding(PaddingConstants.defaultPadding)
@@ -44,5 +44,34 @@ extension View {
     /// - Parameter offset: The current vertical pull offset.
     func pullToRefreshParallax(offset: CGFloat) -> some View {
         self.modifier(PullToRefreshParallaxModifier(offset: offset))
+    }
+}
+
+// MARK: - NUMBER FORMAT MODIFIER
+extension Int {
+    var abbreviated: String {
+        let num = Double(self)
+        let thousand = 1_000.0
+        let million = 1_000_000.0
+        let billion = 1_000_000_000.0
+        let trillion = 1_000_000_000_000.0
+
+        let formatter: (Double, String) -> String = { value, suffix in
+            let str = String(format: value.truncatingRemainder(dividingBy: 1) == 0 ? "%.0f" : "%.1f", value)
+            return "\(str)\(suffix)"
+        }
+
+        switch num {
+        case 0..<thousand:
+            return String(Int(num))
+        case thousand..<million:
+            return formatter(num / thousand, "K")
+        case million..<billion:
+            return formatter(num / million, "M")
+        case billion..<trillion:
+            return formatter(num / billion, "B")
+        default:
+            return formatter(num / thousand, "K")
+        }
     }
 }
