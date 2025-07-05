@@ -71,7 +71,7 @@ extension RouterView {
                     .environment(appState)
                     .transition(.move(edge: .bottom))
             case .explore:
-                SearchView()
+                ExploreView()
                     .environment(appState)
                     .transition(.move(edge: .bottom))
             case .notifications:

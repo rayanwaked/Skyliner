@@ -25,7 +25,7 @@ struct FeedComponent: View {
             .padding(.top, PaddingConstants.tinyPadding * 2)
             .padding(.bottom, PaddingConstants.smallPadding)
         }
-        .background(.blue.opacity(ColorConstants.softOpaque / 2))
+        .background(.blue.opacity(ColorConstants.softOpaque / 1.5))
         .scrollIndicators(.hidden)
     }
 }

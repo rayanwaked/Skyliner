@@ -38,6 +38,7 @@ enum ColorConstants {
     static let darkOpaque: CGFloat = 0.65
     static let heavyOpaque: CGFloat = 0.5
     static let defaultOpaque: CGFloat = 0.3
+    static let lightOpaque: CGFloat = 0.2
     static let softOpaque: CGFloat = 0.1
 }
 

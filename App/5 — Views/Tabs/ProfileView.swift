@@ -162,12 +162,14 @@ extension ProfileView {
     var postsSection: some View {
         VStack(spacing: 0) {
             ArrayButtonComponent(
-                feeds: ["Post"].map {_ in FeedItem(displayName: "Post")
-                },
-                action: {})
-            .padding(.top, -PaddingConstants.tinyPadding)
-            .padding(.bottom, PaddingConstants.tinyPadding)
-            
+                array: ["Posts"],
+                action: {},
+                content: { text in
+                    Text(text)
+                })
+                .padding(.top, -PaddingConstants.tinyPadding)
+                .padding(.bottom, PaddingConstants.tinyPadding)
+                
             SeperatorComponent()
             
             if let configuration = appState.postManager.configuration {

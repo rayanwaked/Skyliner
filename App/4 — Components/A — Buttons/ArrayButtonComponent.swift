@@ -14,24 +14,25 @@ struct FeedItem: Hashable {
 }
 
 // MARK: - VIEW
-struct ArrayButtonComponent: View {
+struct ArrayButtonComponent<T: Hashable, Content: View>: View {
     // MARK: - VARIABLES
-    var feeds: [FeedItem] = []
+    var array: [T] = []
     var action: () -> Void
+    var content: (T) -> Content
     
     // MARK: - BODY
     var body: some View {
         ScrollView(.horizontal) {
             GlassEffectContainer {
                 HStack {
-                    ForEach(feeds, id: \.self) { feed in
-                        Text(feed.displayName)
+                    ForEach(array, id: \.self) { item in
+                        content(item)
                     }
                     .padding(PaddingConstants.smallPadding)
                     .glassEffect(
                         .regular
                             .interactive()
-                            .tint(.blue.opacity(ColorConstants.defaultOpaque))
+                            .tint(.blue.opacity(ColorConstants.lightOpaque))
                     )
                     .padding([.top, .bottom], PaddingConstants.tinyPadding / 1.3)
                     .hapticAction(.soft, perform: { action() })
@@ -50,7 +51,10 @@ struct ArrayButtonComponent: View {
 // MARK: - PREVIEW
 #Preview {
     ArrayButtonComponent(
-        feeds: [FeedItem(displayName: "One"), FeedItem(displayName: "Two")],
-        action: {}
+        array: [FeedItem(displayName: "One"), FeedItem(displayName: "Two")],
+        action: {},
+        content: { feed in
+            Text(feed.displayName)
+        }
     )
 }

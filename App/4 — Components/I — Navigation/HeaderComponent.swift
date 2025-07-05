@@ -67,9 +67,12 @@ private extension HeaderComponent {
     @ViewBuilder
     private var feedSection: some View {
         ArrayButtonComponent(
-            feeds: feeds.map { FeedItem(displayName: $0.displayName)
-            },
-            action: {})
+            array: feeds,
+            action: {},
+            content: { feed in
+                Text(feed.displayName)
+                }
+            )
     }
 
     // MARK: - TRENDING SECTION

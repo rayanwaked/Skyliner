@@ -18,6 +18,7 @@ struct NotificationsView: View {
                 try await appState.authenticationManager.logout()
             }
         }
+        Spacer()
     }
 }
 

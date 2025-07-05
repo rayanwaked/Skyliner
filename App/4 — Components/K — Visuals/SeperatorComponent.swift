@@ -14,7 +14,7 @@ struct SeperatorComponent: View {
         Rectangle()
             .foregroundStyle(.gray.opacity(0.2))
             .frame(height: 0.45)
-            .glassEffect(.regular)
+            .glassEffect()
     }
 }
 

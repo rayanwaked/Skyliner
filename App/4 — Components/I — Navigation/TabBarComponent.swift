@@ -28,7 +28,7 @@ struct TabBarComponent: View {
             )
         }
         .padding([.leading, .trailing], PaddingConstants.defaultPadding)
-        .padding(.bottom, -PaddingConstants.defaultPadding)
+        .padding(.bottom, -PaddingConstants.smallPadding)
         .shadow(
             color: colorScheme == .light ? .black
                 .opacity(0.25) : .black
@@ -91,6 +91,7 @@ extension TabBarComponent {
             CompactButtonComponent(
                 action: {
                     withAnimation(.easeInOut(duration: 0.2)) {
+                        dismissKeyboard()
                         routerViewModel.selectedTab = .home
                     }
                 },

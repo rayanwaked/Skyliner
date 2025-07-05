@@ -16,7 +16,9 @@ struct PostComponent: View {
 
     // MARK: - BODY
     var body: some View {
-        Group {
+        Button {
+            
+        } label: {
             HStack(alignment: .top) {
                 profilePicture
                 VStack(alignment: .leading, spacing:         PaddingConstants.tinyPadding) {
@@ -24,17 +26,22 @@ struct PostComponent: View {
                     text
                     actions
                 }
+                .multilineTextAlignment(.leading)
                 .padding(.leading, PaddingConstants.smallPadding)
             }
             .frame(maxWidth: .infinity, alignment: .leading)
             .padding(.top, PaddingConstants.smallPadding)
             .padding([.leading, .trailing], PaddingConstants.smallPadding)
         }
+        .foregroundStyle(.primary)
         .background(.defaultBackground)
         .clipShape(
             RoundedRectangle(cornerRadius: RadiusConstants.smallRadius)
         )
-        .glassEffect(.regular, in: RoundedRectangle(cornerRadius: RadiusConstants.smallRadius))
+        .glassEffect(
+            .regular,
+            in: RoundedRectangle(cornerRadius: RadiusConstants.smallRadius)
+        )
         .padding([.leading, .trailing], PaddingConstants.tinyPadding)
     }
 }
