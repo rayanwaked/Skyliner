@@ -12,9 +12,8 @@ import SwiftUI
 struct SeperatorComponent: View {
     var body: some View {
         Rectangle()
-            .foregroundStyle(.gray.opacity(0.2))
+            .foregroundStyle(.gray.opacity(ColorConstants.defaultOpaque))
             .frame(height: 0.45)
-            .glassEffect()
     }
 }
 

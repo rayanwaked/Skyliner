@@ -172,7 +172,7 @@ extension ProfileView {
                 
             SeperatorComponent()
             
-            if let configuration = appState.postManager.configuration {
+            if let configuration = appState.postManager.clientManager?.configuration {
                 FeedComponent(feed: authorFeed)
                     .environment(appState)
                     .task(id: configuration.instanceUUID) {

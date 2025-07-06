@@ -19,30 +19,26 @@ struct PostComponent: View {
         Button {
             
         } label: {
-            HStack(alignment: .top) {
-                profilePicture
-                VStack(alignment: .leading, spacing:         PaddingConstants.tinyPadding) {
-                    account
-                    text
-                    actions
+            VStack {
+                HStack(alignment: .top) {
+                    profilePicture
+                    VStack(alignment: .leading) {
+                        account
+                        text
+                        actions
+                    }
+                    .multilineTextAlignment(.leading)
+                    .padding(.leading, PaddingConstants.smallPadding)
                 }
-                .multilineTextAlignment(.leading)
-                .padding(.leading, PaddingConstants.smallPadding)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding([.leading, .trailing], PaddingConstants.defaultPadding)
+                
+                SeperatorComponent()
             }
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .padding(.top, PaddingConstants.smallPadding)
-            .padding([.leading, .trailing], PaddingConstants.smallPadding)
         }
         .foregroundStyle(.primary)
         .background(.defaultBackground)
-        .clipShape(
-            RoundedRectangle(cornerRadius: RadiusConstants.smallRadius)
-        )
-        .glassEffect(
-            .regular,
-            in: RoundedRectangle(cornerRadius: RadiusConstants.smallRadius)
-        )
-        .padding([.leading, .trailing], PaddingConstants.tinyPadding)
+        .padding(.bottom, PaddingConstants.tinyPadding)
     }
 }
 
@@ -83,7 +79,7 @@ extension PostComponent {
                 .font(.subheadline)
                 .fixedSize()
         }
-        .padding(.bottom, PaddingConstants.tinyPadding)
+        .padding(.bottom, PaddingConstants.tinyPadding / 4)
         .lineLimit(1)
     }
     

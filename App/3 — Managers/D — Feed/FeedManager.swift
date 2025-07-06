@@ -13,28 +13,19 @@ import ATProtoKit
 @MainActor
 @Observable
 public class FeedManager {
-    @ObservationIgnored
     public private(set) var savedFeeds: [FeedModel] = []
     @ObservationIgnored
-    public private(set) var clientManager: ClientManager? = nil
-    @ObservationIgnored
-    public var configuration: ATProtocolConfiguration?
-    
-    public init() {}
-    public init(configuration: ATProtocolConfiguration? = nil) {
-        self.configuration = configuration
-    }
+    public var clientManager: ClientManager? = nil
 }
 
 // MARK: - FEED MANAGER FUNCTIONS
 extension FeedManager {
     // MARK: - FETCH SAVED FEEDS
     public func fetchSavedFeeds() async -> [FeedModel] {
-        guard let configuration = configuration else {
-            print("🍄⛔️ FeedManager: Configuration is nil")
+        guard let configuration = clientManager?.configuration else {
+            print("🍄⛔️ ProfileManager: No configuration available")
             return []
         }
-        
         let client = await ATProtoKit(sessionConfiguration: configuration)
         let manager = await ClientManager(configuration: configuration)
         

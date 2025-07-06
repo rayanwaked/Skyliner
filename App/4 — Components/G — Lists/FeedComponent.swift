@@ -22,10 +22,9 @@ struct FeedComponent: View {
                         .environment(appState)
                 }
             }
-            .padding(.top, PaddingConstants.tinyPadding * 2)
-            .padding(.bottom, PaddingConstants.smallPadding)
+            .padding(.top, PaddingConstants.smallPadding)
         }
-        .background(.blue.opacity(ColorConstants.softOpaque / 1.5))
+        .background(.defaultBackground)
         .scrollIndicators(.hidden)
     }
 }

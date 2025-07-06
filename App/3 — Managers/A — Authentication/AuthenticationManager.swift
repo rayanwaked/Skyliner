@@ -17,11 +17,11 @@ public final class AuthenticationManager: @unchecked Sendable {
     let keychain = KeychainSwift()
     let ATProtoKeychain: AppleSecureKeychain
     
-    public private(set) var configuration: ATProtocolConfiguration?
+    public private(set) var clientManager: ClientManager?
     public private(set) var configurationState: ConfigurationState = .empty
     
-    public let configurationContinuation: AsyncStream<ATProtocolConfiguration?>.Continuation
-    public let configurationUpdates: AsyncStream<ATProtocolConfiguration?>
+    public let clientManagerContinuation: AsyncStream<ClientManager?>.Continuation
+    public let clientManagerUpdates: AsyncStream<ClientManager?>
     
     public enum ConfigurationState {
         case restored
@@ -46,10 +46,10 @@ public final class AuthenticationManager: @unchecked Sendable {
             self.ATProtoKeychain = AppleSecureKeychain(identifier: realUUID)
         }
         
-        // 2. Setup async stream
-        let (stream, continuation) = AsyncStream<ATProtocolConfiguration?>.makeStream(bufferingPolicy: .bufferingNewest(1))
-        self.configurationUpdates = stream
-        self.configurationContinuation = continuation
+        // 2. Setup async stream for ClientManager
+        let (stream, continuation) = AsyncStream<ClientManager?>.makeStream(bufferingPolicy: .bufferingNewest(1))
+        self.clientManagerUpdates = stream
+        self.clientManagerContinuation = continuation
         
         // 3. Try session restore
         Task {
@@ -63,16 +63,17 @@ extension AuthenticationManager {
     // MARK: - AUTHENTICATE
     public func authenticate(handle: String, password: String) async throws {
         let config = try await authenticateWith(handle: handle, password: password)
-        self.configuration = config
-        configurationContinuation.yield(config)
+        let manager = await ClientManager(configuration: config)
+        self.clientManager = manager
+        clientManagerContinuation.yield(manager)
         self.configurationState = .restored
     }
     
     // MARK: - LOG OUT
     public func logout() async throws {
-        try await logoutWith(configuration: configuration)
-        self.configuration = nil
-        configurationContinuation.yield(nil)
+        try await logoutWith(configuration: clientManager?.configuration)
+        self.clientManager = nil
+        clientManagerContinuation.yield(nil)
         self.configurationState = .empty
         print("🍄✅ Authentication Manager: Log out successful")
     }
@@ -81,12 +82,13 @@ extension AuthenticationManager {
     public func refresh() async {
         do {
             let config = try await refreshSession()
-            self.configuration = config
-            configurationContinuation.yield(config)
+            let manager = await ClientManager(configuration: config)
+            self.clientManager = manager
+            clientManagerContinuation.yield(manager)
             self.configurationState = .restored
         } catch {
-            self.configuration = nil
-            configurationContinuation.yield(nil)
+            self.clientManager = nil
+            clientManagerContinuation.yield(nil)
             self.configurationState = .failed
         }
     }
@@ -95,10 +97,11 @@ extension AuthenticationManager {
     public func restoreSession() async {
         do {
             let config = try await refreshSession()
+            let manager = await ClientManager(configuration: config)
             await MainActor.run {
                 self.configurationState = .restored
-                self.configuration = config
-                self.configurationContinuation.yield(config)
+                self.clientManager = manager
+                self.clientManagerContinuation.yield(manager)
                 print("🍄✅ Authentication Manager: Session restored")
                 hapticFeedback(.success)
             }
@@ -106,8 +109,8 @@ extension AuthenticationManager {
             print("🍄⛔️ Authentication Manager: Session restoration failed: \(error)")
             await MainActor.run {
                 self.configurationState = .failed
-                self.configuration = nil
-                self.configurationContinuation.yield(nil)
+                self.clientManager = nil
+                self.clientManagerContinuation.yield(nil)
                 hapticFeedback(.error)
             }
         }

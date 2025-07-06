@@ -24,6 +24,8 @@ extension PostComponent {
         }
         .font(.custom("actions", size: 14))
         .foregroundStyle(.primary.opacity(ColorConstants.darkOpaque))
+        .padding(.top, PaddingConstants.tinyPadding)
+        .padding(.bottom, PaddingConstants.tinyPadding / 4)
     }
 }
 
@@ -32,7 +34,6 @@ extension PostComponent {
     var repostButton: some View {
         HStack(spacing: 4) {
             Image(systemName: "arrow.trianglehead.2.clockwise")
-                .padding(7)
                 .hapticAction(.soft, perform: {})
             Text(post.repostCount.abbreviated)
         }
@@ -44,7 +45,6 @@ extension PostComponent {
     var commentButton: some View {
         HStack(spacing: 4) {
             Image(systemName: "message")
-                .padding(7)
                 .hapticAction(.soft, perform: {})
             Text(post.replyCount.abbreviated)
         }
@@ -56,7 +56,6 @@ extension PostComponent {
     var likeButton: some View {
         HStack(spacing: 4) {
             Image(systemName: "heart")
-                .padding(7)
                 .hapticAction(
                     .soft,
                     perform: {
@@ -79,7 +78,6 @@ extension PostComponent {
     var shareButton: some View {
         Image(systemName: "square.and.arrow.up")
             .padding(.bottom, 4)
-            .padding(7)
             .hapticAction(.soft, perform: {})
     }
 }
@@ -88,7 +86,6 @@ extension PostComponent {
 extension PostComponent {
     var optionsButton: some View {
         Image(systemName: "command")
-            .padding(7)
             .hapticAction(.soft, perform: {})
     }
 }

@@ -13,17 +13,9 @@ import ATProtoKit
 @MainActor
 @Observable
 public class TrendManager {
-    @ObservationIgnored
     public private(set) var trends: [TrendModel] = []
     @ObservationIgnored
-    public private(set) var clientManager: ClientManager? = nil
-    @ObservationIgnored
-    public var configuration: ATProtocolConfiguration?
-
-    public init() {}
-    public init(configuration: ATProtocolConfiguration? = nil) {
-        self.configuration = configuration
-    }
+    public var clientManager: ClientManager? = nil
 }
 
 // MARK: - TREND MANAGER FUNCTIONS
@@ -31,8 +23,8 @@ extension TrendManager {
     // MARK: - FETCH TRENDS
     /// Fetches trending topics from the network (stub implementation).
     public func fetchTrends() async -> [TrendModel] {
-        guard let configuration = configuration else {
-            print("TrendManager.fetchTrends() returning early: configuration is nil")
+        guard let configuration = clientManager?.configuration else {
+            print("🍄⛔️ ProfileManager: No configuration available")
             return []
         }
         let client = await ATProtoKit(sessionConfiguration: configuration)

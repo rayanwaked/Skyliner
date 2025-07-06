@@ -13,20 +13,10 @@ import ATProtoKit
 @MainActor
 @Observable
 public class ProfileManager {
-    @ObservationIgnored
     private var contexts: [String: ProfileModel] = [:]
-    
-    @ObservationIgnored
     public private(set) var profiles: [ProfileModel] = []
     @ObservationIgnored
-    public private(set) var clientManager: ClientManager? = nil
-    @ObservationIgnored
-    public var configuration: ATProtocolConfiguration?
-    
-    public init() {}
-    public init(configuration: ATProtocolConfiguration? = nil) {
-        self.configuration = configuration
-    }
+    public var clientManager: ClientManager? = nil
 }
 
 // MARK: - PROFILE MANAGER FUNCTIONS
@@ -34,8 +24,8 @@ extension ProfileManager {
     // MARK: - FETCH CURRENT USER PROFILE
     /// Fetches the current user's profile using the current session DID, if available.
     public func fetchCurrentUserProfile() async -> [ProfileModel] {
-        guard let configuration = configuration else {
-            print("🍄⛔️ ProfileManager: Configuration is nil")
+        guard let configuration = clientManager?.configuration else {
+            print("🍄⛔️ ProfileManager: No configuration available")
             return []
         }
         let manager = await ClientManager(configuration: configuration)

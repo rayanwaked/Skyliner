@@ -13,20 +13,10 @@ import ATProtoKit
 @MainActor
 @Observable
 public class PostManager {
-  @ObservationIgnored
-  private var contexts: [String: PostContextModel] = [:]
-  
-  @ObservationIgnored
-  public private(set) var posts: [PostModel] = []
-  @ObservationIgnored
-  public private(set) var clientManager: ClientManager? = nil
-  @ObservationIgnored
-  public var configuration: ATProtocolConfiguration?
-  
-  public init() {}
-  public init(configuration: ATProtocolConfiguration? = nil) {
-    self.configuration = configuration
-  }
+    private var contexts: [String: PostContextModel] = [:]
+    private var posts: [PostModel] = []
+    @ObservationIgnored
+    public var clientManager: ClientManager? = nil
 }
 
 // MARK: - POST MANAGER FUNCTIONS
@@ -44,8 +34,8 @@ extension PostManager {
     
     // MARK: - GET FEED
     public func getFeed() async -> [PostModel] {
-        guard let configuration = configuration else {
-            print("PostManager.getFeed() returning early: configuration is nil")
+        guard let configuration = clientManager?.configuration else {
+            print("🍄⛔️ ProfileManager: No configuration available")
             return []
         }
         let client = await ATProtoKit(sessionConfiguration: configuration)
@@ -61,8 +51,8 @@ extension PostManager {
     
     // MARK: - GET AUTHOR FEED
     public func getAuthorFeed(by did: String, shouldIncludePins: Bool) async -> [PostModel] {
-        guard let configuration = configuration else {
-            print("PostManager.getFeed() returning early: configuration is nil")
+        guard let configuration = clientManager?.configuration else {
+            print("🍄⛔️ ProfileManager: No configuration available")
             return []
         }
         let client = await ATProtoKit(sessionConfiguration: configuration)
@@ -107,20 +97,20 @@ extension PostManager {
         /// The shared PostContextModel instance for this post.
         /// This should be obtained via PostManager and is intended to be a shared reference.
         private let model: PostContextModel
-
+        
         public init(post: PostModel, client: ClientManager, model: PostContextModel) {
             self.post = post
             self.client = client
             self.model = model
         }
-
+        
         // MARK: - UPDATE CONTEXT
         public func update(with post: PostModel) {
             self.post = post
             model.likeURI = post.likeURI
             model.repostURI = post.repostURI
         }
-
+        
         // MARK: - LIKE POST
         public func toggleLike() async {
             let previousState = model.likeURI
@@ -138,7 +128,7 @@ extension PostManager {
                 model.likeURI = previousState
             }
         }
-
+        
         //  public func toggleRepost() async {
         //    // TODO: IMPLEMENT
         //      let previousState = repostURI
