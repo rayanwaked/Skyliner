@@ -96,7 +96,7 @@ extension PostManager {
         private let client: ClientManager
         /// The shared PostContextModel instance for this post.
         /// This should be obtained via PostManager and is intended to be a shared reference.
-        private let model: PostContextModel
+        let model: PostContextModel
         
         public init(post: PostModel, client: ClientManager, model: PostContextModel) {
             self.post = post
@@ -112,39 +112,74 @@ extension PostManager {
         }
         
         // MARK: - LIKE POST
+        // MARK: - LIKE POST
         public func toggleLike() async {
-            let previousState = model.likeURI
+            let previousLikeURI = model.likeURI
+            let previousBaseLikeCount = model.baseLikeCount
+            
             do {
                 if model.likeURI != nil {
-                    self.model.likeURI = nil
-                    try await client.blueskyClient.deleteRecord(.recordURI(atURI: model.likeURI ?? ""))
+                    // Store the URI before setting it to nil
+                    let uriToDelete = model.likeURI!
+                    
+                    // Optimistic update
+                    model.likeURI = nil
+                    model.baseLikeCount = max(0, model.baseLikeCount)
+                    
+                    // Make the network call
+                    try await client.blueskyClient.deleteRecord(.recordURI(atURI: uriToDelete))
                 } else {
+                    // Optimistic update
                     model.likeURI = "ui.optimistic.like"
-                    model.likeURI = try await client.blueskyClient.createLikeRecord(
+                    model.baseLikeCount = model.baseLikeCount
+                    
+                    // Make the network call
+                    let likeRecord = try await client.blueskyClient.createLikeRecord(
                         .init(recordURI: post.uri, cidHash: post.cid)
-                    ).recordURI
+                    )
+                    model.likeURI = likeRecord.recordURI
                 }
             } catch {
-                model.likeURI = previousState
+                // Revert all changes on error
+                model.likeURI = previousLikeURI
+                model.baseLikeCount = previousBaseLikeCount
+                print("Error toggling like: \(error)")
             }
         }
         
-        //  public func toggleRepost() async {
-        //    // TODO: IMPLEMENT
-        //      let previousState = repostURI
-        //      do {
-        //          if let repostURI {
-        //              self.repostURI = nil
-        //              try await client.blueskyClient.deleteRecord(.recordURI(atURI: repostURI))
-        //          } else {
-        //              self.repostURI = "ui.optimistic.repost"
-        //              self.repostURI = try await client.blueskyClient.createRepostRecord(
-        //                .init(recordURI: post.uri, cidHash: post.cid
-        //                     ).recordURI
-        //          }
-        //      } catch {
-        //          self.repostURI = previousState
-        //      }
-        //  }
+        // MARK: - REPOST POST
+        public func toggleRepost() async {
+            let previousRepostURI = model.repostURI
+            let previousBaseRepostCount = model.baseRepostCount
+            
+            do {
+                if model.repostURI != nil {
+                    // Store the URI before setting it to nil
+                    let uriToDelete = model.repostURI!
+                    
+                    // Optimistic update
+                    model.repostURI = nil
+                    model.baseRepostCount = max(0, model.baseRepostCount)
+                    
+                    // Make the network call
+                    try await client.blueskyClient.deleteRecord(.recordURI(atURI: uriToDelete))
+                } else {
+                    // Optimistic update
+                    model.repostURI = "ui.optimistic.repost"
+                    model.baseRepostCount = model.baseRepostCount
+                    
+                    // Make the network call
+                    let repostRecord = try await client.blueskyClient.createRepostRecord(
+                        .init(recordURI: post.uri, cidHash: post.cid)
+                    )
+                    model.repostURI = repostRecord.recordURI
+                }
+            } catch {
+                // Revert all changes on error
+                model.repostURI = previousRepostURI
+                model.baseRepostCount = previousBaseRepostCount
+                print("Error toggling repost: \(error)")
+            }
+        }
     }
 }

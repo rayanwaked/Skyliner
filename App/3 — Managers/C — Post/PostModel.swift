@@ -217,6 +217,7 @@ extension PostModel {
 }
 
 // MARK: - POST CONTEXT MODEL (DATA MODEL)
+@Observable
 public final class PostContextModel: @unchecked Sendable {
     public var likeURI: String?
     public var repostURI: String?
