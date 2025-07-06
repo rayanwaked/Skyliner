@@ -11,6 +11,7 @@ import SwiftUI
 // MARK: - VIEW
 struct InputFieldComponent: View {
     // MARK: - VARIABLE
+    var searchBar: Bool = false
     var secure: Bool = false
     var icon: Image
     var title: String
@@ -46,8 +47,10 @@ extension InputFieldComponent {
             }
         }
         .padding()
+        .frame(maxHeight: searchBar == true ? SizeConstants.screenHeight * 0.057 : SizeConstants.screenHeight * 0.065
+        )
         .glassEffect(
-            .regular.tint(.secondary.opacity(0.2)).interactive(),
+            .regular.interactive(),
             in: RoundedRectangle(cornerRadius: 100)
         )
     }

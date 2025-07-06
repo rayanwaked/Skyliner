@@ -25,6 +25,7 @@ struct PostComponent: View {
                     VStack(alignment: .leading) {
                         account
                         text
+                        embeds
                         actions
                     }
                     .multilineTextAlignment(.leading)
@@ -62,6 +63,16 @@ extension PostComponent {
                 .frame(maxWidth: SizeConstants.screenWidth * 0.125, maxHeight: SizeConstants.screenWidth * 0.125)
                 .glassEffect()
         }
+    }
+    
+    @ViewBuilder
+    var embeds: some View {
+        Button {
+            
+        } label: {
+            PostEmbeds(embed: post.embed)
+        }
+        .glassEffect(.regular, in: RoundedRectangle(cornerRadius: 12))
     }
     
     // MARK: - ACCOUNT

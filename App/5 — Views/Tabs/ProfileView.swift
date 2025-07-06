@@ -108,7 +108,7 @@ extension ProfileView {
                     Text("posts")
                 }
             }
-            .font(.callout)
+            .font(.subheadline)
         }
         .padding([.leading, .trailing], PaddingConstants.defaultPadding)
     }
@@ -118,7 +118,7 @@ extension ProfileView {
 extension ProfileView {
     var descriptionSection: some View {
         return VStack(alignment: .leading) {
-            HStack {
+            HStack(alignment: .top) {
                 VStack(alignment: .leading) {
                     Text(profile?.displayName ?? "")
                         .font(.title2)
@@ -138,20 +138,20 @@ extension ProfileView {
                 .frame(
                     maxWidth: SizeConstants.screenWidth * 0.2,
                     maxHeight: SizeConstants
-                        .screenHeight * 0.05)
+                        .screenHeight * 0.045)
                 
                 CompactButtonComponent(
                     action: {},
-                    label: Image(systemName: "square.and.arrow.up"),
+                    label: Image(systemName: "command"),
                     variation: .secondary,
-                    placement: .standard
+                    placement: .profile
                 )
             }
             .padding(.bottom, PaddingConstants.smallPadding)
             
             Text(profile?.description ?? "")
         }
-        .font(.callout)
+        .font(.subheadline)
         .padding([.leading, .trailing], PaddingConstants.defaultPadding)
         .frame(width: SizeConstants.screenWidth, alignment: .leading)
     }

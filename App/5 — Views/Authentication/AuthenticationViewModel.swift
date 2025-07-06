@@ -28,5 +28,4 @@ extension AuthenticationView {
         var signinPassword: String = ""
         var signinError: String = ""
     }
-
 }

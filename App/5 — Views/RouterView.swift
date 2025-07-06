@@ -14,7 +14,7 @@ internal import Combine
 struct RouterView: View {
     // MARK: - VARIABLES
     @Environment(AppState.self) private var appState
-    @State var routerViewModel: RouterViewModel = .init()
+    @State var viewModel: TabBarViewModel = .init()
     @State private var appLoaded: Bool = false
     
     // MARK: - BODY
@@ -65,7 +65,7 @@ struct RouterView: View {
 extension RouterView {
     var appNavigation: some View {
         ZStack(alignment: .bottom) {
-            switch routerViewModel.selectedTab {
+            switch viewModel.selectedTab {
             case .home:
                 HomeView()
                     .environment(appState)
@@ -84,35 +84,8 @@ extension RouterView {
                     .transition(.push(from: .bottom))
             }
             TabBarComponent()
-                .environment(routerViewModel)
+                .environment(viewModel)
                 .environment(appState)
-        }
-    }
-}
-
-// MARK: - VIEW MODEL
-class RouterViewModel: Observable, ObservableObject {
-    @Published public var selectedTab: Tabs = .home
-    
-    public enum Tabs: CaseIterable, Identifiable, Hashable {
-        var id: Self { self }
-        
-        case home
-        case explore
-        case notifications
-        case profile
-        
-        func systemImage(forSelected selected: Bool) -> String {
-            switch self {
-            case .home:
-                return selected ? "cloud.fill" : "cloud"
-            case .explore:
-                return selected ? "binoculars.fill" : "binoculars"
-            case .notifications:
-                return selected ? "bell.fill" : "bell"
-            case .profile:
-                return selected ? "person.crop.circle.fill" : "person"
-            }
         }
     }
 }

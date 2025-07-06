@@ -26,10 +26,9 @@ struct HeaderComponent: View {
     }
 }
 
+// MARK: - SETTINGS SECTION
 private extension HeaderComponent {
-    // MARK: - SETTINGS SECTION
-    @ViewBuilder
-    private var settingsSection: some View {
+    var settingsSection: some View {
         HStack {
             Spacer()
             HStack {
@@ -62,22 +61,24 @@ private extension HeaderComponent {
             }, alignment: .bottomLeading)
         .padding(.leading, PaddingConstants.defaultPadding)
     }
+}
 
-    // MARK: - FEED SECTION
-    @ViewBuilder
-    private var feedSection: some View {
+// MARK: - FEED SECTION
+private extension HeaderComponent {
+    var feedSection: some View {
         ArrayButtonComponent(
             array: feeds,
             action: {},
             content: { feed in
                 Text(feed.displayName)
-                }
-            )
+            }
+        )
     }
+}
 
-    // MARK: - TRENDING SECTION
-    @ViewBuilder
-    private var trendingSection: some View {
+// MARK: - TRENDING SECTION
+private extension HeaderComponent {
+    var trendingSection: some View {
         ScrollView(.horizontal) {
             HStack(spacing: PaddingConstants.smallPadding) {
                 Image(systemName: "flame.fill")
@@ -103,4 +104,3 @@ private extension HeaderComponent {
 #Preview {
     HeaderComponent(feeds: FeedModel.placeholders, trends: TrendModel.placeholders)
 }
-

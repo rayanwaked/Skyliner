@@ -23,6 +23,7 @@ struct FeedComponent: View {
                 }
             }
             .padding(.top, PaddingConstants.smallPadding)
+            .padding(.bottom, PaddingConstants.largePadding * 4)
         }
         .background(.defaultBackground)
         .scrollIndicators(.hidden)
