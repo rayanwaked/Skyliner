@@ -35,7 +35,6 @@ struct PostEmbeds: View {
                     EmptyView()
                 }
             }
-            .padding(.top, PaddingConstants.tinyPadding)
         }
     }
 }
@@ -111,28 +110,95 @@ struct VideoThumbnail: View {
 // MARK: - LINK PREVIEW
 struct LinkPreview: View {
     let external: AppBskyLexicon.Embed.ExternalDefinition.ViewExternal
+    @State private var isPressed = false
     
     var body: some View {
-        VStack(alignment: .leading, spacing: 8) {
+        VStack(alignment: .leading, spacing: 0) {
+            // Thumbnail Image
             if let thumbnailURL = external.thumbnailImageURL {
                 AsyncImageView(url: thumbnailURL, altText: nil)
-                    .frame(maxHeight: 150)
+                    .frame(maxHeight: 200)
+                    .clipped()
             }
             
-            VStack(alignment: .leading, spacing: 4) {
-                Text(external.title).font(.headline).lineLimit(2)
-                Text(external.description).font(.subheadline).foregroundColor(.secondary).lineLimit(3)
-                Text(external.uri).font(.caption).foregroundColor(.blue).lineLimit(1)
+            // Content Section
+            VStack(alignment: .leading, spacing: 8) {
+                // Title
+                if !external.title.isEmpty {
+                    Text(external.title)
+                        .font(.headline)
+                        .lineLimit(2)
+                        .multilineTextAlignment(.leading)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+                
+                // Description
+                if !external.description.isEmpty {
+                    Text(external.description)
+                        .font(.subheadline)
+                        .foregroundColor(.secondary)
+                        .lineLimit(3)
+                        .multilineTextAlignment(.leading)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+                
+                // URL with domain extraction
+                HStack(spacing: 4) {
+                    Image(systemName: "link")
+                        .font(.caption)
+                        .foregroundColor(.blue)
+                    
+                    Text(extractDomain(from: external.uri))
+                        .font(.caption)
+                        .foregroundColor(.blue)
+                        .lineLimit(1)
+                        .truncationMode(.tail)
+                    
+                    Spacer(minLength: 0)
+                    
+                    Image(systemName: "arrow.up.right")
+                        .font(.caption2)
+                        .foregroundColor(.blue)
+                }
             }
-            .padding(.horizontal, 12)
-            .padding(.vertical, 8)
+            .padding(12)
         }
         .background(.gray.opacity(0.1))
         .clipShape(RoundedRectangle(cornerRadius: 12))
-        .overlay(RoundedRectangle(cornerRadius: 12).stroke(.primary.opacity(0.1)))
+        .overlay(
+            RoundedRectangle(cornerRadius: 12)
+                .stroke(.primary.opacity(0.1))
+        )
+        .scaleEffect(isPressed ? 0.98 : 1.0)
+        .animation(.easeInOut(duration: 0.1), value: isPressed)
         .onTapGesture {
-            if let url = URL(string: external.uri) { UIApplication.shared.open(url) }
+            if let url = URL(string: external.uri) {
+                UIApplication.shared.open(url)
+            }
         }
+        .onLongPressGesture(minimumDuration: 0) {
+            // Handle press state for visual feedback
+        } onPressingChanged: { pressing in
+            isPressed = pressing
+        }
+        .accessibilityElement(children: .combine)
+        .accessibilityLabel("Link preview: \(external.title)")
+        .accessibilityHint("Double tap to open link")
+    }
+    
+    // Helper function to extract domain from URL
+    private func extractDomain(from urlString: String) -> String {
+        guard let url = URL(string: urlString),
+              let host = url.host else {
+            return urlString
+        }
+        
+        // Remove www. prefix if present
+        if host.hasPrefix("www.") {
+            return String(host.dropFirst(4))
+        }
+        
+        return host
     }
 }
 

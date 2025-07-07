@@ -13,10 +13,10 @@ import ATProtoKit
 @MainActor
 @Observable
 public class PostManager {
-    private var contexts: [String: PostContextModel] = [:]
-    private var posts: [PostModel] = []
     @ObservationIgnored
     public var clientManager: ClientManager? = nil
+    private var contexts: [String: PostContextModel] = [:]
+    private var posts: [PostModel] = []
 }
 
 // MARK: - POST MANAGER FUNCTIONS

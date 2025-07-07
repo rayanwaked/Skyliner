@@ -5,10 +5,10 @@
 //  Created by Rayan Waked on 7/3/25.
 //
 
-// **MARK: - IMPORTS**
+// MARK: - IMPORTS
 import SwiftUI
 
-// **MARK: - ACTIONS**
+// MARK: - ACTIONS
 extension PostComponent {
     var actions: some View {
         HStack {
@@ -29,7 +29,7 @@ extension PostComponent {
     }
 }
 
-// **MARK: - REPOST BUTTON**
+// MARK: - REPOST BUTTON
 extension PostComponent {
     var repostButton: some View {
         HStack(spacing: 4) {
@@ -56,7 +56,7 @@ extension PostComponent {
     }
 }
 
-// **MARK: - COMMENT BUTTON**
+// MARK: - COMMENT BUTTON
 extension PostComponent {
     var commentButton: some View {
         HStack(spacing: 4) {
@@ -72,7 +72,7 @@ extension PostComponent {
     }
 }
 
-// **MARK: - LIKE BUTTON**
+// MARK: - LIKE BUTTON
 extension PostComponent {
     var likeButton: some View {
         HStack(spacing: 4) {
@@ -102,7 +102,7 @@ extension PostComponent {
     }
 }
 
-// **MARK: - SHARE BUTTON**
+// MARK: - SHARE BUTTON
 extension PostComponent {
     var shareButton: some View {
         Image(systemName: "square.and.arrow.up")
@@ -140,7 +140,7 @@ extension PostComponent {
     }
 }
 
-// **MARK: - OPTIONS BUTTON**
+// MARK: - OPTIONS BUTTON
 extension PostComponent {
     var optionsButton: some View {
         Image(systemName: "command")
@@ -157,7 +157,7 @@ extension PostComponent {
     }
 }
 
-// **MARK: - CONTEXT MANAGER HELPER**
+// MARK: - CONTEXT MANAGER HELPER
 extension PostComponent {
     /// Helper computed property to get the context manager for this post
     private var contextManager: PostManager.PostContextManager? {
