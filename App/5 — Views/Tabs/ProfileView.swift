@@ -50,7 +50,6 @@ struct ProfileView: View {
             }
             .background(.defaultBackground)
         }
-        .background(.defaultBackground)
         .ignoresSafeArea(.all)
         .scrollIndicators(.hidden)
         .refreshable {

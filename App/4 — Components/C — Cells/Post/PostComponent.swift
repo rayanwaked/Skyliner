@@ -38,7 +38,6 @@ struct PostComponent: View {
             }
         }
         .foregroundStyle(.primary)
-        .background(.defaultBackground)
         .padding(.bottom, PaddingConstants.tinyPadding)
     }
 }

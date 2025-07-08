@@ -20,6 +20,8 @@ struct SkylinerApp: App {
         let POSTHOG_API_KEY = (Bundle.main.object(forInfoDictionaryKey: "posthogKey") as? String ?? "")
         let POSTHOG_HOST = "https://us.i.posthog.com"
         
+        print(Bundle.main.object(forInfoDictionaryKey: "posthogKey" as String)!)
+        
         let config = PostHogConfig(apiKey: POSTHOG_API_KEY, host: POSTHOG_HOST)
         config.sessionReplay = true
         

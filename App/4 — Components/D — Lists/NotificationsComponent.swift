@@ -40,7 +40,6 @@ struct NotificationsComponent: View {
                 }
             }
         }
-        .background(.defaultBackground)
         .task {
             await loadNotifications()
         }

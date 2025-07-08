@@ -21,7 +21,6 @@ struct HomeView: View {
             FeedComponent(feed: appState.postModel)
                 .environment(appState)
         }
-        .background(.defaultBackground)
     }
 }
 

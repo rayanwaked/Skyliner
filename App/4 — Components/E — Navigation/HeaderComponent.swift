@@ -29,7 +29,7 @@ struct HeaderComponent: View {
             }
             SeperatorComponent()
         }
-        .background(.defaultBackground)
+
     }
 }
 

@@ -45,6 +45,7 @@ struct RouterView: View {
                 .animation(.easeInOut(duration: 3), value: configurationState)
             }
         }
+        .background(.defaultBackground)
         .onAppear { PostHogSDK.shared.capture("Test Event") }
         .animation(.easeInOut, value: appLoaded)
         .task {
