@@ -17,17 +17,13 @@ struct SkylinerApp: App {
     
     // MARK: - INITALIZE
     init() {
-        if let posthogKey = ProcessInfo.processInfo.environment["posthogKey"] {
-            let POSTHOG_API_KEY = posthogKey
-            let POSTHOG_HOST = "https://us.i.posthog.com"
-            
-            let config = PostHogConfig(apiKey: POSTHOG_API_KEY, host: POSTHOG_HOST)
-            config.sessionReplay = true
-            
-            PostHogSDK.shared.setup(config)
-        } else {
-            print("Key not found")
-        }
+        let POSTHOG_API_KEY = Bundle.main.object(forInfoDictionaryKey: "posthogKey") as? String ?? ""
+        let POSTHOG_HOST = "https://us.i.posthog.com"
+        
+        let config = PostHogConfig(apiKey: POSTHOG_API_KEY, host: POSTHOG_HOST)
+        config.sessionReplay = true
+        
+        PostHogSDK.shared.setup(config)
     }
     
     // MARK: - BODY

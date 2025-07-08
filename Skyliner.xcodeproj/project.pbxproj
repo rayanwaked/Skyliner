@@ -21,9 +21,22 @@
 		B9D5550F2E1216FD00D9BD69 /* Skyliner.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Skyliner.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		B98F9BDF2E1D8D6C000EC86A /* Exceptions for "App" folder in "Skyliner" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				"2 — Resources/Information.plist",
+			);
+			target = B9D5550E2E1216FD00D9BD69 /* Skyliner */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		B9D555112E1216FD00D9BD69 /* App */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				B98F9BDF2E1D8D6C000EC86A /* Exceptions for "App" folder in "Skyliner" target */,
+			);
 			path = App;
 			sourceTree = "<group>";
 		};
@@ -293,6 +306,7 @@
 				DEVELOPMENT_TEAM = 6R2E9P9EPV;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "App/2 — Resources/Information.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = Skyliner;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.social-networking";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -332,6 +346,7 @@
 				DEVELOPMENT_TEAM = 6R2E9P9EPV;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "App/2 — Resources/Information.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = Skyliner;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.social-networking";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
