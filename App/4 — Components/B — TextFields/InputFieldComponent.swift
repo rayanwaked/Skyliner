@@ -53,6 +53,8 @@ extension InputFieldComponent {
             .regular.interactive(),
             in: RoundedRectangle(cornerRadius: 100)
         )
+        .background(.gray.opacity(ColorConstants.heavyOpaque))
+        .clipShape(RoundedRectangle(cornerRadius: 100))
     }
 }
 

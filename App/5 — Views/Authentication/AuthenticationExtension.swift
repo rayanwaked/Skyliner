@@ -47,7 +47,7 @@ extension AuthenticationView {
                     Text("for Bluesky")
                         .font(.headline)
                         .padding(.bottom, PaddingConstants.defaultPadding / 2)
-                    Text("Take to the skies with a bespoke experience for Bluesky")
+                    Text("Take to the skies with a refined experience for Bluesky")
                         .padding(.bottom, PaddingConstants.defaultPadding * 1.5)
                 }
                 
@@ -57,10 +57,10 @@ extension AuthenticationView {
                     Text("Welcome!")
                         .font(.title)
                         .fontWeight(.bold)
-                    Text("happy you're here :)")
+                    Text("let's get you started")
                         .font(.headline)
                         .padding(.bottom, PaddingConstants.defaultPadding / 2)
-                    Text("Just a quick account setup away from a new kind of social media")
+                    Text("We can help you setup a Bluesky account from here")
                         .padding(.bottom, PaddingConstants.defaultPadding * 1.5)
                 }
                 
@@ -70,10 +70,10 @@ extension AuthenticationView {
                     Text("Hey!")
                         .font(.title)
                         .fontWeight(.bold)
-                    Text("welcome back :)")
+                    Text("welcome back")
                         .font(.headline)
                         .padding(.bottom, PaddingConstants.defaultPadding / 2)
-                    Text("Are you ready for some cat pictures?")
+                    Text("There is lots happening, sign in with your Bluesky account to continue")
                         .padding(.bottom, PaddingConstants.defaultPadding * 1.5)
                 }
             }

@@ -13,12 +13,11 @@ struct NotificationsView: View {
     @Environment(AppState.self) private var appState
     
     var body: some View {
-        Button("Log Out") {
-            Task {
-                try await appState.authenticationManager.logout()
-            }
+        VStack {
+            HeaderComponent(isHome: false)
+                .padding(.top, PaddingConstants.largePadding * 2)
+            NotificationsComponent()
         }
-        NotificationsComponent()
     }
 }
 

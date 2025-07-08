@@ -12,6 +12,7 @@ import SwiftUI
 extension PostComponent {
     var actions: some View {
         HStack {
+            Spacer()
             repostButton
             Spacer()
             commentButton
@@ -19,8 +20,7 @@ extension PostComponent {
             likeButton
             Spacer()
             shareButton
-            Spacer()
-            optionsButton
+//            optionsButton
         }
         .font(.custom("actions", size: 14))
         .foregroundStyle(.primary.opacity(ColorConstants.darkOpaque))

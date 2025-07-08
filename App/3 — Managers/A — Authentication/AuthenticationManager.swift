@@ -116,7 +116,7 @@ extension AuthenticationManager {
         }
     }
     
-    // MARK: - AUTH METHODS (inlined from AuthenticationFunctions)
+    // MARK: - AUTH METHODS
     private func authenticateWith(handle: String, password: String) async throws -> ATProtocolConfiguration {
         let config = ATProtocolConfiguration(keychainProtocol: ATProtoKeychain)
         try await config.authenticate(with: handle, password: password)

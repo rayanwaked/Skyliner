@@ -17,6 +17,7 @@ struct HomeView: View {
     var body: some View {
         VStack(spacing: 0) {
             HeaderComponent(feeds: appState.feedModel, trends: appState.trendModel)
+                .environment(appState)
             FeedComponent(feed: appState.postModel)
                 .environment(appState)
         }

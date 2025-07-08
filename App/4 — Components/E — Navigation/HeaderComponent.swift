@@ -11,15 +11,22 @@ import NukeUI
 
 // MARK: - VIEW
 struct HeaderComponent: View {
+    @Environment(AppState.self) private var appState
     var feeds: [FeedModel] = []
     var trends: [TrendModel] = []
+    var isHome: Bool = true
     
     // MARK: - BODY
     var body: some View {
         VStack(spacing: 0) {
-            settingsSection
-            feedSection
-            trendingSection
+            if isHome {
+                settingsSection
+                feedSection
+                trendingSection
+            } else {
+                settingsSection
+                    .padding(.bottom, PaddingConstants.smallPadding)
+            }
             SeperatorComponent()
         }
         .background(.defaultBackground)
@@ -32,19 +39,25 @@ private extension HeaderComponent {
         HStack {
             Spacer()
             HStack {
-                CompactButtonComponent(
-                    action: {},
-                    label: Image(systemName: "command"),
-                    variation: .quaternary,
-                    placement: .header
-                )
+                if isHome {
+                    CompactButtonComponent(
+                        action: {
+                            Task {
+                                try await appState.authenticationManager.logout()
+                            }
+                        },
+                        label: Image(systemName: "command"),
+                        variation: .quaternary,
+                        placement: .header
+                    )
                 
-                CompactButtonComponent(
-                    action: {},
-                    label: Image(systemName: "number"),
-                    variation: .quaternary,
-                    placement: .header
-                )
+                    CompactButtonComponent(
+                        action: {},
+                        label: Image(systemName: "number"),
+                        variation: .quaternary,
+                        placement: .header
+                    )
+                }
             }
         }
         .padding([.leading, .trailing], PaddingConstants.defaultPadding)
@@ -54,7 +67,7 @@ private extension HeaderComponent {
                     .resizable()
                     .scaledToFit()
                     .frame(width: SizeConstants.screenWidth * 0.08, height: SizeConstants.screenWidth * 0.08)
-                Text("Skyliner")
+                Text(isHome ? "Skyliner" : "Notifications")
                     .font(.title)
                     .fontWeight(.bold)
                     .foregroundStyle(.primary)
@@ -102,5 +115,7 @@ private extension HeaderComponent {
 
 // MARK: - PREVIEW
 #Preview {
+    @Previewable @State var appState: AppState = .init()
+    
     HeaderComponent(feeds: FeedModel.placeholders, trends: TrendModel.placeholders)
 }
