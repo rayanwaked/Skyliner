@@ -14,6 +14,7 @@
 		B97588D32E170A5C00CD7360 /* FancyScrollView in Frameworks */ = {isa = PBXBuildFile; productRef = B97588D22E170A5C00CD7360 /* FancyScrollView */; };
 		B98C2C8E2E16E0A700D96DCA /* BezelKit in Frameworks */ = {isa = PBXBuildFile; productRef = B98C2C8D2E16E0A700D96DCA /* BezelKit */; };
 		B99314212E17227E0085B16E /* NukeUI in Frameworks */ = {isa = PBXBuildFile; productRef = B99314202E17227E0085B16E /* NukeUI */; };
+		B99D9C122E1CAD12005E8080 /* PostHog in Frameworks */ = {isa = PBXBuildFile; productRef = B99D9C112E1CAD12005E8080 /* PostHog */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -36,6 +37,7 @@
 				B97588D32E170A5C00CD7360 /* FancyScrollView in Frameworks */,
 				B99314212E17227E0085B16E /* NukeUI in Frameworks */,
 				B968C28E2E13154900DA7661 /* KeychainSwift in Frameworks */,
+				B99D9C122E1CAD12005E8080 /* PostHog in Frameworks */,
 				B968C2892E13153E00DA7661 /* ATMacro in Frameworks */,
 				B92B33392E1657AE004D4656 /* Glur in Frameworks */,
 				B968C28B2E13153E00DA7661 /* ATProtoKit in Frameworks */,
@@ -89,6 +91,7 @@
 				B98C2C8D2E16E0A700D96DCA /* BezelKit */,
 				B97588D22E170A5C00CD7360 /* FancyScrollView */,
 				B99314202E17227E0085B16E /* NukeUI */,
+				B99D9C112E1CAD12005E8080 /* PostHog */,
 			);
 			productName = Skyliner;
 			productReference = B9D5550F2E1216FD00D9BD69 /* Skyliner.app */;
@@ -125,6 +128,7 @@
 				B98C2C8C2E16E0A700D96DCA /* XCRemoteSwiftPackageReference "BezelKit" */,
 				B97588D12E170A5C00CD7360 /* XCRemoteSwiftPackageReference "FancyScrollView" */,
 				B993141F2E17227E0085B16E /* XCRemoteSwiftPackageReference "Nuke" */,
+				B99D9C102E1CAD12005E8080 /* XCRemoteSwiftPackageReference "posthog-ios" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = B9D555102E1216FD00D9BD69 /* Products */;
@@ -426,6 +430,14 @@
 				minimumVersion = 12.8.0;
 			};
 		};
+		B99D9C102E1CAD12005E8080 /* XCRemoteSwiftPackageReference "posthog-ios" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/PostHog/posthog-ios";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 3.28.2;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -463,6 +475,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = B993141F2E17227E0085B16E /* XCRemoteSwiftPackageReference "Nuke" */;
 			productName = NukeUI;
+		};
+		B99D9C112E1CAD12005E8080 /* PostHog */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = B99D9C102E1CAD12005E8080 /* XCRemoteSwiftPackageReference "posthog-ios" */;
+			productName = PostHog;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

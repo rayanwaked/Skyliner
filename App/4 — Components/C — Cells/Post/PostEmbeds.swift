@@ -163,7 +163,7 @@ struct LinkPreview: View {
             }
             .padding(12)
         }
-        .background(.gray.opacity(ColorConstants.softOpaque))
+        .background(.blue.opacity(ColorConstants.softOpaque))
         .clipShape(RoundedRectangle(cornerRadius: 12))
         .overlay(
             RoundedRectangle(cornerRadius: 12)

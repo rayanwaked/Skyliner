@@ -9,6 +9,7 @@
 import SwiftUI
 import ATProtoKit
 internal import Combine
+import PostHog
 
 // MARK: - VIEW
 struct RouterView: View {
@@ -44,6 +45,7 @@ struct RouterView: View {
                 .animation(.easeInOut(duration: 3), value: configurationState)
             }
         }
+        .onAppear { PostHogSDK.shared.capture("Test Event") }
         .animation(.easeInOut, value: appLoaded)
         .task {
             while !appLoaded {
