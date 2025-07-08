@@ -13,7 +13,6 @@ struct FeedComponent: View {
     @Environment(AppState.self) private var appState
     var feed: [PostModel]
     
-    // MARK: - BODY
     var body: some View {
         ScrollView {
             LazyVStack {

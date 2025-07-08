@@ -110,6 +110,7 @@ extension ProfileView {
             .font(.subheadline)
         }
         .padding([.leading, .trailing], PaddingConstants.defaultPadding)
+        .padding(.top, -PaddingConstants.tinyPadding)
     }
 }
 

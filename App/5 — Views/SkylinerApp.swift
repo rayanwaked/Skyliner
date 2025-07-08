@@ -12,15 +12,11 @@ import PostHog
 // MARK: - MAIN
 @main
 struct SkylinerApp: App {
-    // MARK: - VARIABLES
     @State private var appState = AppState()
     
-    // MARK: - INITALIZE
     init() {
         let POSTHOG_API_KEY = (Bundle.main.object(forInfoDictionaryKey: "posthogKey") as? String ?? "")
         let POSTHOG_HOST = "https://us.i.posthog.com"
-        
-        print(Bundle.main.object(forInfoDictionaryKey: "posthogKey" as String)!)
         
         let config = PostHogConfig(apiKey: POSTHOG_API_KEY, host: POSTHOG_HOST)
         config.sessionReplay = true
@@ -28,7 +24,6 @@ struct SkylinerApp: App {
         PostHogSDK.shared.setup(config)
     }
     
-    // MARK: - BODY
     var body: some Scene {
         WindowGroup {
             RouterView()

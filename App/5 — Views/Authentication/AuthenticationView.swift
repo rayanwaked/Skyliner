@@ -8,26 +8,44 @@
 // MARK: - IMPORT
 import SwiftUI
 
+// MARK: - VIEW MODEL
+extension AuthenticationView {
+    @Observable
+    class ViewModel {
+        public enum AuthenticationSections {
+            case welcomeSection
+            case createAccountSection
+            case signinSection
+        }
+        
+        var selectedSection: AuthenticationSections = .welcomeSection
+        var createHandle: String = ""
+        var createPassword: String = ""
+        var createReenteredPassword: String = ""
+        var createError: String = ""
+        var signinHandle: String = ""
+        var signinPassword: String = ""
+        var signinError: String = ""
+    }
+}
 
 // MARK: - VIEW
 struct AuthenticationView: View {
-    // MARK: - VARIABLE
     @Environment(AppState.self) private var appState
     @Environment(\.openURL) var openURL
     @State var viewModel = ViewModel()
     
-    // MARK: - BODY
     public var body: some View {
         ZStack(alignment: .bottomLeading) {
-            // MARK: BACKGROUND
-            BackgroundComponent()
+            // MARK: - BACKGROUND
+            BackgroundComponent(isAnimated: true)
                 .ignoresSafeArea(.keyboard)
                 .safeGlassEffect(in: RoundedRectangle(
                     cornerRadius: RadiusConstants.glassRadius
                 ))
                 .ignoresSafeArea()
 
-            // MARK: CONTENT
+            // MARK: - CONTENT
             VStack {
                 VStack {
                     switch viewModel.selectedSection {
@@ -88,7 +106,7 @@ struct AuthenticationView: View {
                 .padding(.bottom, -PaddingConstants.defaultPadding)
                 .animation(.easeInOut(duration: 0.25), value: viewModel.selectedSection)
 
-                // MARK: DOCUMENT
+                // MARK: - DOCUMENT
                 documentSection
                     .standardCardStyle()
                     .ignoresSafeArea(.keyboard)

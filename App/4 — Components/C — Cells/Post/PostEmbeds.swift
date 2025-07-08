@@ -27,7 +27,7 @@ struct PostEmbeds: View {
                 case .embedRecordView(let recordEmbed):
                     QuotedPost(record: recordEmbed.record)
                 case .embedRecordWithMediaView(let recordWithMediaEmbed):
-                    VStack(spacing: 8) {
+                    VStack(spacing: PaddingConstants.smallPadding) {
                         QuotedPost(record: recordWithMediaEmbed.record.record)
                         EmbedMedia(media: recordWithMediaEmbed.media)
                     }
@@ -44,13 +44,18 @@ struct MediaGrid: View {
     let images: [AppBskyLexicon.Embed.ImagesDefinition.ViewImage]
     
     var body: some View {
-        LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 4), count: images.count == 1 ? 1 : 2), spacing: 4) {
+        let columns = Array(repeating: GridItem(.flexible(), spacing: PaddingConstants.tinyPadding), count: images.count == 1 ? 1 : 2)
+        
+        LazyVGrid(columns: columns, spacing: PaddingConstants.tinyPadding) {
             ForEach(images.indices, id: \.self) { index in
                 AsyncImageView(url: images[index].fullSizeImageURL, altText: images[index].altText)
+                    .aspectRatio(images.count == 1 ? nil : 1, contentMode: .fill)
+                    .frame(maxHeight: images.count == 1 ? 400 : 200) // Add explicit max height
             }
         }
-        .clipShape(RoundedRectangle(cornerRadius: 12))
-        .overlay(RoundedRectangle(cornerRadius: 12).stroke(.primary.opacity(0.1)))
+        .fixedSize(horizontal: false, vertical: true) // Important: Let the grid size itself
+        .clipShape(RoundedRectangle(cornerRadius: RadiusConstants.smallRadius))
+        .overlay(RoundedRectangle(cornerRadius: RadiusConstants.smallRadius).stroke(.primary.opacity(ColorConstants.softOpaque)))
     }
 }
 
@@ -65,12 +70,15 @@ struct AsyncImageView: View {
                 image
                     .resizable()
                     .aspectRatio(contentMode: .fill)
-                    .frame(maxHeight: 300)
                     .clipped()
             } else {
                 Rectangle()
-                    .fill(.gray.opacity(0.2))
-                    .frame(height: 200)
+                    .fill(.gray.opacity(ColorConstants.lightOpaque))
+                    .frame(minHeight: 200) // Use minHeight instead of height
+                    .overlay(
+                        ProgressView()
+                            .scaleEffect(0.8)
+                    )
             }
         }
         .accessibilityLabel(altText ?? "")
@@ -82,16 +90,17 @@ struct VideoThumbnail: View {
     let video: AppBskyLexicon.Embed.VideoDefinition.View
     
     var body: some View {
-        VStack(alignment: .leading, spacing: 8) {
+        VStack(alignment: .leading, spacing: PaddingConstants.smallPadding) {
             ZStack {
                 AsyncImageView(url: video.thumbnailImageURL.flatMap(URL.init), altText: video.altText)
                     .frame(maxHeight: 200)
+                    .aspectRatio(16/9, contentMode: .fit) // Add aspect ratio constraint
                 
                 Button { /* TODO: Video playback */ } label: {
                     Image(systemName: "play.circle.fill")
                         .font(.system(size: 50))
                         .foregroundColor(.white)
-                        .background(.black.opacity(0.3), in: Circle())
+                        .background(.black.opacity(ColorConstants.defaultOpaque), in: Circle())
                 }
             }
             
@@ -99,11 +108,14 @@ struct VideoThumbnail: View {
                 Text(altText)
                     .font(.caption)
                     .foregroundColor(.secondary)
-                    .padding(.horizontal, 8)
+                    .padding(.horizontal, PaddingConstants.smallPadding)
+                    .multilineTextAlignment(.leading)
+                    .fixedSize(horizontal: false, vertical: true)
             }
         }
-        .clipShape(RoundedRectangle(cornerRadius: 12))
-        .overlay(RoundedRectangle(cornerRadius: 12).stroke(.primary.opacity(0.1)))
+        .fixedSize(horizontal: false, vertical: true) // Allow proper vertical sizing
+        .clipShape(RoundedRectangle(cornerRadius: RadiusConstants.smallRadius))
+        .overlay(RoundedRectangle(cornerRadius: RadiusConstants.smallRadius).stroke(.primary.opacity(ColorConstants.softOpaque)))
     }
 }
 
@@ -118,18 +130,18 @@ struct LinkPreview: View {
             if let thumbnailURL = external.thumbnailImageURL {
                 AsyncImageView(url: thumbnailURL, altText: nil)
                     .frame(maxHeight: 200)
+                    .aspectRatio(contentMode: .fit)
                     .clipped()
             }
             
             // Content Section
-            VStack(alignment: .leading, spacing: 8) {
+            VStack(alignment: .leading, spacing: PaddingConstants.smallPadding) {
                 // Title
                 if !external.title.isEmpty {
                     Text(external.title)
                         .font(.headline)
                         .lineLimit(2)
                         .multilineTextAlignment(.leading)
-                        .fixedSize(horizontal: false, vertical: true)
                 }
                 
                 // Description
@@ -139,11 +151,10 @@ struct LinkPreview: View {
                         .foregroundColor(.secondary)
                         .lineLimit(3)
                         .multilineTextAlignment(.leading)
-                        .fixedSize(horizontal: false, vertical: true)
                 }
                 
                 // URL with domain extraction
-                HStack(spacing: 4) {
+                HStack(spacing: PaddingConstants.tinyPadding) {
                     Image(systemName: "link")
                         .font(.caption)
                         .foregroundColor(.blue)
@@ -161,13 +172,13 @@ struct LinkPreview: View {
                         .foregroundColor(.blue)
                 }
             }
-            .padding(12)
+            .padding(PaddingConstants.smallPadding)
         }
         .background(.blue.opacity(ColorConstants.softOpaque))
-        .clipShape(RoundedRectangle(cornerRadius: 12))
+        .clipShape(RoundedRectangle(cornerRadius: RadiusConstants.smallRadius))
         .overlay(
-            RoundedRectangle(cornerRadius: 12)
-                .stroke(.primary.opacity(0.1))
+            RoundedRectangle(cornerRadius: RadiusConstants.smallRadius)
+                .stroke(.primary.opacity(ColorConstants.softOpaque))
         )
         .scaleEffect(isPressed ? 0.98 : 1.0)
         .animation(.easeInOut(duration: 0.1), value: isPressed)
@@ -231,35 +242,51 @@ struct QuotedPostContent: View {
     let record: AppBskyLexicon.Embed.RecordDefinition.ViewRecord
     
     var body: some View {
-        VStack(alignment: .leading, spacing: 8) {
-            HStack {
+        VStack(alignment: .leading, spacing: PaddingConstants.smallPadding) {
+            HStack(spacing: PaddingConstants.smallPadding) {
                 AsyncImageView(url: record.author.avatarImageURL, altText: nil)
                     .frame(width: 24, height: 24)
                     .clipShape(Circle())
                 
-                VStack(alignment: .leading, spacing: 0) {
-                    Text(record.author.displayName ?? "").font(.caption).fontWeight(.medium).lineLimit(1)
-                    Text("@\(record.author.actorHandle)").font(.caption2).foregroundColor(.secondary).lineLimit(1)
+                VStack(alignment: .leading, spacing: 1) {
+                    Text(record.author.displayName ?? "")
+                        .font(.caption)
+                        .fontWeight(.medium)
+                        .lineLimit(1)
+                    Text("@\(record.author.actorHandle)")
+                        .font(.caption2)
+                        .foregroundColor(.secondary)
+                        .lineLimit(1)
                 }
                 
                 Spacer()
-                Text(DateHelper.formattedRelativeDate(from: record.indexedAt)).font(.caption2).foregroundColor(.secondary)
+                
+                Text(DateHelper.formattedRelativeDate(from: record.indexedAt))
+                    .font(.caption2)
+                    .foregroundColor(.secondary)
             }
             
             if let postRecord = record.value.getRecord(ofType: AppBskyLexicon.Feed.PostRecord.self) {
-                Text(postRecord.text).font(.subheadline).lineLimit(6)
+                Text(postRecord.text)
+                    .font(.subheadline)
+                    .lineLimit(6)
+                    .multilineTextAlignment(.leading)
+                    .fixedSize(horizontal: false, vertical: true)
             }
             
             if let embeds = record.embeds, !embeds.isEmpty {
-                ForEach(embeds.indices, id: \.self) { index in
-                    NestedEmbed(embed: embeds[index])
+                VStack(spacing: PaddingConstants.smallPadding) {
+                    ForEach(embeds.indices, id: \.self) { index in
+                        NestedEmbed(embed: embeds[index])
+                    }
                 }
             }
         }
-        .padding(12)
-        .background(.gray.opacity(0.05))
-        .clipShape(RoundedRectangle(cornerRadius: 12))
-        .overlay(RoundedRectangle(cornerRadius: 12).stroke(.primary.opacity(0.1)))
+        .padding(PaddingConstants.smallPadding)
+        .fixedSize(horizontal: false, vertical: true) // Allow proper vertical sizing
+        .background(.gray.opacity(ColorConstants.defaultOpaque))
+        .clipShape(RoundedRectangle(cornerRadius: RadiusConstants.smallRadius))
+        .overlay(RoundedRectangle(cornerRadius: RadiusConstants.smallRadius).stroke(.primary.opacity(ColorConstants.softOpaque)))
     }
 }
 
@@ -269,10 +296,14 @@ struct NestedEmbed: View {
     
     var body: some View {
         switch embed {
-        case .embedImagesView(let imagesView): MediaGrid(images: imagesView.images)
-        case .embedVideoView(let videoView): VideoThumbnail(video: videoView)
-        case .embedExternalView(let externalView): LinkPreview(external: externalView.external)
-        default: EmptyView()
+        case .embedImagesView(let imagesView):
+            MediaGrid(images: imagesView.images)
+        case .embedVideoView(let videoView):
+            VideoThumbnail(video: videoView)
+        case .embedExternalView(let externalView):
+            LinkPreview(external: externalView.external)
+        default:
+            EmptyView()
         }
     }
 }
@@ -283,10 +314,14 @@ struct EmbedMedia: View {
     
     var body: some View {
         switch media {
-        case .embedImagesView(let imagesView): MediaGrid(images: imagesView.images)
-        case .embedVideoView(let videoView): VideoThumbnail(video: videoView)
-        case .embedExternalView(let externalView): LinkPreview(external: externalView.external)
-        default: EmptyView()
+        case .embedImagesView(let imagesView):
+            MediaGrid(images: imagesView.images)
+        case .embedVideoView(let videoView):
+            VideoThumbnail(video: videoView)
+        case .embedExternalView(let externalView):
+            LinkPreview(external: externalView.external)
+        default:
+            EmptyView()
         }
     }
 }
@@ -298,13 +333,19 @@ struct PlaceholderView: View {
     let color: Color
     
     var body: some View {
-        VStack {
-            Image(systemName: icon).foregroundColor(color)
-            Text(text).font(.subheadline).foregroundColor(.secondary)
+        VStack(spacing: PaddingConstants.smallPadding) {
+            Image(systemName: icon)
+                .foregroundColor(color)
+                .font(.title2)
+            Text(text)
+                .font(.subheadline)
+                .foregroundColor(.secondary)
         }
-        .padding()
-        .background(.gray.opacity(0.1))
-        .clipShape(RoundedRectangle(cornerRadius: 12))
+        .padding(PaddingConstants.defaultPadding)
+        .frame(maxWidth: .infinity)
+        .fixedSize(horizontal: false, vertical: true) // Allow proper vertical sizing
+        .background(.gray.opacity(ColorConstants.softOpaque))
+        .clipShape(RoundedRectangle(cornerRadius: RadiusConstants.smallRadius))
     }
 }
 
@@ -316,16 +357,23 @@ struct SpecialRecordView: View {
     let color: Color
     
     var body: some View {
-        VStack(alignment: .leading, spacing: 8) {
-            Text(title).font(.headline)
-            Text(subtitle).font(.subheadline)
-            if let description = description {
-                Text(description).font(.caption).foregroundColor(.secondary)
+        VStack(alignment: .leading, spacing: PaddingConstants.smallPadding) {
+            Text(title)
+                .font(.headline)
+            Text(subtitle)
+                .font(.subheadline)
+            if let description = description, !description.isEmpty {
+                Text(description)
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+                    .multilineTextAlignment(.leading)
+                    .fixedSize(horizontal: false, vertical: true)
             }
         }
-        .padding()
-        .background(color.opacity(0.1))
-        .clipShape(RoundedRectangle(cornerRadius: 12))
+        .padding(PaddingConstants.smallPadding)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(color.opacity(ColorConstants.softOpaque))
+        .clipShape(RoundedRectangle(cornerRadius: RadiusConstants.smallRadius))
     }
 }
 

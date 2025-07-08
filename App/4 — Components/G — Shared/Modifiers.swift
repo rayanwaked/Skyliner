@@ -5,6 +5,7 @@
 //  Created by Rayan Waked on 6/30/25.
 //
 
+// MARK: - IMPORTS
 import SwiftUI
 
 // MARK: - MODIFIER
@@ -76,7 +77,7 @@ extension Int {
     }
 }
 
-// MARK: - Glass Effect Wrapper
+// MARK: - GLASS EFFECT WRAPPER
 extension View {
     /// Applies a basic glass effect if running on iOS 26 or later, otherwise does nothing
     /// - Returns: View with glass effect applied on iOS 26+, unchanged view on older versions
@@ -220,7 +221,7 @@ extension View {
     }
 }
 
-// MARK: - Safe Glass Effect Container
+// MARK: - SAFE GLASS EFFECT CONTAINER
 struct SafeGlassEffectContainer<Content: View>: View {
     let content: Content
     

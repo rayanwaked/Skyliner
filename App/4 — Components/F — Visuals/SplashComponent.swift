@@ -10,12 +10,10 @@ import SwiftUI
 
 // MARK: - VIEW
 struct SplashComponent: View {
-    // MARK: - VARIABLES
     @State private var didAppear: Bool = false
     @State private var animationProgress: Double = 0
     @State private var opacityChange: Double = 0
     
-    // MARK: - VIEW
     var body: some View {
         GeometryReader { geometry in
             let width = geometry.size.width
@@ -26,7 +24,7 @@ struct SplashComponent: View {
             let rotation = -25 * animationProgress
             
             ZStack {
-                BackgroundComponent()
+                BackgroundComponent(isAnimated: true)
                 Image("SkylinerIcon")
                     .resizable()
                     .scaledToFit()

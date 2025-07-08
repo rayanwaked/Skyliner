@@ -5,8 +5,6 @@
 //  Created by Rayan Waked on 6/22/25.
 //
 
-// BackgroundComponent provides a dynamic, animated background with moving clouds for the Skyliner app.
-
 // MARK: - IMPORT
 import SwiftUI
 internal import Combine
@@ -18,20 +16,28 @@ struct BackgroundComponent: View {
     @StateObject private var cloudsAnimator = CloudsAnimator()
     // Track system light/dark mode for adaptive coloring.
     @Environment(\.colorScheme) var colorScheme
+    var isAnimated: Bool = false
 
     // MARK: - BODY
     var body: some View {
-        // Use geometry to size/position clouds relative to screen.
-        GeometryReader { geo in
-            ZStack {
-                gradientBackground
-                cloud(geo: geo)
+        if isAnimated {
+            // Use geometry to size/position clouds relative to screen.
+            GeometryReader { geo in
+                ZStack {
+                    gradientBackground
+                    cloud(geo: geo)
+                }
+                // Start cloud animation on appear.
+                .onAppear {
+                    cloudsAnimator
+                        .startAnimating(geoWidth: SizeConstants.screenWidth)
+                }
             }
-            // Start cloud animation on appear.
-            .onAppear {
-                cloudsAnimator
-                    .startAnimating(geoWidth: SizeConstants.screenWidth)
-            }
+        } else {
+            Rectangle()
+                .ignoresSafeArea(.all)
+                .foregroundStyle(.defaultBackground)
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
     }
 }

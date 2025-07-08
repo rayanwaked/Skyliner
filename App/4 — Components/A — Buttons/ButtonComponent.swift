@@ -5,7 +5,7 @@
 //  Created by Rayan Waked on 6/22/25.
 //
 
-// MARK: - IMPORT
+// MARK: - IMPORTS
 import SwiftUI
 import UIKit
 
@@ -18,12 +18,10 @@ enum ButtonVariation {
 
 // MARK: - VIEW
 struct ButtonComponent: View {
-    // MARK: - VARIABLE
     var action: () -> Void
     var label: String
     var variation: ButtonVariation
     
-    // MARK: - BODY
     var body: some View {
         Button(label) {
             action()
@@ -35,27 +33,27 @@ struct ButtonComponent: View {
 
 // MARK: - STYLE
 struct ButtonComponentStyle: ButtonStyle {
-    // MARK: - VARIABLE
     var variation: ButtonVariation = .primary
     
-    // MARK: - BODY
     func makeBody(configuration: Configuration) -> some View {
         ZStack {
             if variation == .primary || variation == .secondary {
                 RoundedRectangle(cornerRadius: 100)
                     .foregroundStyle( variation == .primary ? .blue : .blue .opacity(ColorConstants.defaultOpaque)
                     )
-                    .frame(maxWidth: .infinity, maxHeight: 50)
             } else {
                 RoundedRectangle(cornerRadius: 100)
                     .strokeBorder(Color.blue, lineWidth: 2)
-                    .frame(maxWidth: .infinity, maxHeight: 50)
             }
             configuration.label
                 .foregroundStyle((variation == .primary) ? .white : .blue)
                 .font(.subheadline)
                 .fontWeight(.semibold)
         }
+        .frame(
+            maxWidth: .infinity,
+            maxHeight: SizeConstants.screenHeight
+            * 0.055)
         .safeInteractiveGlassEffect()
         
     }

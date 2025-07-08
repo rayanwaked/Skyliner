@@ -13,12 +13,10 @@ import PostHog
 
 // MARK: - VIEW
 struct RouterView: View {
-    // MARK: - VARIABLES
     @Environment(AppState.self) private var appState
     @State var viewModel: TabBarViewModel = .init()
     @State private var appLoaded: Bool = false
     
-    // MARK: - BODY
     var body: some View {
         @State var configurationState = appState.authenticationManager.configurationState
         
@@ -35,18 +33,16 @@ struct RouterView: View {
                     .animation(.easeInOut, value: configurationState)
             case (true, false), (false, false):
                 ZStack {
-                    BackgroundComponent()
+                    BackgroundComponent(isAnimated: true)
                     SplashComponent()
                 }
+                .animation(.easeInOut(duration: 3), value: configurationState)
                 .safeGlassEffect(in: RoundedRectangle(
                     cornerRadius: RadiusConstants.glassRadius
                 ))
                 .ignoresSafeArea()
-                .animation(.easeInOut(duration: 3), value: configurationState)
             }
         }
-        .background(.defaultBackground)
-        .onAppear { PostHogSDK.shared.capture("Test Event") }
         .animation(.easeInOut, value: appLoaded)
         .task {
             while !appLoaded {
@@ -68,6 +64,8 @@ struct RouterView: View {
 extension RouterView {
     var appNavigation: some View {
         ZStack(alignment: .bottom) {
+            BackgroundComponent()
+            
             switch viewModel.selectedTab {
             case .home:
                 HomeView()
@@ -86,6 +84,7 @@ extension RouterView {
                     .environment(appState)
                     .transition(.push(from: .bottom))
             }
+
             TabBarComponent()
                 .environment(viewModel)
                 .environment(appState)

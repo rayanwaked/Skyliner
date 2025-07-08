@@ -5,7 +5,7 @@
 //  Created by Rayan Waked on 6/26/25.
 //
 
-// MARK: - IMPORT
+// MARK: - IMPORTS
 import SwiftUI
 import NukeUI
 
@@ -14,7 +14,6 @@ struct PostComponent: View {
     @Environment(AppState.self) var appState
     var post: PostModel
 
-    // MARK: - BODY
     var body: some View {
         Button {
             
@@ -42,9 +41,8 @@ struct PostComponent: View {
     }
 }
 
-// MARK: - EXTENSION
+// MARK: - PROFILE PICTURE
 extension PostComponent {
-    // MARK: - PROFILE PICTURE
     @ViewBuilder
     var profilePicture: some View {
         if post.author.avatarImageURL != nil {
@@ -71,7 +69,9 @@ extension PostComponent {
         } label: {
             PostEmbeds(embed: post.embed)
         }
-        .safeGlassEffect(in: RoundedRectangle(cornerRadius: 12))
+        .safeGlassEffect(
+            in: RoundedRectangle(cornerRadius: RadiusConstants.smallRadius)
+        )
     }
     
     // MARK: - ACCOUNT
@@ -89,7 +89,6 @@ extension PostComponent {
                 .font(.subheadline)
                 .fixedSize()
         }
-        .padding(.bottom, PaddingConstants.tinyPadding / 4)
         .lineLimit(1)
     }
     

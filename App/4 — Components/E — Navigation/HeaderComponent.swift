@@ -5,7 +5,7 @@
 //  Created by Rayan Waked on 6/24/25.
 //
 
-// MARK: - IMPORT
+// MARK: - IMPORTS
 import SwiftUI
 import NukeUI
 
@@ -16,7 +16,6 @@ struct HeaderComponent: View {
     var trends: [TrendModel] = []
     var isHome: Bool = true
     
-    // MARK: - BODY
     var body: some View {
         VStack(spacing: 0) {
             if isHome {

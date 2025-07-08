@@ -15,12 +15,10 @@ struct FeedItem: Hashable {
 
 // MARK: - VIEW
 struct ArrayButtonComponent<T: Hashable, Content: View>: View {
-    // MARK: - VARIABLES
     var array: [T] = []
     var action: () -> Void
     var content: (T) -> Content
     
-    // MARK: - BODY
     var body: some View {
         ScrollView(.horizontal) {
             SafeGlassEffectContainer {

@@ -49,6 +49,7 @@ extension CompactButtonVariation {
     }
 }
 
+// MARK: - FONT & PADDING
 extension CompactButtonPlacement {
     func font(for placement: CompactButtonPlacement) -> Font {
         switch self {
@@ -62,8 +63,8 @@ extension CompactButtonPlacement {
 
     func padding(for placement: CompactButtonPlacement) -> CGFloat {
         switch self {
-        case .standard: PaddingConstants.defaultPadding * 0.75
-        case .tabBar: PaddingConstants.defaultPadding * 1.15
+        case .standard: PaddingConstants.defaultPadding * 0.9
+        case .tabBar: PaddingConstants.defaultPadding * 0.95
         case .header: PaddingConstants.defaultPadding * 0.5
         case .explore: PaddingConstants.defaultPadding * 1.0
         case .profile: PaddingConstants.defaultPadding * 0.7
@@ -73,13 +74,11 @@ extension CompactButtonPlacement {
 
 // MARK: - VIEW
 struct CompactButtonComponent: View {
-    // MARK: - VARIABLE
     var action: () -> Void
     var label: Image
     var variation: CompactButtonVariation
     var placement: CompactButtonPlacement
 
-    // MARK: - BODY
     var body: some View {
         Button() {
             action()
@@ -94,11 +93,9 @@ struct CompactButtonComponent: View {
 
 // MARK: - STYLE
 struct CompactButtonComponentStyle: ButtonStyle {
-    // MARK: - VARIABLE
     var variation: CompactButtonVariation = .primary
     var placement: CompactButtonPlacement = .standard
 
-    // MARK: - BODY
     func makeBody(configuration: Configuration) -> some View {
         ZStack {
             variation.background(for: placement)

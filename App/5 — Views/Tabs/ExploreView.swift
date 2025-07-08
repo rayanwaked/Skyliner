@@ -15,7 +15,9 @@ struct ExploreView: View {
     @Environment(AppState.self) private var appState
     
     var body: some View {
-        Spacer()
+        ScrollView {
+            Spacer()
+        }
     }
 }
 

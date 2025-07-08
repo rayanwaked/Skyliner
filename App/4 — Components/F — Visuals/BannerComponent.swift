@@ -12,10 +12,8 @@ import Glur
 
 // MARK: - VIEW
 struct BannerComponent: View {
-    // MARK: - VARIABLES
     var bannerURL: URL? = URL(string: "https://cdn.bsky.app/img/banner/plain/did:plc:fid77rvrx44chjgehhbpduun/bafkreidaqpiitbwjcd4ny3lvkuwetkoz5nrdt2brpdm2cpfkvt4xxbt4zm@jpeg")
     
-    // MARK: - BODY
     var body: some View {
         VStack(spacing: 0) {
             if let bannerURL = bannerURL {

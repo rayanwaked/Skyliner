@@ -10,10 +10,8 @@ import SwiftUI
 
 // MARK: - VIEW
 struct NotificationComponent: View {
-    // MARK: - VALUES
     let notification: NotificationModel
     
-    // MARK: - Properties
     var body: some View {
         HStack(alignment: .top, spacing: PaddingConstants.smallPadding) {
             // Avatar
@@ -99,6 +97,7 @@ struct NotificationComponent: View {
     }
 }
 
+// MARK: - PREVIEW
 #Preview {
     @Previewable @State var appState: AppState = .init()
     

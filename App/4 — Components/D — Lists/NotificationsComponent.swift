@@ -5,14 +5,14 @@
 //  Created by Rayan Waked on 7/5/25.
 //
 
+// MARK: - IMPORTS
 import SwiftUI
 
-// MARK: - NotificationsComponent
+// MARK: - VIEW
 struct NotificationsComponent: View {
     @Environment(AppState.self) private var appState
     @State private var isLoading = false
     
-    // MARK: - Properties
     var body: some View {
         VStack {
             if isLoading {
@@ -45,7 +45,6 @@ struct NotificationsComponent: View {
         }
     }
     
-    // MARK: - Private Methods
     private func loadNotifications() async {
         isLoading = true
         _ = await appState.notificationManager.fetchNotifications()
@@ -53,7 +52,7 @@ struct NotificationsComponent: View {
     }
 }
 
-// MARK: - Preview
+// MARK: - PREVIEW
 #Preview {
     @Previewable @State var appState: AppState = .init()
     

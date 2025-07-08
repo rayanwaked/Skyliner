@@ -10,7 +10,6 @@ import SwiftUI
 
 // MARK: - VIEW
 struct InputFieldComponent: View {
-    // MARK: - VARIABLE
     var searchBar: Bool = false
     var secure: Bool = false
     var icon: Image
@@ -20,13 +19,12 @@ struct InputFieldComponent: View {
     
     private var inputOpacity: Color {
         if #available(iOS 26.0, *) {
-            return .gray.opacity(ColorConstants.darkOpaque)
+            return .gray.opacity(ColorConstants.heavyOpaque)
         } else {
             return .gray.opacity(ColorConstants.lightOpaque)
         }
     }
     
-    // MARK: - BODY
     var body: some View {
         Button(action: {
             isFocused = true
@@ -38,9 +36,8 @@ struct InputFieldComponent: View {
     }
 }
 
-// MARK: - EXTENSION
+// MARK: - TEXT FIELD
 extension InputFieldComponent {
-    // MARK: - TEXT FIELD
     var inputField: some View {
         HStack {
             icon
@@ -55,10 +52,10 @@ extension InputFieldComponent {
             }
         }
         .padding()
-        .frame(maxHeight: searchBar == true ? SizeConstants.screenHeight * 0.057 : SizeConstants.screenHeight * 0.065
+        .frame(maxHeight: searchBar == true ? SizeConstants.screenHeight * 0.055 : SizeConstants.screenHeight * 0.06
         )
         .safeInteractiveGlassEffect()
-        .background(inputOpacity)
+        .background(searchBar == true ? .clear : inputOpacity)
         .clipShape(RoundedRectangle(cornerRadius: 100))
     }
 }
@@ -67,14 +64,12 @@ extension InputFieldComponent {
 #Preview {
     @Previewable @State var previewText: String = "Preview"
 
-    // MARK: - STANDARD
     InputFieldComponent(
         icon: Image(systemName: "at"),
         title: "Title",
         text: $previewText
     )
     
-    // MARK: - SECURE
     InputFieldComponent(
         secure: true,
         icon: Image(systemName: "lock"),
