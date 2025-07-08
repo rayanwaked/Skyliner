@@ -17,7 +17,7 @@ struct SkylinerApp: App {
     
     // MARK: - INITALIZE
     init() {
-        let POSTHOG_API_KEY = Bundle.main.object(forInfoDictionaryKey: "posthogKey") as? String ?? ""
+        let POSTHOG_API_KEY = (Bundle.main.object(forInfoDictionaryKey: "posthogKey") as? String ?? "")
         let POSTHOG_HOST = "https://us.i.posthog.com"
         
         let config = PostHogConfig(apiKey: POSTHOG_API_KEY, host: POSTHOG_HOST)
