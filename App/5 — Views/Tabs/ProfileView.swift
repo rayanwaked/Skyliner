@@ -38,7 +38,7 @@ struct ProfileView: View {
                         bottomLeadingRadius: RadiusConstants.smallRadius,
                         bottomTrailingRadius: RadiusConstants.smallRadius,
                         topTrailingRadius: RadiusConstants.glassRadius))
-                    .glassEffect(.regular, in: .rect(
+                    .safeGlassEffect(in: .rect(
                         topLeadingRadius: RadiusConstants.glassRadius,
                         bottomLeadingRadius: RadiusConstants.smallRadius,
                         bottomTrailingRadius: RadiusConstants.smallRadius,
@@ -69,7 +69,7 @@ extension ProfileView {
                 .overlay(Circle().stroke(.defaultBackground, lineWidth: 5))
                 .scaledToFit()
         }
-        .glassEffect()
+        .safeGlassEffect()
         .frame(width: SizeConstants.screenWidth * 0.3, height: SizeConstants.screenWidth * 0.3)
         .padding(.top, SizeConstants.screenHeight * -0.065)
         .shadow(

@@ -38,7 +38,7 @@ struct RouterView: View {
                     BackgroundComponent()
                     SplashComponent()
                 }
-                .glassEffect(in: RoundedRectangle(
+                .safeGlassEffect(in: RoundedRectangle(
                     cornerRadius: RadiusConstants.glassRadius
                 ))
                 .ignoresSafeArea()

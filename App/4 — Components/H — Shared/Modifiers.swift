@@ -75,3 +75,166 @@ extension Int {
         }
     }
 }
+
+// MARK: - Glass Effect Wrapper
+extension View {
+    /// Applies a basic glass effect if running on iOS 26 or later, otherwise does nothing
+    /// - Returns: View with glass effect applied on iOS 26+, unchanged view on older versions
+    @ViewBuilder
+    func safeGlassEffect() -> some View {
+        if #available(iOS 26.0, *) {
+            self.glassEffect()
+        } else {
+            self
+        }
+    }
+    
+    /// Applies a glass effect with regular style and tint color if running on iOS 26 or later, otherwise does nothing
+    /// - Parameter tintColor: The tint color to apply to the glass effect
+    /// - Returns: View with glass effect applied on iOS 26+, unchanged view on older versions
+    @ViewBuilder
+    func safeGlassEffect(tint tintColor: Color) -> some View {
+        if #available(iOS 26.0, *) {
+            self.glassEffect(.regular.tint(tintColor))
+        } else {
+            self
+        }
+    }
+    
+    /// Applies an interactive glass effect if running on iOS 26 or later, otherwise does nothing
+    /// - Returns: View with interactive glass effect applied on iOS 26+, unchanged view on older versions
+    @ViewBuilder
+    func safeInteractiveGlassEffect() -> some View {
+        if #available(iOS 26.0, *) {
+            self.glassEffect(.regular.interactive())
+        } else {
+            self
+        }
+    }
+    
+    /// Applies an interactive glass effect with tint color if running on iOS 26 or later, otherwise does nothing
+    /// - Parameter tintColor: The tint color to apply to the glass effect
+    /// - Returns: View with interactive glass effect applied on iOS 26+, unchanged view on older versions
+    @ViewBuilder
+    func safeInteractiveGlassEffect(tint tintColor: Color) -> some View {
+        if #available(iOS 26.0, *) {
+            self.glassEffect(.regular.tint(tintColor).interactive())
+        } else {
+            self
+        }
+    }
+    
+    /// Applies a glass effect within a specific region if running on iOS 26 or later, otherwise does nothing
+    /// - Parameter region: The region where the effect should be applied
+    /// - Returns: View with glass effect applied on iOS 26+, unchanged view on older versions
+    @ViewBuilder
+    func safeGlassEffect<S: Shape>(in region: S) -> some View {
+        if #available(iOS 26.0, *) {
+            self.glassEffect(in: region)
+        } else {
+            self
+        }
+    }
+    
+    /// Applies a glass effect with tint color within a specific region if running on iOS 26 or later, otherwise does nothing
+    /// - Parameters:
+    ///   - tintColor: The tint color to apply to the glass effect
+    ///   - region: The region where the effect should be applied
+    /// - Returns: View with glass effect applied on iOS 26+, unchanged view on older versions
+    @ViewBuilder
+    func safeGlassEffect<S: Shape>(tint tintColor: Color, in region: S) -> some View {
+        if #available(iOS 26.0, *) {
+            self.glassEffect(.regular.tint(tintColor), in: region)
+        } else {
+            self
+        }
+    }
+    
+    /// Applies a glass effect with enabled state if running on iOS 26 or later, otherwise does nothing
+    /// - Parameter isEnabled: Whether the glass effect should be enabled
+    /// - Returns: View with glass effect applied on iOS 26+, unchanged view on older versions
+    @ViewBuilder
+    func safeGlassEffect(isEnabled: Bool) -> some View {
+        if #available(iOS 26.0, *) {
+            self.glassEffect(isEnabled: isEnabled)
+        } else {
+            self
+        }
+    }
+    
+    /// Applies a glass effect with tint color and enabled state if running on iOS 26 or later, otherwise does nothing
+    /// - Parameters:
+    ///   - tintColor: The tint color to apply to the glass effect
+    ///   - isEnabled: Whether the glass effect should be enabled
+    /// - Returns: View with glass effect applied on iOS 26+, unchanged view on older versions
+    @ViewBuilder
+    func safeGlassEffect(tint tintColor: Color, isEnabled: Bool) -> some View {
+        if #available(iOS 26.0, *) {
+            self.glassEffect(.regular.tint(tintColor), isEnabled: isEnabled)
+        } else {
+            self
+        }
+    }
+    
+    /// Applies a glass effect within a specific region with enabled state if running on iOS 26 or later, otherwise does nothing
+    /// - Parameters:
+    ///   - region: The region where the effect should be applied
+    ///   - isEnabled: Whether the glass effect should be enabled
+    /// - Returns: View with glass effect applied on iOS 26+, unchanged view on older versions
+    @ViewBuilder
+    func safeGlassEffect<S: Shape>(in region: S, isEnabled: Bool) -> some View {
+        if #available(iOS 26.0, *) {
+            self.glassEffect(in: region, isEnabled: isEnabled)
+        } else {
+            self
+        }
+    }
+    
+    /// Applies a glass effect with tint color within a specific region with enabled state if running on iOS 26 or later, otherwise does nothing
+    /// - Parameters:
+    ///   - tintColor: The tint color to apply to the glass effect
+    ///   - region: The region where the effect should be applied
+    ///   - isEnabled: Whether the glass effect should be enabled
+    /// - Returns: View with glass effect applied on iOS 26+, unchanged view on older versions
+    @ViewBuilder
+    func safeGlassEffect<S: Shape>(tint tintColor: Color, in region: S, isEnabled: Bool) -> some View {
+        if #available(iOS 26.0, *) {
+            self.glassEffect(.regular.tint(tintColor), in: region, isEnabled: isEnabled)
+        } else {
+            self
+        }
+    }
+    
+    /// Applies a glass effect ID for grouping if running on iOS 26 or later, otherwise does nothing
+    /// - Parameters:
+    ///   - id: The unique identifier for this glass effect element
+    ///   - namespace: The namespace for grouping glass effects together
+    /// - Returns: View with glass effect ID applied on iOS 26+, unchanged view on older versions
+    @ViewBuilder
+    func safeGlassEffectID<ID: Hashable & Sendable>(_ id: ID, in namespace: Namespace.ID) -> some View {
+        if #available(iOS 26.0, *) {
+            self.glassEffectID(id, in: namespace)
+        } else {
+            self
+        }
+    }
+}
+
+// MARK: - Safe Glass Effect Container
+struct SafeGlassEffectContainer<Content: View>: View {
+    let content: Content
+    
+    init(@ViewBuilder content: () -> Content) {
+        self.content = content()
+    }
+    
+    var body: some View {
+        if #available(iOS 26.0, *) {
+            GlassEffectContainer {
+                content
+            }
+        } else {
+            content
+        }
+    }
+}

@@ -23,17 +23,13 @@ struct ArrayButtonComponent<T: Hashable, Content: View>: View {
     // MARK: - BODY
     var body: some View {
         ScrollView(.horizontal) {
-            GlassEffectContainer {
+            SafeGlassEffectContainer {
                 HStack {
                     ForEach(array, id: \.self) { item in
                         content(item)
                     }
                     .padding(PaddingConstants.smallPadding)
-                    .glassEffect(
-                        .regular
-                            .interactive()
-                            .tint(.blue.opacity(ColorConstants.lightOpaque))
-                    )
+                    .safeInteractiveGlassEffect(tint: .blue.opacity(ColorConstants.lightOpaque))
                     .shadow(radius: 0)
                     .padding([.top, .bottom], PaddingConstants.tinyPadding / 1.3)
                     .hapticAction(.soft, perform: { action() })

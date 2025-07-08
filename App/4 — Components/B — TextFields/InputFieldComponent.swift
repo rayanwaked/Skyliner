@@ -18,6 +18,14 @@ struct InputFieldComponent: View {
     @Binding var text: String
     @FocusState private var isFocused: Bool
     
+    private var inputOpacity: Color {
+        if #available(iOS 26.0, *) {
+            return .gray.opacity(ColorConstants.darkOpaque)
+        } else {
+            return .gray.opacity(ColorConstants.lightOpaque)
+        }
+    }
+    
     // MARK: - BODY
     var body: some View {
         Button(action: {
@@ -49,11 +57,8 @@ extension InputFieldComponent {
         .padding()
         .frame(maxHeight: searchBar == true ? SizeConstants.screenHeight * 0.057 : SizeConstants.screenHeight * 0.065
         )
-        .glassEffect(
-            .regular.interactive(),
-            in: RoundedRectangle(cornerRadius: 100)
-        )
-        .background(.gray.opacity(ColorConstants.heavyOpaque))
+        .safeInteractiveGlassEffect()
+        .background(inputOpacity)
         .clipShape(RoundedRectangle(cornerRadius: 100))
     }
 }
@@ -77,4 +82,3 @@ extension InputFieldComponent {
         text: $previewText
     )
 }
-

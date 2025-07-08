@@ -55,13 +55,13 @@ extension PostComponent {
                     .clipShape(Circle())
                     .scaledToFit()
                     .frame(maxWidth: SizeConstants.screenWidth * 0.125, maxHeight: SizeConstants.screenWidth * 0.125)
-                    .glassEffect()
+                    .safeGlassEffect()
             }
         } else {
             Circle()
                 .foregroundStyle(.blue)
                 .frame(maxWidth: SizeConstants.screenWidth * 0.125, maxHeight: SizeConstants.screenWidth * 0.125)
-                .glassEffect()
+                .safeGlassEffect()
         }
     }
     
@@ -72,7 +72,7 @@ extension PostComponent {
         } label: {
             PostEmbeds(embed: post.embed)
         }
-        .glassEffect(.regular, in: RoundedRectangle(cornerRadius: 12))
+        .safeGlassEffect(in: RoundedRectangle(cornerRadius: 12))
     }
     
     // MARK: - ACCOUNT

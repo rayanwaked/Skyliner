@@ -108,7 +108,7 @@ struct CompactButtonComponentStyle: ButtonStyle {
                 .fontWeight(.semibold)
                 .padding(placement.padding(for: placement))
         }
-        .glassEffect(.regular.interactive(true))
+        .safeInteractiveGlassEffect()
     }
 }
 

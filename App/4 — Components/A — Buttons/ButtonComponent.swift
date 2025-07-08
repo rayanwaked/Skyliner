@@ -56,7 +56,7 @@ struct ButtonComponentStyle: ButtonStyle {
                 .font(.subheadline)
                 .fontWeight(.semibold)
         }
-        .glassEffect(.regular.interactive(true))
+        .safeInteractiveGlassEffect()
         
     }
 }

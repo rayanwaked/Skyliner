@@ -14,6 +14,14 @@ internal import Combine
 class TabBarViewModel: Observable, ObservableObject {
     @Published fileprivate var _selectedTab: Tabs = .home
     
+    var tabBarOpacity: CGFloat {
+        if #available(iOS 26, *) {
+            return CGFloat(0)
+        } else {
+            return CGFloat(100)
+        }
+    }
+    
     public var selectedTab: Tabs {
         get { _selectedTab }
         set { _selectedTab = newValue }
@@ -157,7 +165,9 @@ extension TabBarComponent {
         .foregroundStyle(.primary)
         .padding([.leading, .trailing], PaddingConstants.defaultPadding)
         .padding([.top, .bottom], PaddingConstants.defaultPadding / 3)
-        .glassEffect(.regular.tint(.clear).interactive())
+        .safeInteractiveGlassEffect(tint: .clear)
+        .background(.ultraThinMaterial.opacity(viewModel.tabBarOpacity))
+        .clipShape(RoundedRectangle(cornerRadius: 100))
     }
 }
 
@@ -195,3 +205,4 @@ extension TabBarComponent {
         .environment(viewModel)
         .environment(appState)
 }
+

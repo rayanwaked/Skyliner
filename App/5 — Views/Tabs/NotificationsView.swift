@@ -18,6 +18,7 @@ struct NotificationsView: View {
                 .padding(.top, PaddingConstants.largePadding * 2)
             NotificationsComponent()
         }
+        .background(.defaultBackground)
     }
 }
 
