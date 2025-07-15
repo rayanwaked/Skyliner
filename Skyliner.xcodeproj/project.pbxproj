@@ -6,14 +6,22 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		B9C03D3A2E24855B00D98A25 /* ATMacro in Frameworks */ = {isa = PBXBuildFile; productRef = B9C03D392E24855B00D98A25 /* ATMacro */; };
+		B9C03D3C2E24855B00D98A25 /* ATProtoKit in Frameworks */ = {isa = PBXBuildFile; productRef = B9C03D3B2E24855B00D98A25 /* ATProtoKit */; };
+		B9C03DD92E248D6400D98A25 /* PostHog in Frameworks */ = {isa = PBXBuildFile; productRef = B9C03DD82E248D6400D98A25 /* PostHog */; };
+		B9C03E102E2496A900D98A25 /* KeychainSwift in Frameworks */ = {isa = PBXBuildFile; productRef = B9C03E0F2E2496A900D98A25 /* KeychainSwift */; };
+		B9C03E9E2E2499C500D98A25 /* NukeUI in Frameworks */ = {isa = PBXBuildFile; productRef = B9C03E9D2E2499C500D98A25 /* NukeUI */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
 		B9C03D2A2E24850D00D98A25 /* Skyliner.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Skyliner.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		B9C03D2C2E24850D00D98A25 /* Skyliner */ = {
+		B9C03D2C2E24850D00D98A25 /* App */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			path = Skyliner;
+			path = App;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -23,6 +31,11 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B9C03DD92E248D6400D98A25 /* PostHog in Frameworks */,
+				B9C03E102E2496A900D98A25 /* KeychainSwift in Frameworks */,
+				B9C03E9E2E2499C500D98A25 /* NukeUI in Frameworks */,
+				B9C03D3A2E24855B00D98A25 /* ATMacro in Frameworks */,
+				B9C03D3C2E24855B00D98A25 /* ATProtoKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -32,7 +45,7 @@
 		B9C03D212E24850D00D98A25 = {
 			isa = PBXGroup;
 			children = (
-				B9C03D2C2E24850D00D98A25 /* Skyliner */,
+				B9C03D2C2E24850D00D98A25 /* App */,
 				B9C03D2B2E24850D00D98A25 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -61,10 +74,15 @@
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
-				B9C03D2C2E24850D00D98A25 /* Skyliner */,
+				B9C03D2C2E24850D00D98A25 /* App */,
 			);
 			name = Skyliner;
 			packageProductDependencies = (
+				B9C03D392E24855B00D98A25 /* ATMacro */,
+				B9C03D3B2E24855B00D98A25 /* ATProtoKit */,
+				B9C03DD82E248D6400D98A25 /* PostHog */,
+				B9C03E0F2E2496A900D98A25 /* KeychainSwift */,
+				B9C03E9D2E2499C500D98A25 /* NukeUI */,
 			);
 			productName = Skyliner;
 			productReference = B9C03D2A2E24850D00D98A25 /* Skyliner.app */;
@@ -94,6 +112,12 @@
 			);
 			mainGroup = B9C03D212E24850D00D98A25;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				B9C03D382E24855B00D98A25 /* XCRemoteSwiftPackageReference "ATProtoKit" */,
+				B9C03DD72E248D6400D98A25 /* XCRemoteSwiftPackageReference "posthog-ios" */,
+				B9C03E0E2E2496A900D98A25 /* XCRemoteSwiftPackageReference "keychain-swift" */,
+				B9C03E9C2E2499C500D98A25 /* XCRemoteSwiftPackageReference "Nuke" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = B9C03D2B2E24850D00D98A25 /* Products */;
 			projectDirPath = "";
@@ -251,16 +275,20 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 6R2E9P9EPV;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = Skyliner;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.social-networking";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -269,12 +297,16 @@
 				PRODUCT_BUNDLE_IDENTIFIER = waked.Skyliner;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
 				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -283,16 +315,20 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 6R2E9P9EPV;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = Skyliner;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.social-networking";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -301,12 +337,16 @@
 				PRODUCT_BUNDLE_IDENTIFIER = waked.Skyliner;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
 				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};
@@ -332,6 +372,69 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		B9C03D382E24855B00D98A25 /* XCRemoteSwiftPackageReference "ATProtoKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/MasterJ93/ATProtoKit";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.30.2;
+			};
+		};
+		B9C03DD72E248D6400D98A25 /* XCRemoteSwiftPackageReference "posthog-ios" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/PostHog/posthog-ios";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 3.28.2;
+			};
+		};
+		B9C03E0E2E2496A900D98A25 /* XCRemoteSwiftPackageReference "keychain-swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/evgenyneu/keychain-swift.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 24.0.0;
+			};
+		};
+		B9C03E9C2E2499C500D98A25 /* XCRemoteSwiftPackageReference "Nuke" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/kean/Nuke";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 12.8.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		B9C03D392E24855B00D98A25 /* ATMacro */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = B9C03D382E24855B00D98A25 /* XCRemoteSwiftPackageReference "ATProtoKit" */;
+			productName = ATMacro;
+		};
+		B9C03D3B2E24855B00D98A25 /* ATProtoKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = B9C03D382E24855B00D98A25 /* XCRemoteSwiftPackageReference "ATProtoKit" */;
+			productName = ATProtoKit;
+		};
+		B9C03DD82E248D6400D98A25 /* PostHog */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = B9C03DD72E248D6400D98A25 /* XCRemoteSwiftPackageReference "posthog-ios" */;
+			productName = PostHog;
+		};
+		B9C03E0F2E2496A900D98A25 /* KeychainSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = B9C03E0E2E2496A900D98A25 /* XCRemoteSwiftPackageReference "keychain-swift" */;
+			productName = KeychainSwift;
+		};
+		B9C03E9D2E2499C500D98A25 /* NukeUI */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = B9C03E9C2E2499C500D98A25 /* XCRemoteSwiftPackageReference "Nuke" */;
+			productName = NukeUI;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = B9C03D222E24850D00D98A25 /* Project object */;
 }
