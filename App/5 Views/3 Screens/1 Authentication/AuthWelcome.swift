@@ -92,7 +92,7 @@ extension AuthenticationView {
 extension AuthenticationView {
     @ViewBuilder
     var skylinerIcon: some View {
-        Image("SkylinerIcon")
+        Image("SkylinerImage")
             .resizable()
             .scaledToFit()
             .frame(width: Padding.standard * 2.5, height: Padding.standard * 2.5)

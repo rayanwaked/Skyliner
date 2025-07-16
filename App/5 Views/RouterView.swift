@@ -41,13 +41,13 @@ extension RouterView {
             switch routerCoordinator.selectedTab {
             case .home:
                 HomeView()
-                    .transition(.push(from: .bottom))
+                    .transition(.move(edge: .bottom))
             case .explore:
-                Text("Explore")
-                    .transition(.push(from: .bottom))
+                ExploreView()
+                    .transition(.move(edge: .top))
             case .profile:
-                Text("Profile")
-                    .transition(.push(from: .bottom))
+                ProfileView()
+                    .transition(.move(edge: .bottom))
             }
             
             TabBarFeature()

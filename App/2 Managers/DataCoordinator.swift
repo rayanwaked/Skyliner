@@ -17,12 +17,10 @@ class DataCoordinator {
         self.appState = appState
     }
     
-    // MARK: - METHODS
-    func refreshAllData() async {
-//        guard let appState else { return }
-    }
-    
-    func refreshPosts() async {
-//        guard let appState else { return }
+    func loadAllData() async {
+        await appState?.updateUserDID()
+        await appState?.accountManager.loadProfilePicture()
+        await appState?.trendsManager.loadTrends()
+        await appState?.postsManager.loadPosts()
     }
 }

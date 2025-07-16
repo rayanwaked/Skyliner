@@ -7,6 +7,7 @@
 
 import SwiftUI
 import NukeUI
+internal import Combine
 
 // MARK: - VIEW
 struct HeaderFeature: View {
@@ -27,6 +28,8 @@ struct HeaderFeature: View {
                 settingsSection
                     .padding(.bottom, Padding.small)
             }
+            
+            Divider()
         }
         .background(.standardBackground)
     }
@@ -71,24 +74,41 @@ private extension HeaderFeature {
                     .foregroundStyle(.accent)
                     .padding(.trailing, -Padding.small)
                 
-//                ArrayButtonComponent(
-//                    items: ["", ""], content: { trend in
-//                        withAnimation(.easeInOut) {
-//                            routerCoordinator.selectedTab = .explore
-//                        }
-//                        // Setting the search value after a delay, so that the view has time to load; otherwise a bug will occur and the search returns will be empty
-//                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-//                            routerCoordinator.exploreSearch = "" ?? ""
-//                        }
-//                    }, action: { trend in
-//                        Text("" ?? "")
-//                    }
-//                )
+                ArrayButtonComponent(
+                    items: appState.trendsManager.trends,
+                    content: { trend in
+                        Text(trend)
+                    },
+                    action: { trend in
+                        withAnimation(.easeInOut) {
+                            routerCoordinator.selectedTab = .explore
+                        }
+                        // Setting the search value after a delay, so that the view has time to load; otherwise a bug will occur and the search will return empty
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                            routerCoordinator.exploreSearch = trend
+                        }
+                    }
+                )
             }
             .padding(.horizontal, Padding.standard)
         }
-        .padding(.vertical, Padding.small)
+        .padding(.vertical, Padding.tiny)
         .scrollIndicators(.hidden)
+    }
+}
+
+// MARK: - SCROLL HANDLER
+final class HandleScrollChange: ObservableObject {
+    @Published private(set) var isVisible: Bool = true
+    
+    func updateVisibility(_ oldValue: Double, _ newValue: Double) {
+        withAnimation(.easeInOut) {
+            if newValue < Screen.height * 0.025 {
+                isVisible = true
+            } else {
+                isVisible = newValue < oldValue
+            }
+        }
     }
 }
 
@@ -101,4 +121,3 @@ private extension HeaderFeature {
         .environment(appState)
         .environment(routerCoordinator)
 }
-

@@ -1,0 +1,113 @@
+//
+//  ProfilePictureComponent.swift
+//  Skyliner
+//
+//  Created by Rayan Waked on 7/15/25.
+//
+
+import SwiftUI
+import NukeUI
+
+extension ProfilePictureComponent {
+    enum Size {
+        case small, medium, large
+        
+        var frame: CGSize {
+            switch self {
+            case .small: CGSize(
+                width: Screen.width * 0.08,
+                height: Screen.width * 0.08
+            )
+            case .medium: CGSize(
+                width: Screen.width * 0.11,
+                height: Screen.width * 0.11
+            )
+            case .large: CGSize(
+                width: Screen.width * 0.2,
+                height: Screen.width * 0.2
+            )
+            }
+        }
+    }
+}
+
+// MARK: - VIEW
+struct ProfilePictureComponent: View {
+    @Environment(AppState.self) private var appState
+    var isUser: Bool? = true
+    var profilePictureURL: URL? = nil
+    var size: Size = .medium
+    
+    var body: some View {
+        switch isUser {
+        case true: user
+        case false: others
+        default: user
+        }
+    }
+}
+
+// MARK: - USER
+extension ProfilePictureComponent {
+    var user: some View {
+        Group {
+            if let profilePictureURL = appState.accountManager.profilePictureURL {
+                LazyImage(url: profilePictureURL) { state in
+                    if let image = state.image {
+                        image
+                            .resizable()
+                            .aspectRatio(contentMode: .fill)
+                    } else {
+                        Circle()
+                            .fill(Color.secondary.opacity(0.3))
+                    }
+                }
+                .frame(width: size.frame.width, height: size.frame.height)
+                .clipShape(Circle())
+                .backport.glassEffect(.tintedAndInteractive(color: .clear, isEnabled: true))
+            } else {
+                Circle()
+                    .font(.title2)
+                    .fontWeight(.semibold)
+                    .frame(maxWidth: .infinity)
+                    .frame(width: size.frame.width, height: size.frame.height)
+            }
+        }
+    }
+}
+
+// MARK: - OTHERS
+extension ProfilePictureComponent {
+    var others: some View {
+        Group {
+            if let profilePictureURL {
+                LazyImage(url: profilePictureURL) { state in
+                    if let image = state.image {
+                        image
+                            .resizable()
+                            .aspectRatio(contentMode: .fill)
+                    } else {
+                        Circle()
+                            .fill(Color.secondary.opacity(0.3))
+                    }
+                }
+                .frame(width: size.frame.width, height: size.frame.height)
+                .backport.glassEffect(.tintedAndInteractive(color: .clear, isEnabled: true))
+                .clipShape(Circle())
+            } else {
+                Circle()
+                    .font(.title2)
+                    .fontWeight(.semibold)
+                    .frame(maxWidth: .infinity)
+                    .frame(width: size.frame.width, height: size.frame.height)
+            }
+        }
+    }
+}
+
+#Preview {
+    @Previewable @State var appState: AppState = .init()
+    
+    ProfilePictureComponent(size: .medium)
+        .environment(appState)
+}

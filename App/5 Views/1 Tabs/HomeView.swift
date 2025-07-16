@@ -8,44 +8,38 @@
 import SwiftUI
 
 struct HomeView: View {
-    @State private var scrollDistance: Double = 0.0
-    @State private var previousScrollDistance: Double = 0
-    @State private var headerShowing: Bool = true
+    @StateObject var scrollHandler = HandleScrollChange()
     
     var body: some View {
         ZStack(alignment: .top) {
             ScrollView {
-                VStack {
-                    
+                LazyVStack {
+                    ForEach(1..<102) { _ in
+                        PostFeature()
+                    }
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
-                .padding(.top, Screen.height * 0.1)
+                .padding(.top, Screen.height * 0.125)
             }
+            .scrollIndicators(.hidden)
             .onScrollGeometryChange(for: Double.self) { geo in
                 geo.contentOffset.y
             } action: { oldValue, newValue in
-                scrollDistance = newValue
-                if scrollDistance < Screen.height * 0.025 {
-                    headerShowing = true
-                } else {
-                    if scrollDistance < oldValue {
-                        headerShowing = true
-                    } else {
-                        headerShowing = false
-                    }
-                }
-                
+                scrollHandler
+                    .updateVisibility(oldValue, newValue)
             }
             
-            HeaderFeature()
-                .baselineOffset(headerShowing ? 0.0 : 200)
-                .opacity(headerShowing ? 1.0 : 0.0)
-                .transition(headerShowing ? .move(edge: .top) : .move(edge: .bottom))
-                .animation(
-                    .snappy(duration: 0.5),
-                    value: headerShowing
-                )
+            if scrollHandler.isVisible {
+                HeaderFeature()
+                    .zIndex(1)
+                    .baselineOffset(scrollHandler.isVisible ? 0 : Screen.height * -1)
+                    .transition(.asymmetric(
+                        insertion: .move(edge: .top).combined(with: .opacity),
+                        removal: .offset(y: -Screen.height * 0.2).combined(with: .opacity)
+                    ))
+            }
         }
+        .background(.standardBackground)
     }
 }
 

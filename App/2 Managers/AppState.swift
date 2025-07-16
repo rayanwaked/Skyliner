@@ -14,6 +14,9 @@ class AppState {
     var clientManager: ClientManager?
     var config: ATProtocolConfiguration?
     let authManager = AuthManager()
+    let accountManager = AccountManager()
+    let trendsManager = TrendsManager()
+    let postsManager = PostsManager()
     
     var dataCoordinator: DataCoordinator {
         DataCoordinator(appState: self)
@@ -34,22 +37,24 @@ class AppState {
             for await clientManager in authManager.clientManagerUpdates {
                 self.clientManager = clientManager
                 self.config = clientManager?.credentials
-                updateManagers(with: clientManager)
+                updateManagers(with: clientManager, with: self)
                 
+                // MARK: - FETCH ON LAUNCH
                 if clientManager != nil {
-                    await updateUserDID()
-                    await dataCoordinator.refreshAllData()
+                    await dataCoordinator.loadAllData()
                 }
             }
         }
     }
     
     // MARK: - METHODS
-    private func updateManagers(with clientManager: ClientManager?) {
-
+    func updateManagers(with clientManager: ClientManager?, with appState: AppState?) {
+        accountManager.appState = self
+        trendsManager.clientManager = clientManager
+        postsManager.appState = self
     }
 
-    private func updateUserDID() async {
+    func updateUserDID() async {
         guard let storedUserDID = try? await clientManager?.account.getUserSession()?.sessionDID else {
             return
         }

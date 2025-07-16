@@ -78,7 +78,9 @@ struct TabBarFeature: View {
             y: Padding.standard * 2.5
         )
     }
-    
+}
+
+extension TabBarFeature {
     // MARK: - REGULAR TAB BAR
     private var regularTabBar: some View {
         HStack {
@@ -90,24 +92,14 @@ struct TabBarFeature: View {
                     hapticFeedback(.soft)
                 } label: {
                     if tab == .profile {
-                        Image(systemName: tab.systemImage(forSelected: routerCoordinator.selectedTab == tab))
-                            .font(.title2)
-                            .fontWeight(.semibold)
-                            .frame(maxWidth: .infinity)
-                            .frame(height: Screen.height * 0.05)
-                    
-//                        if let profileAvatarURL {
-//                            LazyImage(url: profileAvatarURL) { result in
-//                                result.image?
-//                                    .resizable()
-//                                    .clipShape(Circle())
-//                                    .frame(width: Screen.width * 0.08, height: Screen.width * 0.08)
-//                                    .padding(.trailing, Screen.width * 0.05)
-//                                    .padding(.leading, Screen.width * 0.04)
-//                            }
-//                        }
+//                        profileTabContent
                     } else {
                         Image(systemName: tab.systemImage(forSelected: routerCoordinator.selectedTab == tab))
+                            .backport.glassEffect(
+                                .tintedAndInteractive(
+                                color: .clear,
+                                isEnabled: true)
+                            )
                             .font(.title2)
                             .fontWeight(.semibold)
                             .frame(maxWidth: .infinity)
@@ -124,6 +116,25 @@ struct TabBarFeature: View {
         .clipShape(RoundedRectangle(cornerRadius: 100))
     }
     
+    // MARK: - PROFILE TAB CONTENT
+    private var profileTabContent: some View {
+        Group {
+            if appState.accountManager.profilePictureURL != nil {
+                ProfilePictureComponent(isUser: true, size: .small)
+                    .padding(.trailing, Screen.width * 0.09)
+                    .padding(.leading, Screen.width * 0.04)
+            } else {
+                Image(systemName: Tabs.profile.systemImage(forSelected: routerCoordinator.selectedTab == .profile))
+                    .font(.title2)
+                    .fontWeight(.semibold)
+                    .frame(maxWidth: .infinity)
+                    .frame(height: Screen.height * 0.05)
+            }
+        }
+    }
+}
+
+extension TabBarFeature {
     // MARK: - EXPLORE SEARCH BAR
     private var exploreSearchBar: some View {
         HStack {
@@ -161,3 +172,4 @@ struct TabBarFeature: View {
         .environment(appState)
         .environment(routerCoordinator)
 }
+

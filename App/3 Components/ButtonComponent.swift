@@ -31,11 +31,12 @@ struct ButtonConfig {
     }
     
     enum Size {
-        case compact, standard, tabBar, header
+        case compact, inline, standard, tabBar, header
         
         var font: Font {
             switch self {
             case .compact, .standard: .subheadline
+            case .inline: .caption
             case .tabBar: .title2
             case .header: .title3
             }
@@ -44,6 +45,7 @@ struct ButtonConfig {
         var padding: CGFloat {
             switch self {
             case .compact: Padding.standard * 0.9
+            case .inline: Padding.standard * 0.7
             case .standard: 0
             case .tabBar: Padding.standard * 0.95
             case .header: Padding.standard * 0.5
@@ -117,7 +119,7 @@ struct ButtonComponent: View {
                 .foregroundStyle(variation.foregroundColor)
                 .padding(size.padding)
                 .frame(maxWidth: size == .standard ? .infinity : nil)
-                .frame(height: size == .standard ? Screen.height * 0.055 : nil)
+                .frame(maxHeight: size == .standard ? Screen.height * 0.055 : nil)
                 .background {
                     RoundedRectangle(cornerRadius: 100)
                         .fill(variation.backgroundColor)

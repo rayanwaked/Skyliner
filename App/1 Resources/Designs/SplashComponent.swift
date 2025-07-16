@@ -24,7 +24,7 @@ struct SplashComponent: View {
             
             ZStack {
                 BackgroundComponent(isAnimated: true)
-                Image("SkylinerIcon")
+                Image("SkylinerImage")
                     .resizable()
                     .scaledToFit()
                     .opacity(opacityChange)
