@@ -11,6 +11,7 @@ internal import Combine
 
 // MARK: - VIEW
 struct HeaderFeature: View {
+    // MARK: - PROPERTIES
     @Environment(AppState.self) private var appState
     @Environment(RouterCoordinator.self) private var routerCoordinator
     var location: headerLocation = .home
@@ -19,6 +20,7 @@ struct HeaderFeature: View {
         case home, explore, notifications
     }
     
+    // MARK: - BODY
     var body: some View {
         VStack(spacing: 0) {
             if location == .home {

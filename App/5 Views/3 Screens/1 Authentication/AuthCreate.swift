@@ -48,7 +48,8 @@ extension AuthenticationView {
                     ButtonComponent(
                         systemName: "chevron.backward",
                         variation: .secondary,
-                        size: .compact
+                        size: .compact,
+                        haptic: .soft
                     ) {
                         dismissKeyboard()
                         onGoBack()
@@ -58,6 +59,7 @@ extension AuthenticationView {
                     ButtonComponent(
                         "Go to Bluesky",
                         variation: .primary,
+                        haptic: .success,
                         action: {
                             openURL(URL(string: "https://bsky.app/")!)
                         })

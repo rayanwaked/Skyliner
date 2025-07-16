@@ -68,3 +68,27 @@ struct DateHelper {
         }
     }
 }
+
+struct LoadMoreHelper: View {
+    enum Location {
+        case home, explore
+    }
+    
+    var appState: AppState
+    var location: Location
+    
+    var body: some View {
+        Rectangle()
+            .foregroundStyle(.clear)
+            .baselineOffset(Screen.height * -1)
+            .onAppear {
+                Task {
+                    switch location {
+                    case .home: await appState.postsManager.loadPosts()
+                    case .explore: await appState.searchManager.loadMoreResults()
+                    }
+                }
+            }
+    }
+}
+

@@ -9,6 +9,7 @@ import SwiftUI
 
 // MARK: - CONFIGURATION
 struct ButtonConfig {
+    // MARK: - VARIATION
     enum Variation {
         case primary, secondary, tertiary, quaternary
         
@@ -30,6 +31,7 @@ struct ButtonConfig {
         }
     }
     
+    // MARK: - SIZE
     enum Size {
         case compact, inline, standard, tabBar, header
         

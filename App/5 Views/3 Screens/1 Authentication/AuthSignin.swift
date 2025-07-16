@@ -41,6 +41,7 @@ extension AuthenticationView {
                     ButtonComponent(
                         systemName: "chevron.backward",
                         variation: .secondary,
+                        haptic: .soft
                     ) {
                         dismissKeyboard()
                         onGoBack()
@@ -49,7 +50,8 @@ extension AuthenticationView {
                     // MARK: SIGN IN
                     ButtonComponent(
                         "Sign in",
-                        variation: .primary
+                        variation: .primary,
+                        haptic: .success
                     ) {
                         onSignIn()
                     }

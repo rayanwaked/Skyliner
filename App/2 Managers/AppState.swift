@@ -17,6 +17,7 @@ class AppState {
     let accountManager = AccountManager()
     let trendsManager = TrendsManager()
     let postsManager = PostsManager()
+    let searchManager = SearchManager()
     
     var dataCoordinator: DataCoordinator {
         DataCoordinator(appState: self)
@@ -52,6 +53,7 @@ class AppState {
         accountManager.appState = self
         trendsManager.clientManager = clientManager
         postsManager.appState = self
+        searchManager.clientManager = clientManager
     }
 
     func updateUserDID() async {

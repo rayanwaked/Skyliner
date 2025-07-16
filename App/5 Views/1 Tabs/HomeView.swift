@@ -7,20 +7,25 @@
 
 import SwiftUI
 
+// MARK: - VIEW
 struct HomeView: View {
+    // MARK: - PROPERTIES
+    @Environment(AppState.self) private var appState
+    @Environment(\.colorScheme) private var colorScheme
     @StateObject var scrollHandler = HandleScrollChange()
     
+    // MARK: - BODY
     var body: some View {
         ZStack(alignment: .top) {
             ScrollView {
                 LazyVStack {
-                    ForEach(1..<102) { _ in
-                        PostFeature()
-                    }
+                    PostFeature()
+                    LoadMoreHelper(appState: appState, location: .home)
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
                 .padding(.top, Screen.height * 0.125)
             }
+            .defaultScrollAnchor(.top)
             .scrollIndicators(.hidden)
             .onScrollGeometryChange(for: Double.self) { geo in
                 geo.contentOffset.y
@@ -43,6 +48,10 @@ struct HomeView: View {
     }
 }
 
+// MARK: - PREVIEW
 #Preview {
+    @Previewable @State var appState: AppState = .init()
+    
     HomeView()
+        .environment(appState)
 }

@@ -9,10 +9,9 @@ import SwiftUI
 import ATProtoKit
 import KeychainSwift
 
-// MARK: - MANAGER
 @Observable
 public final class AuthManager: @unchecked Sendable {
-    //MARK: - VARIABLES
+    //MARK: - PROPERTIES
     let keychain = KeychainSwift()
     let ATProtoKeychain: AppleSecureKeychain
     
@@ -55,7 +54,7 @@ public final class AuthManager: @unchecked Sendable {
     }
 }
 
-// MARK: - FUNCTIONS
+// MARK: - METHODS
 extension AuthManager {
     // MARK: - AUTHENTICATE
     public func authenticate(handle: String, password: String) async throws {

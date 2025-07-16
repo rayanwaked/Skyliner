@@ -11,12 +11,13 @@ import NukeUI
 
 @Observable
 public final class AccountManager {
+    // MARK: - PROPERTIES
     @ObservationIgnored
     var appState: AppState? = nil
-    
     var profilePictureURL: URL? = nil
     var isLoadingProfile = false
     
+    // MARK: - METHODS
     public func loadProfilePicture() async {
         guard let clientManager = self.appState?.clientManager else {
             print("❌ No clientManager available")

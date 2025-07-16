@@ -10,29 +10,18 @@ import ATProtoKit
 
 @Observable
 public final class PostsManager {
+    // MARK: - Properties
     @ObservationIgnored
-    var appState: AppState? = nil
-    
+    var appState: AppState?
+    public private(set) var extendedFeed: [AppBskyLexicon.Feed.GetTimelineOutput] = []
     public private(set) var authorFeed: AppBskyLexicon.Feed.GetTimelineOutput?
+    private var currentCursor: String?
     
-    //MARK: - Computed Properties
+    // MARK: - Computed Properties
     var postData: [(imageURL: URL?, name: String, handle: String, message: String)] {
-        guard let feed = authorFeed?.feed else { return [] }
-        
-        return feed.compactMap { feedViewPost in
-            let post = feedViewPost.post
-            let author = post.author
-            
-            // Extract text from the UnknownType wrapper
-            let message: String
-            let mirror = Mirror(reflecting: post.record)
-            
-            if let recordChild = mirror.children.first(where: { $0.label == "record" }),
-               let postRecord = recordChild.value as? AppBskyLexicon.Feed.PostRecord {
-                message = postRecord.text
-            } else {
-                message = "Unable to parse content"
-            }
+        extendedFeed.flatMap(\.feed).compactMap { feed in
+            let author = feed.post.author
+            let message = extractMessage(from: feed.post.record)
             
             return (
                 imageURL: author.avatarImageURL,
@@ -43,7 +32,7 @@ public final class PostsManager {
         }
     }
     
-    //MARK: - Methods
+    // MARK: - Methods
     func loadPosts() async {
         guard let userDID = appState?.userDID, !userDID.isEmpty else {
             print("❌ No valid userDID available")
@@ -51,10 +40,25 @@ public final class PostsManager {
         }
         
         do {
-            let feedResult = try await appState?.clientManager?.account.getTimeline(using: userDID)
-            authorFeed = feedResult
+            let feedResult = try await appState?.clientManager?.account.getTimeline(using: userDID, cursor: currentCursor)
+            
+            if let feedResult {
+                currentCursor = feedResult.cursor
+                extendedFeed.append(feedResult)
+            }
         } catch {
             print(error.localizedDescription)
         }
+    }
+    
+    private func extractMessage(from record: UnknownType) -> String {
+        let mirror = Mirror(reflecting: record)
+        
+        if let recordChild = mirror.children.first(where: { $0.label == "record" }),
+           let postRecord = recordChild.value as? AppBskyLexicon.Feed.PostRecord {
+            return postRecord.text
+        }
+        
+        return "Unable to parse content"
     }
 }

@@ -10,11 +10,12 @@ import ATProtoKit
 
 @Observable
 public final class TrendsManager {
+    // MARK: - PROPERTIES
     @ObservationIgnored
     var clientManager: ClientManager? = nil
-    
     var trends: [String] = []
-    
+
+    // MARK: - METHODS
     public func loadTrends() async {
         do {
             let output = try await clientManager?.account.getTrends()

@@ -14,10 +14,12 @@ struct FeedItem: Hashable {
 
 // MARK: - VIEW
 struct ArrayButtonComponent<T: Hashable, Content: View>: View {
+    // MARK: - PROPERTIES
     let items: [T]
     let content: (T) -> Content
     let action: ((T) -> Void)?
     
+    // MARK: - BODY
     var body: some View {
         ScrollView(.horizontal) {
             HStack {

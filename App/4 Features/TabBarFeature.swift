@@ -26,6 +26,7 @@ enum Tabs: CaseIterable, Identifiable, Hashable {
 
 // MARK: - VIEW
 struct TabBarFeature: View {
+    // MARK: - PROPERTIES
     @Environment(RouterCoordinator.self) private var routerCoordinator
     @Environment(AppState.self) private var appState
     @Environment(\.colorScheme) private var colorScheme
@@ -60,6 +61,7 @@ struct TabBarFeature: View {
                     systemName: "plus",
                     variation: .primary,
                     size: .tabBar,
+                    haptic: .soft,
                     action: routerCoordinator.toggleCreate
                 )
             }
@@ -80,8 +82,8 @@ struct TabBarFeature: View {
     }
 }
 
+// MARK: - REGULAR TAB BAR
 extension TabBarFeature {
-    // MARK: - REGULAR TAB BAR
     private var regularTabBar: some View {
         HStack {
             ForEach(Tabs.allCases) { tab in
@@ -134,16 +136,18 @@ extension TabBarFeature {
     }
 }
 
+// MARK: - EXPLORE SEARCH BAR
 extension TabBarFeature {
-    // MARK: - EXPLORE SEARCH BAR
     private var exploreSearchBar: some View {
         HStack {
             ButtonComponent(
                 systemName: "chevron.left",
                 variation: .secondary,
+                haptic: .soft,
                 action: {
                     withAnimation(.easeInOut(duration: 0.2)) {
                         dismissKeyboard()
+                        appState.searchManager.clearSearch()
                         routerCoordinator.clearExploreSearch()
                         routerCoordinator.selectTab(.home)
                     }

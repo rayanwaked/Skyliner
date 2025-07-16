@@ -8,6 +8,7 @@
 import SwiftUI
 import NukeUI
 
+// MARK: - ENUM
 extension ProfilePictureComponent {
     enum Size {
         case small, medium, large
@@ -33,11 +34,13 @@ extension ProfilePictureComponent {
 
 // MARK: - VIEW
 struct ProfilePictureComponent: View {
+    // MARK: - PROPERTIES
     @Environment(AppState.self) private var appState
     var isUser: Bool? = true
     var profilePictureURL: URL? = nil
     var size: Size = .medium
     
+    // MARK: - BODY
     var body: some View {
         switch isUser {
         case true: user
@@ -105,6 +108,7 @@ extension ProfilePictureComponent {
     }
 }
 
+// MARK: - PREVIEW
 #Preview {
     @Previewable @State var appState: AppState = .init()
     

@@ -20,14 +20,16 @@ extension AuthenticationView {
                 HStack {
                     ButtonComponent(
                         "Create account",
-                        variation: .primary
+                        variation: .primary,
+                        haptic: .soft
                     ) {
                         onGoCreateAccount()
                     }
                     
                     ButtonComponent(
                         "Sign in",
-                        variation: .secondary
+                        variation: .secondary,
+                        haptic: .soft
                     ) {
                         onGoSignIn()
                     }
@@ -105,14 +107,16 @@ extension AuthenticationView {
         HStack {
             ButtonComponent(
                 "Privacy",
-                variation: .tertiary
+                variation: .tertiary,
+                haptic: .rigid
             ) {
                 openURL(URL(string: "https://bsky.social/about/support/privacy-policy")!)
             }
             
             ButtonComponent(
                 "Terms",
-                variation: .tertiary
+                variation: .tertiary,
+                haptic: .rigid
             ) {
                 openURL(URL(string: "https://bsky.social/about/support/tos")!)
             }

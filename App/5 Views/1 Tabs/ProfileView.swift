@@ -7,12 +7,16 @@
 
 import SwiftUI
 
+// MARK: - VIEW
 struct ProfileView: View {
+    
+    // MARK: - BODY
     var body: some View {
         Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
     }
 }
 
+// MARK: - PREVIEW
 #Preview {
     ProfileView()
 }

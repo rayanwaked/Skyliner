@@ -9,9 +9,11 @@ import SwiftUI
 
 // MARK: - VIEW
 struct RouterView: View {
+    // MARK: - PROPERTIES
     @Environment(AppState.self) private var appState
     @Environment(RouterCoordinator.self) private var routerCoordinator
     
+    // MARK: - BODY
     var body: some View {
         switch (routerCoordinator.isLoaded, appState.authManager.configState) {
         case (true, .empty): splashView

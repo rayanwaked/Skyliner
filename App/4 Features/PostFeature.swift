@@ -7,17 +7,13 @@
 
 import SwiftUI
 
+// MARK: - VIEW
 struct PostFeature: View {
+    // MARK: - PROPERTIES
     @Environment(AppState.self) private var appState
     
+    // MARK: - BODY
     var body: some View {
-        postList
-    }
-}
-
-// MARK: - POST LIST
-extension PostFeature {
-    var postList: some View {
         let posts = appState.postsManager.postData
         
         if !posts.isEmpty {
@@ -39,7 +35,6 @@ extension PostFeature {
     }
 }
 
-
 // MARK: - POST CELL
 struct PostCell: View {
     var imageURL: URL? = nil
@@ -55,10 +50,13 @@ struct PostCell: View {
                 VStack(alignment: .leading) {
                     HStack(alignment: .top) {
                         Text(name)
-                        Text("· 2h ago")
+                            .fontWeight(.medium)
+                        Text(handle)
+                            .foregroundStyle(.gray.opacity(0.9))
+                            .lineLimit(1)
+                        // Time
                     }
-                    Text(handle)
-                        .padding(.bottom, Padding.tiny * 0.1)
+                    .padding(.bottom, Padding.tiny * 0.1)
                     
                     Text(message)
                 }
@@ -73,8 +71,10 @@ struct PostCell: View {
             Divider()
         }
     }
+    
 }
 
+// MARK: - PREVIEW
 #Preview {
     @Previewable @State var appState: AppState = .init()
     

@@ -9,10 +9,12 @@ import SwiftUI
 
 // MARK: - VIEW
 struct SplashComponent: View {
+    // MARK: - PROPERTIES
     @State private var didAppear: Bool = false
     @State private var animationProgress: Double = 0
     @State private var opacityChange: Double = 0
     
+    // MARK: - BODY
     var body: some View {
         GeometryReader { geometry in
             let width = geometry.size.width

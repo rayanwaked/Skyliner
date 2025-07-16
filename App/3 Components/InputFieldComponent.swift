@@ -9,6 +9,7 @@ import SwiftUI
 
 // MARK: - VIEW
 struct InputFieldComponent: View {
+    // MARK: - PROPERTIES
     var searchBar: Bool = false
     var secure: Bool = false
     var icon: Image
@@ -24,6 +25,7 @@ struct InputFieldComponent: View {
         }
     }
     
+    // MARK: - BODY
     var body: some View {
         Button(action: {
             isFocused = true

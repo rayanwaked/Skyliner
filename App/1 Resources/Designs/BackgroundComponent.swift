@@ -10,6 +10,7 @@ internal import Combine
 
 // MARK: - VIEW
 struct BackgroundComponent: View {
+    // MARK: - PROPERTIES
     @StateObject private var cloudsAnimator = CloudsAnimator()
     @Environment(\.colorScheme) var colorScheme
     var isAnimated: Bool = false
