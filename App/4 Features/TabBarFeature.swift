@@ -97,11 +97,11 @@ extension TabBarFeature {
 //                        profileTabContent
                     } else {
                         Image(systemName: tab.systemImage(forSelected: routerCoordinator.selectedTab == tab))
-                            .backport.glassEffect(
-                                .tintedAndInteractive(
-                                color: .clear,
-                                isEnabled: true)
-                            )
+//                            .backport.glassEffect(
+//                                .tintedAndInteractive(
+//                                color: .clear,
+//                                isEnabled: true)
+//                            )
                             .font(.title2)
                             .fontWeight(.semibold)
                             .frame(maxWidth: .infinity)
@@ -113,8 +113,8 @@ extension TabBarFeature {
         .foregroundStyle(.primary)
         .padding(.horizontal, Padding.standard)
         .padding(.vertical, Padding.standard / 3)
-        .backport.glassEffect(.tintedAndInteractive(color: .clear, isEnabled: true))
-        .background(.ultraThinMaterial.opacity(tabBarOpacity))
+//        .backport.glassEffect(.tintedAndInteractive(color: .clear, isEnabled: true))
+        .background(.ultraThinMaterial)
         .clipShape(RoundedRectangle(cornerRadius: 100))
     }
     

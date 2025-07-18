@@ -43,7 +43,6 @@ struct ExploreView: View {
         }
         .background(.standardBackground)
         .onChange(of: routerCoordinator.exploreSearch) {_, newValue in
-            print("🔍🔄 ExploreView: Search query changed to: '\(newValue)'")
             Task {
                 if !newValue.isEmpty {
                     await appState.searchManager.searchBluesky(

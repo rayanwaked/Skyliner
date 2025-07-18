@@ -13,6 +13,7 @@ public enum HapticType {
 }
 
 // MARK: - FEEDBACK
+@MainActor
 public func hapticFeedback(_ type: HapticType) {
 #if os(iOS)
     switch type {

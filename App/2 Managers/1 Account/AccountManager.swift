@@ -9,6 +9,7 @@ import SwiftUI
 import ATProtoKit
 import NukeUI
 
+@MainActor
 @Observable
 public final class AccountManager {
     // MARK: - PROPERTIES

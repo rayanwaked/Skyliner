@@ -13,24 +13,20 @@ extension ProfilePictureComponent {
     enum Size {
         case small, medium, large
         
+        @MainActor
         var frame: CGSize {
             switch self {
-            case .small: CGSize(
-                width: Screen.width * 0.08,
-                height: Screen.width * 0.08
-            )
-            case .medium: CGSize(
-                width: Screen.width * 0.11,
-                height: Screen.width * 0.11
-            )
-            case .large: CGSize(
-                width: Screen.width * 0.2,
-                height: Screen.width * 0.2
-            )
+            case .small:
+                CGSize(width: Screen.width * 0.08, height: Screen.width * 0.08)
+            case .medium:
+                CGSize(width: Screen.width * 0.11, height: Screen.width * 0.11)
+            case .large:
+                CGSize(width: Screen.width * 0.2, height: Screen.width * 0.2)
             }
         }
     }
 }
+
 
 // MARK: - VIEW
 struct ProfilePictureComponent: View {
@@ -67,7 +63,7 @@ extension ProfilePictureComponent {
                 }
                 .frame(width: size.frame.width, height: size.frame.height)
                 .clipShape(Circle())
-                .backport.glassEffect(.tintedAndInteractive(color: .clear, isEnabled: true))
+//                .backport.glassEffect(.tintedAndInteractive(color: .clear, isEnabled: true))
             } else {
                 Circle()
                     .font(.title2)
@@ -95,7 +91,7 @@ extension ProfilePictureComponent {
                     }
                 }
                 .frame(width: size.frame.width, height: size.frame.height)
-                .backport.glassEffect(.tintedAndInteractive(color: .clear, isEnabled: true))
+//                .backport.glassEffect(.tintedAndInteractive(color: .clear, isEnabled: true))
                 .clipShape(Circle())
             } else {
                 Circle()

@@ -133,7 +133,7 @@ struct ButtonComponent: View {
                         }
                 }
         }
-        .backport.glassEffect(.interactive(isEnabled: true))
+//        .backport.glassEffect(.interactive(isEnabled: true))
         .fixedSize(horizontal: size != .standard, vertical: false)
     }
 }

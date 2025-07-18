@@ -8,6 +8,7 @@
 import SwiftUI
 import ATProtoKit
 
+@MainActor
 @Observable
 public final class SearchManager {
     // MARK: - Properties

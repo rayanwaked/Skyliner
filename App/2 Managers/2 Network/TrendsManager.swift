@@ -8,6 +8,7 @@
 import SwiftUI
 import ATProtoKit
 
+@MainActor
 @Observable
 public final class TrendsManager {
     // MARK: - PROPERTIES

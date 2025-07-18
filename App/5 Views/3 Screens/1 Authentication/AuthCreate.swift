@@ -59,10 +59,21 @@ extension AuthenticationView {
                     ButtonComponent(
                         "Go to Bluesky",
                         variation: .primary,
-                        haptic: .success,
-                        action: {
-                            openURL(URL(string: "https://bsky.app/")!)
-                        })
+                        haptic: .success
+                    ) {
+                        isPresentCreate = true
+                    }
+                    .sheet(isPresented: $isPresentCreate) {
+                        WebViewComponent(
+                            url: URL(string: "https://bsky.app/settings")!
+                        )
+                        .ignoresSafeArea(.all)
+                    }
+                    .onChange(of: isPresentCreate) { _, newValue in
+                        if newValue == false {
+                            viewModel.selectedSection = .signinSection
+                        }
+                    }
                 }
                 
                 // MARK: ERROR

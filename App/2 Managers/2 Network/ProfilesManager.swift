@@ -8,6 +8,7 @@
 import SwiftUI
 import ATProtoKit
 
+@MainActor
 public final class ProfilesManager {
     // MARK: - PROPERTIES
     @ObservationIgnored

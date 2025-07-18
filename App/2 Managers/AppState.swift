@@ -8,6 +8,7 @@
 import SwiftUI
 import ATProtoKit
 
+@MainActor
 @Observable
 class AppState {
     // MARK: - PROPERTIES

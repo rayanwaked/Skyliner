@@ -21,7 +21,7 @@ struct InputFieldComponent: View {
         if #available(iOS 26.0, *) {
             return .gray.opacity(Opacity.dark)
         } else {
-            return .gray.opacity(Opacity.light)
+            return .standardBackground.opacity(1.0)
         }
     }
     
@@ -54,8 +54,10 @@ extension InputFieldComponent {
         }
         .padding()
         .frame(maxHeight: Screen.height * 0.06)
-        .backport.glassEffect(.interactive(isEnabled: true))
-        .background(searchBar == true ? .clear : inputOpacity)
+//        .background(.ultraThinMaterial.opacity(0.7))
+//        .backport.glassEffect(.interactive(isEnabled: true))
+//        .background(searchBar == true ? .clear : inputOpacity)
+        .background(.ultraThinMaterial)
         .clipShape(RoundedRectangle(cornerRadius: 100))
     }
 }

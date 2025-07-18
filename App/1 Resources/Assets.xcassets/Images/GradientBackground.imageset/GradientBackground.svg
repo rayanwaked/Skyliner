@@ -2,8 +2,8 @@
 <rect width="430" height="932" fill="url(#paint0_linear_33_3)"/>
 <defs>
 <linearGradient id="paint0_linear_33_3" x1="215" y1="0" x2="215" y2="932" gradientUnits="userSpaceOnUse">
-<stop stop-color="#2885FF"/>
-<stop offset="1" stop-color="#76BFFF"/>
+<stop stop-color="#0055FF"/>
+<stop offset="1" stop-color="#7EBCF2"/>
 </linearGradient>
 </defs>
 </svg>

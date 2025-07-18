@@ -18,13 +18,13 @@ extension AuthenticationView {
                 
                 // MARK: ACTION
                 HStack {
-                    ButtonComponent(
-                        "Create account",
-                        variation: .primary,
-                        haptic: .soft
-                    ) {
-                        onGoCreateAccount()
-                    }
+//                    ButtonComponent(
+//                        "Create account",
+//                        variation: .primary,
+//                        haptic: .soft
+//                    ) {
+//                        onGoCreateAccount()
+//                    }
                     
                     ButtonComponent(
                         "Sign in",
@@ -106,19 +106,27 @@ extension AuthenticationView {
     var documentSection: some View {
         HStack {
             ButtonComponent(
-                "Privacy",
+                "Skyliner Privacy",
                 variation: .tertiary,
                 haptic: .rigid
             ) {
-                openURL(URL(string: "https://bsky.social/about/support/privacy-policy")!)
+                isPresentPrivacy = true
+            }
+            .sheet(isPresented: $isPresentPrivacy) {
+                WebViewComponent(url: URL(string: "https://skyliner.app")!)
+                    .ignoresSafeArea(.all)
             }
             
             ButtonComponent(
-                "Terms",
+                "Bluesky Terms",
                 variation: .tertiary,
                 haptic: .rigid
             ) {
-                openURL(URL(string: "https://bsky.social/about/support/tos")!)
+                isPresentTerms = true
+            }
+            .sheet(isPresented: $isPresentTerms) {
+                WebViewComponent(url: URL(string: "https://bsky.social/about/support/tos")!)
+                    .ignoresSafeArea(.all)
             }
         }
     }

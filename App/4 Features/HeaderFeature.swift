@@ -100,7 +100,8 @@ private extension HeaderFeature {
 }
 
 // MARK: - SCROLL HANDLER
-final class HandleScrollChange: ObservableObject {
+@MainActor
+final class HeaderVisibilityManager: ObservableObject {
     @Published private(set) var isVisible: Bool = true
     
     func updateVisibility(_ oldValue: Double, _ newValue: Double) {
@@ -111,6 +112,26 @@ final class HandleScrollChange: ObservableObject {
                 isVisible = newValue < oldValue
             }
         }
+    }
+}
+
+struct HandleScrollModifer: ViewModifier {
+    let headerManager: HeaderVisibilityManager
+    
+    func body(content: Content) -> some View {
+        content
+            .onScrollGeometryChange(for: Double.self) { geo in
+                geo.contentOffset.y
+            } action: { oldValue, newValue in
+                headerManager
+                    .updateVisibility(oldValue, newValue)
+            }
+    }
+}
+
+extension View {
+    func headerScrollBehavior(_ manager: HeaderVisibilityManager) -> some View {
+        modifier(HandleScrollModifer(headerManager: manager))
     }
 }
 

@@ -12,7 +12,7 @@ struct HomeView: View {
     // MARK: - PROPERTIES
     @Environment(AppState.self) private var appState
     @Environment(\.colorScheme) private var colorScheme
-    @StateObject var scrollHandler = HandleScrollChange()
+    @StateObject var headerManager = HeaderVisibilityManager()
     
     // MARK: - BODY
     var body: some View {
@@ -27,17 +27,12 @@ struct HomeView: View {
             }
             .defaultScrollAnchor(.top)
             .scrollIndicators(.hidden)
-            .onScrollGeometryChange(for: Double.self) { geo in
-                geo.contentOffset.y
-            } action: { oldValue, newValue in
-                scrollHandler
-                    .updateVisibility(oldValue, newValue)
-            }
+            .headerScrollBehavior(headerManager)
             
-            if scrollHandler.isVisible {
+            if headerManager.isVisible {
                 HeaderFeature()
                     .zIndex(1)
-                    .baselineOffset(scrollHandler.isVisible ? 0 : Screen.height * -1)
+                    .baselineOffset(headerManager.isVisible ? 0 : Screen.height * -1)
                     .transition(.asymmetric(
                         insertion: .move(edge: .top).combined(with: .opacity),
                         removal: .offset(y: -Screen.height * 0.2).combined(with: .opacity)

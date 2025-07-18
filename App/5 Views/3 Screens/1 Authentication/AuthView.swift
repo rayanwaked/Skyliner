@@ -29,7 +29,9 @@ extension AuthenticationView {
 // MARK: - VIEW
 struct AuthenticationView: View {
     @Environment(AppState.self) private var appState
-    @Environment(\.openURL) var openURL
+    @State var isPresentPrivacy = false
+    @State var isPresentTerms = false
+    @State var isPresentCreate = false
     @State var viewModel = ViewModel()
     
     // MARK: - BODY
@@ -38,9 +40,9 @@ struct AuthenticationView: View {
             // MARK: - BACKGROUND
             BackgroundComponent(isAnimated: true)
                 .ignoresSafeArea(.keyboard)
-                .backport.glassEffect(in: RoundedRectangle(
-                    cornerRadius: Radius.large
-                ))
+//                .backport.glassEffect(in: RoundedRectangle(
+//                    cornerRadius: Radius.large
+//                ))
                 .ignoresSafeArea()
 
             // MARK: - CONTENT

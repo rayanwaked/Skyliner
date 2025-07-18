@@ -8,6 +8,7 @@
 import ATProtoKit
 import SwiftUI
 
+@MainActor
 @Observable
 public final class ClientManager: Sendable {
     // MARK: - PROPERTIES

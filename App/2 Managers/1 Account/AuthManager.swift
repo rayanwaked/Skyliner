@@ -9,6 +9,7 @@ import SwiftUI
 import ATProtoKit
 import KeychainSwift
 
+@MainActor
 @Observable
 public final class AuthManager: @unchecked Sendable {
     //MARK: - PROPERTIES
