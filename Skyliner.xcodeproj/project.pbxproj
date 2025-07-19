@@ -295,7 +295,7 @@
 				DEVELOPMENT_TEAM = 6R2E9P9EPV;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = "Skyliner-Info.plist";
+				INFOPLIST_FILE = "App/1 Resources/Properties.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = Skyliner;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.social-networking";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -339,7 +339,7 @@
 				DEVELOPMENT_TEAM = 6R2E9P9EPV;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = "Skyliner-Info.plist";
+				INFOPLIST_FILE = "App/1 Resources/Properties.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = Skyliner;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.social-networking";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
