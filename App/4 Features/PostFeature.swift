@@ -14,7 +14,7 @@ struct PostFeature: View {
     
     // MARK: - BODY
     var body: some View {
-        let posts = appState.postsManager.postData
+        let posts = appState.postManager.postData
         
         if !posts.isEmpty {
             return AnyView(
@@ -47,7 +47,7 @@ struct PostCell: View {
     var message: String = ""
     
     var body: some View {
-        let postState = appState.postsManager.getPostState(postID: postID)
+        let postState = appState.postManager.getPostState(postID: postID)
         
         Group {
             HStack(alignment: .top) {
@@ -88,7 +88,7 @@ extension PostCell {
         HStack {
             Button {
                 Task {
-                    await appState.postsManager.toggleRepost(postID: postID)
+                    await appState.postManager.toggleRepost(postID: postID)
                 }
             } label: {
                 Image(systemName: "arrow.trianglehead.2.clockwise")
@@ -108,7 +108,7 @@ extension PostCell {
             
             Button {
                 Task {
-                    await appState.postsManager.toggleLike(postID: postID)
+                    await appState.postManager.toggleLike(postID: postID)
                 }
             } label: {
                 Image(systemName: postState.isLiked ? "heart.fill" : "heart")
@@ -118,7 +118,7 @@ extension PostCell {
             Spacer()
             
             Button {
-                appState.postsManager.sharePost(postID: postID)
+                appState.postManager.sharePost(postID: postID)
             } label: {
                 Image(systemName: "square.and.arrow.up")
                     .foregroundStyle(.foreground)
@@ -128,7 +128,7 @@ extension PostCell {
             
             Menu {
                 Button("Copy Link") {
-                    appState.postsManager.copyPostLink(postID: postID)
+                    appState.postManager.copyPostLink(postID: postID)
                 }
             } label: {
                 Image(systemName: "ellipsis")

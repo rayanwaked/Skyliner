@@ -17,7 +17,7 @@ class AppState {
     let authManager = AuthManager()
     let accountManager = AccountManager()
     let trendsManager = TrendsManager()
-    let postsManager = PostManager()
+    let postManager = PostManager()
     let searchManager = SearchManager()
     
     var dataCoordinator: DataCoordinator {
@@ -53,7 +53,7 @@ class AppState {
     func updateManagers(with clientManager: ClientManager?, with appState: AppState?) {
         accountManager.appState = self
         trendsManager.appState = self
-        postsManager.appState = self
+        postManager.appState = self
         searchManager.appState = self
     }
 

@@ -27,7 +27,7 @@ struct HomeView: View {
             }
             .refreshable {
                 Task {
-                    await appState.postsManager.refreshPosts()
+                    await appState.postManager.refreshPosts()
                 }
             }
             .defaultScrollAnchor(.top)

@@ -25,19 +25,24 @@ struct ProfileView: View {
                 .zIndex(0)
       
             ScrollView {
-                Color.clear
-                    .frame(height: bannerHeight*2) // Spacer for banner
-                
-                subBanner
-                    .background(Color(.systemBackground))
+                VStack(alignment: .leading, spacing: 0) {
+                    subBanner
+                        .padding(.top, currentBannerHeight * 2)
+                    
+                    description
+                    
+                    Rectangle()
+                        .foregroundStyle(.standardBackground)
+                        .frame(width: Screen.width, height: Screen.height)
+                }
             }
-            .zIndex(1)
             .onScrollGeometryChange(for: CGFloat.self) { geo in
                 geo.contentOffset.y
             } action: { _, newValue in
                 scrollOffset = newValue
             }
         }
+        .background(.standardBackground)
         .ignoresSafeArea(.all)
         .scrollIndicators(.hidden)
         .onAppear {
@@ -65,7 +70,7 @@ extension ProfileView {
                 .clipped()
                 .scaleEffect(y: -1)
         }
-        .glur(radius: Radius.small, interpolation: 0.9, direction: .down)
+        .glur(radius: Radius.small, offset: 0.45, interpolation: 1.0, direction: .down)
         .clipShape(.rect(
             topLeadingRadius: Radius.glass,
             bottomLeadingRadius: Radius.small,
@@ -77,6 +82,7 @@ extension ProfileView {
             bottomTrailingRadius: Radius.small,
             topTrailingRadius: Radius.glass))
         .offset(y: parallaxOffset)
+        .background(.standardBackground)
     }
     
     private var currentBannerHeight: CGFloat {
@@ -87,7 +93,11 @@ extension ProfileView {
     }
     
     private var parallaxOffset: CGFloat {
-        scrollOffset > 0 ? -scrollOffset * 0.5 : 0
+        if scrollOffset < 0 {
+            scrollOffset > 0 ? -scrollOffset * 0.5 : 0
+        } else {
+            -scrollOffset
+        }
     }
 }
 
@@ -95,11 +105,18 @@ extension ProfileView {
 extension ProfileView {
     var subBanner: some View {
         HStack {
-            ProfilePictureComponent(size: .xlarge)
+            ZStack {
+                Circle()
+                    .frame(width: Screen.width * 0.335)
+                    .foregroundStyle(Color.standardBackground)
+                ProfilePictureComponent(size: .xlarge)
+            }
+            .padding(.top, -Padding.large * 3)
+            
             profileStats
+                .padding(.top, -Padding.small)
         }
         .padding(.horizontal, Padding.standard)
-        .padding(.top, -Padding.large * 2)
     }
 }
 
@@ -130,6 +147,16 @@ extension ProfileView {
             }
         }
         .font(.smaller(.subheadline))
+    }
+}
+
+extension ProfileView {
+    var description: some View {
+        Text("\(userProfile?.description ?? "")")
+            .font(.smaller(.body))
+            .padding(.top, Padding.small)
+            .padding(.horizontal, Padding.standard)
+            .frame(width: Screen.width, alignment: .leading)
     }
 }
 

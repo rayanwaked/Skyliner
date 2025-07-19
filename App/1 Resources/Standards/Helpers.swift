@@ -84,7 +84,7 @@ struct LoadMoreHelper: View {
             .onAppear {
                 Task {
                     switch location {
-                    case .home: await appState.postsManager.loadPosts()
+                    case .home: await appState.postManager.loadPosts()
                     case .explore: await appState.searchManager.loadMoreResults()
                     }
                 }

@@ -16,9 +16,11 @@ public final class AccountManager {
     @ObservationIgnored
     var appState: AppState? = nil
     var profilePictureURL: URL? = nil
+    var bannerURL: URL? = nil
     var follows: Int? = nil
     var followers: Int? = nil
     var posts: Int? = nil
+    var description: String? = nil
     var name: String? = nil
     var handle: String? = nil
     var isLoadingProfile = false
@@ -68,11 +70,13 @@ public final class AccountManager {
         do {
             let profile = try await clientManager.account.getProfile(for: userDID)
             await MainActor.run {
+                self.bannerURL = profile.bannerImageURL
                 self.follows = profile.followCount
                 self.followers = profile.followerCount
                 self.posts = profile.postCount
                 self.name = profile.displayName
                 self.handle = profile.actorHandle
+                self.description = profile.description
                 self.isLoadingProfile = false
             }
             print("✅ Profile loaded")

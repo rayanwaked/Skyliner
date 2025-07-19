@@ -23,6 +23,6 @@ class DataCoordinator {
         await appState?.accountManager.loadProfilePicture()
         await appState?.accountManager.loadProfile()
         await appState?.trendsManager.loadTrends()
-        await appState?.postsManager.loadPosts()
+        await appState?.postManager.loadPosts()
     }
 }
