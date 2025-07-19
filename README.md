@@ -78,7 +78,7 @@ To make debugging easier and log output more readable, Skyliner uses a unique co
 * 🔥 **Views:** Logged from SwiftUI Views (UI layer).
   *Example:* `print("🔥 AuthenticationView: Sign in button pressed")` – Emitted when a user taps the sign-in button in the AuthenticationView.
 
-* 💧 **Components:** Logged from UI Components (reusable views or controls).
+* 💧 **Components/Features:** Logged from UI Components (reusable views or controls).
   *Example:* `print("💧⛔️ Failed to create haptic engine")` – A component (here perhaps the Haptics helper) failed to initialize, indicated by the ⛔️ alongside the flower emoji.
 
 * ☁️ **Managers/Functions:** Logged from manager classes or other functions (business logic layer).
