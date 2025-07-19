@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import BezelKit
 
 // MARK: - SCREEN
 @MainActor
@@ -19,6 +20,7 @@ enum Radius {
     static let large: CGFloat = 22
     static let standard: CGFloat = 28
     static let small: CGFloat = 18
+    static let glass: CGFloat = .deviceBezel
 }
 
 // MARK: - PADDING
