@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import PostHog
 
 // MARK: - VIEW
 struct ExploreView: View {
@@ -82,6 +83,9 @@ struct ExploreView: View {
                     )
                 }
             }
+        }
+        .onAppear {
+            PostHogSDK.shared.capture("Explore View")
         }
     }
 }

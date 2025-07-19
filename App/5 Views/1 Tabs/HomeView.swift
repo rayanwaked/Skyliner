@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import PostHog
 
 // MARK: - VIEW
 struct HomeView: View {
@@ -45,6 +46,9 @@ struct HomeView: View {
             }
         }
         .background(.standardBackground)
+        .onAppear {
+            PostHogSDK.shared.capture("Home View")
+        }
     }
 }
 

@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import PostHog
 
 // MARK: - WELCOME SECTION
 extension AuthenticationView {
@@ -115,6 +116,9 @@ extension AuthenticationView {
             .sheet(isPresented: $isPresentPrivacy) {
                 WebViewComponent(url: URL(string: "https://skyliner.app")!)
                     .ignoresSafeArea(.all)
+                    .onAppear {
+                        PostHogSDK.shared.capture("Privacy Policy View")
+                    }
             }
             
             ButtonComponent(
@@ -127,6 +131,9 @@ extension AuthenticationView {
             .sheet(isPresented: $isPresentTerms) {
                 WebViewComponent(url: URL(string: "https://bsky.social/about/support/tos")!)
                     .ignoresSafeArea(.all)
+                    .onAppear {
+                        PostHogSDK.shared.capture("Terms of Service View")
+                    }
             }
         }
     }

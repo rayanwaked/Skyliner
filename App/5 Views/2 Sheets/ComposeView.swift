@@ -7,6 +7,7 @@
 
 import SwiftUI
 import ATProtoKit
+import PostHog
 
 // MARK: - VIEW
 struct ComposeView: View {
@@ -34,6 +35,9 @@ struct ComposeView: View {
         .padding(.top, Padding.large)
         .padding(.bottom, Padding.standard)
         .background(.standardBackground.opacity(0.9))
+        .onAppear {
+            PostHogSDK.shared.capture("Compose View")
+        }
     }
 }
 

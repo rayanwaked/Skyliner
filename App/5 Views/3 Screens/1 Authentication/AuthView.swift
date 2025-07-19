@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import PostHog
 
 // MARK: - VIEW MODEL
 extension AuthenticationView {
@@ -58,6 +59,9 @@ struct AuthenticationView: View {
                             onGoCreateAccount:
                                 { viewModel.selectedSection = .createAccountSection }
                         )
+                        .onAppear {
+                            PostHogSDK.shared.capture("Welcome View")
+                        }
 
                     // MARK: - CREATE ACOUNT
                     case .createAccountSection:
@@ -77,6 +81,9 @@ struct AuthenticationView: View {
                                 viewModel.createReenteredPassword = ""
                             }
                         )
+                        .onAppear {
+                            PostHogSDK.shared.capture("Create Account View")
+                        }
 
                     // MARK: - SIGN IN
                     case .signinSection:
@@ -101,6 +108,9 @@ struct AuthenticationView: View {
                                 viewModel.signinPassword = ""
                             }
                         )
+                        .onAppear {
+                            PostHogSDK.shared.capture("Sign In View")
+                        }
                     }
                 }
                 .padding(.bottom, -Padding.standard)

@@ -7,6 +7,7 @@
 
 import SwiftUI
 import Glur
+import PostHog
 
 // MARK: - VIEW
 struct ProfileView: View {
@@ -49,6 +50,9 @@ struct ProfileView: View {
             if userProfile == nil {
                 userProfile = appState.accountManager
             }
+        }
+        .onAppear {
+            PostHogSDK.shared.capture("Profile View")
         }
     }
 }
