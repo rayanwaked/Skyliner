@@ -25,14 +25,14 @@
 
 ## Overview
 
-**Skyliner** is a native iOS client for [BlueSky](https://blueskyweb.xyz), built with Swift and SwiftUI. It utilizes the [ATProtoKit](https://github.com/MasterJ93/ATProtoKit) framework to connect to BlueSky’s AT Protocol network. The app focuses on a refined user interface and smooth user experience, with an emphasis on minimalistic and maintainable code. Skyliner demonstrates a modern SwiftUI architecture and provides a solid foundation for further customization and new features.
+**Skyliner** is a native iOS client for [Bluesky](https://blueskyweb.xyz), built with Swift and SwiftUI. It utilizes the [ATProtoKit](https://github.com/MasterJ93/ATProtoKit) framework to connect to Bluesky’s AT Protocol network. The app focuses on a refined user interface and smooth user experience, with an emphasis on minimalistic and maintainable code. Skyliner demonstrates a modern SwiftUI architecture and provides a solid foundation for further customization and new features.
 
 <img width="1489" height="750" alt="Templify App Store Template" src="https://github.com/user-attachments/assets/2e7827f7-7bb9-4091-bc16-dfcef75c417d" />
 
 ## Features
 
 * **Native SwiftUI App:** Written entirely in Swift and SwiftUI for a fully native iOS experience.
-* **BlueSky Integration:** Connects to the decentralized BlueSky social network via ATProtoKit, handling authentication and feed data through the AT Protocol.
+* **Bluesky Integration:** Connects to the decentralized Bluesky social network via ATProtoKit, handling authentication and feed data through the AT Protocol.
 * **Modern Architecture:** Uses a scalable MVVM-like architecture with managers and view models, making the code easy to understand and extend.
 * **UI/UX Focus:** Polished interface elements and animations (custom components, icons, and backgrounds) for an engaging user experience.
 * **Extensible Foundation:** The codebase is organized for easy refactoring and addition of new features without breaking existing functionality.
@@ -57,7 +57,7 @@
 
 Skyliner uses Swift Package Manager (SPM) to manage its external libraries. Key dependencies include:
 
-* **ATProtoKit (v0.30.0):** A Swift client library for Bluesky’s AT Protocol – handles networking and data models for BlueSky integration.
+* **ATProtoKit (v0.30.0):** A Swift client library for Bluesky’s AT Protocol – handles networking and data models for Bluesky integration.
 * **KeychainSwift (v24.0.0):** Used for securely storing sensitive data (e.g. authentication tokens) in the iOS Keychain.
 * **SwiftLog (Apple Swift Logging API v1.6.3):** Provides a flexible logging mechanism used by the app for debug and error logging.
 * **SwiftSyntax (v600.0.1):** Swift syntax parsing library (included as a dependency, potentially for future development needs or as a transient dependency of other packages).
