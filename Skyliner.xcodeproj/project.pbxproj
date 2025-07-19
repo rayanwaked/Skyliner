@@ -20,9 +20,22 @@
 		B9C03D2A2E24850D00D98A25 /* Skyliner.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Skyliner.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		B9A023092E2C623D00A00B0A /* Exceptions for "App" folder in "Skyliner" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				"1 Resources/Properties.plist",
+			);
+			target = B9C03D292E24850D00D98A25 /* Skyliner */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		B9C03D2C2E24850D00D98A25 /* App */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				B9A023092E2C623D00A00B0A /* Exceptions for "App" folder in "Skyliner" target */,
+			);
 			path = App;
 			sourceTree = "<group>";
 		};
