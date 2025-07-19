@@ -10,10 +10,12 @@ import ATProtoKit
 
 @MainActor
 @Observable
+// MARK: - MANAGER
 public final class TrendsManager {
     // MARK: - PROPERTIES
     @ObservationIgnored
-    var clientManager: ClientManager? = nil
+    var appState: AppState?
+    var clientManager: ClientManager? { appState?.clientManager }
     var trends: [String] = []
 
     // MARK: - METHODS

@@ -55,3 +55,33 @@ extension Int {
         }
     }
 }
+
+// MARK: - FONT SIZE
+extension Font {
+    static func smaller(
+        _ style: TextStyle,
+        adjustment: CGFloat = -1
+    ) -> Font {
+        let baseSize = UIFont.preferredFont(forTextStyle: style.uiTextStyle).pointSize
+        return .system(size: baseSize + adjustment)
+    }
+}
+
+extension Font.TextStyle {
+    var uiTextStyle: UIFont.TextStyle {
+        switch self {
+        case .largeTitle: return .largeTitle
+        case .title: return .title1
+        case .title2: return .title2
+        case .title3: return .title3
+        case .headline: return .headline
+        case .body: return .body
+        case .callout: return .callout
+        case .subheadline: return .subheadline
+        case .footnote: return .footnote
+        case .caption: return .caption1
+        case .caption2: return .caption2
+        @unknown default: return .body
+        }
+    }
+}

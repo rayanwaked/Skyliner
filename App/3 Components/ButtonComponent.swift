@@ -33,24 +33,25 @@ struct ButtonConfig {
     
     // MARK: - SIZE
     enum Size {
-        case compact, inline, standard, tabBar, header
+        case compact, inline, standard, tabBar, header, compose
         
         var font: Font {
             switch self {
-            case .compact, .standard: .subheadline
-            case .inline: .caption
-            case .tabBar: .title2
-            case .header: .title3
+            case .compact, .standard: .smaller(.subheadline)
+            case .inline: .smaller(.caption)
+            case .tabBar, .header: .smaller(.title3)
+            case .compose: .smaller(.footnote)
             }
         }
         
         var padding: CGFloat {
             switch self {
-            case .compact: Padding.standard * 0.9
-            case .inline: Padding.standard * 0.7
-            case .standard: 0
+            case .compact: Padding.standard * 0.85
+            case .inline: Padding.standard * 0.70
+            case .standard: 0.00
             case .tabBar: Padding.standard * 0.95
-            case .header: Padding.standard * 0.5
+            case .header: Padding.standard * 0.50
+            case .compose: Padding.standard * 1.10
             }
         }
     }
@@ -133,7 +134,7 @@ struct ButtonComponent: View {
                         }
                 }
         }
-//        .backport.glassEffect(.interactive(isEnabled: true))
+        .backport.glassEffect(.interactive(isEnabled: true))
         .fixedSize(horizontal: size != .standard, vertical: false)
     }
 }

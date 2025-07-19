@@ -21,6 +21,7 @@ class DataCoordinator {
     func loadAllData() async {
         await appState?.updateUserDID()
         await appState?.accountManager.loadProfilePicture()
+        await appState?.accountManager.loadProfile()
         await appState?.trendsManager.loadTrends()
         await appState?.postsManager.loadPosts()
     }

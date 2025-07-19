@@ -10,21 +10,24 @@ import ATProtoKit
 
 @MainActor
 @Observable
+// MARK: - MANAGER
 public final class SearchManager {
     // MARK: - Properties
     @ObservationIgnored
-    var clientManager: ClientManager?
+    var appState: AppState?
+    var clientManager: ClientManager? { appState?.clientManager }
     public private(set) var searchResults: [AppBskyLexicon.Feed.SearchPostsOutput] = []
     private var currentCursor: String?
     private var currentQuery: String?
     
     // MARK: - Computed Properties
-    var postData: [(imageURL: URL?, name: String, handle: String, message: String)] {
+    var postData: [(postID: String, imageURL: URL?, name: String, handle: String, message: String)] {
         searchResults.flatMap(\.posts).compactMap { result in
             let author = result.author
             let message = extractMessage(from: result.record)
             
             return (
+                postID: result.uri,
                 imageURL: author.avatarImageURL,
                 name: author.displayName ?? author.actorHandle,
                 handle: author.actorHandle,
@@ -58,7 +61,9 @@ public final class SearchManager {
             
             if let result {
                 currentCursor = result.cursor
-                searchResults.append(result)
+                withAnimation(.snappy) {
+                    searchResults.append(result)
+                }
             }
         } catch {
             print("Search error: \(error.localizedDescription)")

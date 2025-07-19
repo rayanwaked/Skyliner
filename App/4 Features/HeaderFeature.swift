@@ -38,7 +38,7 @@ struct HeaderFeature: View {
 }
 
 // MARK: - SETTINGS SECTION
-private extension HeaderFeature {
+extension HeaderFeature {
     var settingsSection: some View {
         HStack {
             Spacer()
@@ -50,7 +50,7 @@ private extension HeaderFeature {
                 Image("SkylinerEmoji")
                     .resizable()
                     .scaledToFit()
-                    .frame(width: Screen.width * 0.08, height: Screen.width * 0.08)
+                    .frame(width: Screen.width * 0.065, height: Screen.width * 0.065)
                 Group {
                     switch location {
                     case .home: Text("Skyliner")
@@ -58,7 +58,7 @@ private extension HeaderFeature {
                     case .notifications: Text("Notifications")
                     }
                 }
-                .font(.title)
+                .font(.smaller(.title))
                 .fontWeight(.bold)
                 .foregroundStyle(.primary)
             },
@@ -68,7 +68,7 @@ private extension HeaderFeature {
 }
 
 // MARK: - TRENDING SECTION
-private extension HeaderFeature {
+extension HeaderFeature {
     var trendingSection: some View {
         ScrollView(.horizontal) {
             HStack(spacing: Padding.small) {
@@ -94,7 +94,7 @@ private extension HeaderFeature {
             }
             .padding(.horizontal, Padding.standard)
         }
-        .padding(.vertical, Padding.tiny)
+        .padding(.bottom, Padding.tiny)
         .scrollIndicators(.hidden)
     }
 }

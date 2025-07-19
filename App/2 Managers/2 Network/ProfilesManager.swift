@@ -9,9 +9,11 @@ import SwiftUI
 import ATProtoKit
 
 @MainActor
+// MARK: - MANAGER
 public final class ProfilesManager {
     // MARK: - PROPERTIES
     @ObservationIgnored
-    var clientManager: ClientManager? = nil
+    var appState: AppState?
+    var clientManager: ClientManager? { appState?.clientManager }
     var profiles: [String: String] = [:]
 }

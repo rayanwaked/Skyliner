@@ -11,7 +11,7 @@ import NukeUI
 // MARK: - ENUM
 extension ProfilePictureComponent {
     enum Size {
-        case small, medium, large
+        case small, medium, large, xlarge
         
         @MainActor
         var frame: CGSize {
@@ -19,9 +19,11 @@ extension ProfilePictureComponent {
             case .small:
                 CGSize(width: Screen.width * 0.08, height: Screen.width * 0.08)
             case .medium:
-                CGSize(width: Screen.width * 0.11, height: Screen.width * 0.11)
+                CGSize(width: Screen.width * 0.115, height: Screen.width * 0.115)
             case .large:
                 CGSize(width: Screen.width * 0.2, height: Screen.width * 0.2)
+            case .xlarge:
+                CGSize(width: Screen.width * 0.3, height: Screen.width * 0.3)
             }
         }
     }
@@ -63,15 +65,15 @@ extension ProfilePictureComponent {
                 }
                 .frame(width: size.frame.width, height: size.frame.height)
                 .clipShape(Circle())
-//                .backport.glassEffect(.tintedAndInteractive(color: .clear, isEnabled: true))
             } else {
                 Circle()
-                    .font(.title2)
+                    .font(.smaller(.title2))
                     .fontWeight(.semibold)
                     .frame(maxWidth: .infinity)
                     .frame(width: size.frame.width, height: size.frame.height)
             }
         }
+        .backport.glassEffect(.tintedAndInteractive(color: .clear, isEnabled: true))
     }
 }
 
@@ -91,16 +93,16 @@ extension ProfilePictureComponent {
                     }
                 }
                 .frame(width: size.frame.width, height: size.frame.height)
-//                .backport.glassEffect(.tintedAndInteractive(color: .clear, isEnabled: true))
                 .clipShape(Circle())
             } else {
                 Circle()
-                    .font(.title2)
+                    .font(.smaller(.title2))
                     .fontWeight(.semibold)
                     .frame(maxWidth: .infinity)
                     .frame(width: size.frame.width, height: size.frame.height)
             }
         }
+        .backport.glassEffect(.tintedAndInteractive(color: .clear, isEnabled: true))
     }
 }
 

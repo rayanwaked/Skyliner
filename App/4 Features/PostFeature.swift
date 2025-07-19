@@ -21,6 +21,7 @@ struct PostFeature: View {
                 LazyVStack {
                     ForEach(Array(posts.enumerated()), id: \.offset) { index, post in
                         PostCell(
+                            postID: post.postID,
                             imageURL: post.imageURL,
                             name: post.name,
                             handle: post.handle,
@@ -37,21 +38,27 @@ struct PostFeature: View {
 
 // MARK: - POST CELL
 struct PostCell: View {
+    @Environment(AppState.self) private var appState
+    
+    var postID: String
     var imageURL: URL? = nil
     var name: String = "Name"
     var handle: String = "account@bsky.social"
     var message: String = ""
     
     var body: some View {
+        let postState = appState.postsManager.getPostState(postID: postID)
+        
         Group {
             HStack(alignment: .top) {
                 ProfilePictureComponent(isUser: false, profilePictureURL: imageURL, size: .medium)
+                    .padding(.trailing, Padding.tiny)
                 
                 VStack(alignment: .leading) {
                     HStack(alignment: .top) {
                         Text(name)
                             .fontWeight(.medium)
-                        Text(handle)
+                        Text("@\(handle)")
                             .foregroundStyle(.gray.opacity(0.9))
                             .lineLimit(1)
                         // Time
@@ -59,19 +66,79 @@ struct PostCell: View {
                     .padding(.bottom, Padding.tiny * 0.1)
                     
                     Text(message)
+                    
+                    actions(postState: postState)
                 }
-                .font(.subheadline)
+                .font(.smaller(.body))
                 
                 Spacer()
             }
             .padding(.leading, Padding.standard)
-            .padding(.vertical, Padding.small)
+            .padding(.vertical, Padding.tiny)
             .background(.standardBackground)
             
             Divider()
         }
     }
-    
+}
+
+// MARK: - ACTIONS
+extension PostCell {
+    func actions(postState: (isLiked: Bool, isReposted: Bool, likeCount: Int, repostCount: Int)) -> some View {
+        HStack {
+            Button {
+                Task {
+                    await appState.postsManager.toggleRepost(postID: postID)
+                }
+            } label: {
+                Image(systemName: "arrow.trianglehead.2.clockwise")
+                    .foregroundStyle(postState.isReposted ? .blue : .primary)
+            }
+            
+            Spacer()
+            
+            Button {
+                // Handle reply action
+            } label: {
+                Image(systemName: "message")
+                    .foregroundStyle(.foreground)
+            }
+            
+            Spacer()
+            
+            Button {
+                Task {
+                    await appState.postsManager.toggleLike(postID: postID)
+                }
+            } label: {
+                Image(systemName: postState.isLiked ? "heart.fill" : "heart")
+                    .foregroundStyle(postState.isLiked ? .red : .primary)
+            }
+            
+            Spacer()
+            
+            Button {
+                appState.postsManager.sharePost(postID: postID)
+            } label: {
+                Image(systemName: "square.and.arrow.up")
+                    .foregroundStyle(.foreground)
+            }
+            
+            Spacer()
+            
+            Menu {
+                Button("Copy Link") {
+                    appState.postsManager.copyPostLink(postID: postID)
+                }
+            } label: {
+                Image(systemName: "ellipsis")
+                    .foregroundStyle(.foreground)
+            }
+        }
+        .font(.smaller(.subheadline))
+        .padding(.top, Padding.small)
+        .padding(.trailing, Padding.standard)
+    }
 }
 
 // MARK: - PREVIEW
@@ -81,4 +148,3 @@ struct PostCell: View {
     PostFeature()
         .environment(appState)
 }
-

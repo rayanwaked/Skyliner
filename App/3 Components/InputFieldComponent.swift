@@ -19,7 +19,7 @@ struct InputFieldComponent: View {
     
     private var inputOpacity: Color {
         if #available(iOS 26.0, *) {
-            return .gray.opacity(Opacity.dark)
+            return .gray.opacity(Opacity.dark * 1.5)
         } else {
             return .standardBackground.opacity(1.0)
         }
@@ -53,11 +53,9 @@ extension InputFieldComponent {
             }
         }
         .padding()
-        .frame(maxHeight: Screen.height * 0.06)
-//        .background(.ultraThinMaterial.opacity(0.7))
-//        .backport.glassEffect(.interactive(isEnabled: true))
-//        .background(searchBar == true ? .clear : inputOpacity)
-        .background(.ultraThinMaterial)
+        .frame(maxHeight: searchBar ? Screen.height * 0.06 : Screen.height * 0.06)
+        .backport.glassEffect(.interactive(isEnabled: true))
+        .background(searchBar ? .clear : inputOpacity)
         .clipShape(RoundedRectangle(cornerRadius: 100))
     }
 }

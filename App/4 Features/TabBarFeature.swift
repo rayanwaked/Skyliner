@@ -31,6 +31,7 @@ struct TabBarFeature: View {
     @Environment(AppState.self) private var appState
     @Environment(\.colorScheme) private var colorScheme
     @StateObject private var keyboard = KeyboardResponder()
+    @State private var localInput = ""
     
     private var tabBarOpacity: CGFloat {
         if #available(iOS 26, *) { return 0 } else { return 1 }
@@ -42,7 +43,6 @@ struct TabBarFeature: View {
             Spacer()
             
             HStack {
-                // Tab Bar Content
                 HStack {
                     if routerCoordinator.selectedTab != .explore {
                         regularTabBar
@@ -84,7 +84,7 @@ struct TabBarFeature: View {
 
 // MARK: - REGULAR TAB BAR
 extension TabBarFeature {
-    private var regularTabBar: some View {
+    var regularTabBar: some View {
         HStack {
             ForEach(Tabs.allCases) { tab in
                 Button {
@@ -94,18 +94,12 @@ extension TabBarFeature {
                     hapticFeedback(.soft)
                 } label: {
                     if tab == .profile {
-//                        profileTabContent
+                        profileTabContent
                     } else {
                         Image(systemName: tab.systemImage(forSelected: routerCoordinator.selectedTab == tab))
-//                            .backport.glassEffect(
-//                                .tintedAndInteractive(
-//                                color: .clear,
-//                                isEnabled: true)
-//                            )
-                            .font(.title2)
+                            .font(.smaller(.title2))
                             .fontWeight(.semibold)
                             .frame(maxWidth: .infinity)
-                            .frame(height: Screen.height * 0.05)
                     }
                 }
             }
@@ -113,13 +107,13 @@ extension TabBarFeature {
         .foregroundStyle(.primary)
         .padding(.horizontal, Padding.standard)
         .padding(.vertical, Padding.standard / 3)
-//        .backport.glassEffect(.tintedAndInteractive(color: .clear, isEnabled: true))
-        .background(.ultraThinMaterial)
+        .frame(height: Screen.height * 0.06)
+        .backport.glassEffect(.tintedAndInteractive(color: .clear, isEnabled: true))
         .clipShape(RoundedRectangle(cornerRadius: 100))
     }
     
     // MARK: - PROFILE TAB CONTENT
-    private var profileTabContent: some View {
+    var profileTabContent: some View {
         Group {
             if appState.accountManager.profilePictureURL != nil {
                 ProfilePictureComponent(isUser: true, size: .small)
@@ -127,7 +121,7 @@ extension TabBarFeature {
                     .padding(.leading, Screen.width * 0.04)
             } else {
                 Image(systemName: Tabs.profile.systemImage(forSelected: routerCoordinator.selectedTab == .profile))
-                    .font(.title2)
+                    .font(.smaller(.title2))
                     .fontWeight(.semibold)
                     .frame(maxWidth: .infinity)
                     .frame(height: Screen.height * 0.05)
@@ -138,11 +132,12 @@ extension TabBarFeature {
 
 // MARK: - EXPLORE SEARCH BAR
 extension TabBarFeature {
-    private var exploreSearchBar: some View {
+    var exploreSearchBar: some View {
         HStack {
             ButtonComponent(
                 systemName: "chevron.left",
                 variation: .secondary,
+                size: .compact,
                 haptic: .soft,
                 action: {
                     withAnimation(.easeInOut(duration: 0.2)) {
@@ -158,11 +153,11 @@ extension TabBarFeature {
                 secure: false,
                 icon: Image(systemName: "magnifyingglass"),
                 title: "Explore the skies",
-                text: Binding(
-                    get: { routerCoordinator.exploreSearch },
-                    set: { routerCoordinator.exploreSearch = $0 }
-                )
+                text: $localInput
             )
+            .onSubmit {
+                routerCoordinator.exploreSearch = localInput
+            }
         }
     }
 }

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		B916FBDE2E2BCE2600412076 /* BezelKit in Frameworks */ = {isa = PBXBuildFile; productRef = B916FBDD2E2BCE2600412076 /* BezelKit */; };
 		B9AB600E2E2895F900C6179D /* Glur in Frameworks */ = {isa = PBXBuildFile; productRef = B9AB600D2E2895F900C6179D /* Glur */; };
 		B9C03D3A2E24855B00D98A25 /* ATMacro in Frameworks */ = {isa = PBXBuildFile; productRef = B9C03D392E24855B00D98A25 /* ATMacro */; };
 		B9C03D3C2E24855B00D98A25 /* ATProtoKit in Frameworks */ = {isa = PBXBuildFile; productRef = B9C03D3B2E24855B00D98A25 /* ATProtoKit */; };
@@ -32,6 +33,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B916FBDE2E2BCE2600412076 /* BezelKit in Frameworks */,
 				B9C03DD92E248D6400D98A25 /* PostHog in Frameworks */,
 				B9C03E102E2496A900D98A25 /* KeychainSwift in Frameworks */,
 				B9AB600E2E2895F900C6179D /* Glur in Frameworks */,
@@ -86,6 +88,7 @@
 				B9C03E0F2E2496A900D98A25 /* KeychainSwift */,
 				B9C03E9D2E2499C500D98A25 /* NukeUI */,
 				B9AB600D2E2895F900C6179D /* Glur */,
+				B916FBDD2E2BCE2600412076 /* BezelKit */,
 			);
 			productName = Skyliner;
 			productReference = B9C03D2A2E24850D00D98A25 /* Skyliner.app */;
@@ -121,6 +124,7 @@
 				B9C03E0E2E2496A900D98A25 /* XCRemoteSwiftPackageReference "keychain-swift" */,
 				B9C03E9C2E2499C500D98A25 /* XCRemoteSwiftPackageReference "Nuke" */,
 				B9AB600C2E2895F900C6179D /* XCRemoteSwiftPackageReference "Glur" */,
+				B916FBDC2E2BCE2600412076 /* XCRemoteSwiftPackageReference "BezelKit" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = B9C03D2B2E24850D00D98A25 /* Products */;
@@ -390,6 +394,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		B916FBDC2E2BCE2600412076 /* XCRemoteSwiftPackageReference "BezelKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/markbattistella/BezelKit";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 4.0.0;
+			};
+		};
 		B9AB600C2E2895F900C6179D /* XCRemoteSwiftPackageReference "Glur" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/joogps/Glur";
@@ -433,6 +445,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		B916FBDD2E2BCE2600412076 /* BezelKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = B916FBDC2E2BCE2600412076 /* XCRemoteSwiftPackageReference "BezelKit" */;
+			productName = BezelKit;
+		};
 		B9AB600D2E2895F900C6179D /* Glur */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = B9AB600C2E2895F900C6179D /* XCRemoteSwiftPackageReference "Glur" */;

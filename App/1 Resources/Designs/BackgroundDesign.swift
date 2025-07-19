@@ -1,5 +1,5 @@
 //
-//  BackgroundComponent.swift
+//  BackgroundDesign.swift
 //  Skyliner
 //
 //  Created by Rayan Waked on 6/22/25.
@@ -9,7 +9,7 @@ import SwiftUI
 internal import Combine
 
 // MARK: - VIEW
-struct BackgroundComponent: View {
+struct BackgroundDesign: View {
     // MARK: - PROPERTIES
     @StateObject private var cloudsAnimator = CloudsAnimator()
     @Environment(\.colorScheme) var colorScheme
@@ -40,7 +40,7 @@ struct BackgroundComponent: View {
 }
 
 // MARK: - GRADIENT BACKGROUND
-extension BackgroundComponent {
+extension BackgroundDesign {
     var gradientBackground: some View {
         Image("GradientBackground")
             .resizable()
@@ -49,7 +49,7 @@ extension BackgroundComponent {
     }
 }
 
-private extension BackgroundComponent {
+private extension BackgroundDesign {
     // MARK: - CLOUD VIEW
     @ViewBuilder
     private func cloud(geo: GeometryProxy) -> some View {
@@ -123,6 +123,6 @@ class CloudsAnimator: ObservableObject {
 
 // MARK: - PREVIEW
 #Preview {
-    BackgroundComponent()
+    BackgroundDesign()
 }
 

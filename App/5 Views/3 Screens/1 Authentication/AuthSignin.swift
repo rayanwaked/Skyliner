@@ -61,7 +61,7 @@ extension AuthenticationView {
                 if !error.isEmpty {
                     Text(error)
                         .foregroundColor(.red)
-                        .font(.footnote)
+                        .font(.smaller(.footnote))
                         .padding(.top, 4)
                         .padding(.leading, 4)
                 }

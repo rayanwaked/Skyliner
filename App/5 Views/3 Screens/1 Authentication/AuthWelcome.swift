@@ -50,10 +50,10 @@ extension AuthenticationView {
             case .welcomeSection:
                 VStack(alignment: .leading) {
                     Text("Skyliner")
-                        .font(.title)
+                        .font(.smaller(.title))
                         .fontWeight(.bold)
                     Text("for Bluesky")
-                        .font(.headline)
+                        .font(.smaller(.headline))
                         .padding(.bottom, Padding.standard / 2)
                     Text("Take to the skies with a refined experience for Bluesky")
                         .padding(.bottom, Padding.standard * 1.5)
@@ -62,11 +62,11 @@ extension AuthenticationView {
                 // MARK: CREATE ACCOUNT
             case .createAccountSection:
                 VStack(alignment: .leading) {
-                    Text("Welcome!")
-                        .font(.title)
+                    Text("Welcome")
+                        .font(.smaller(.title))
                         .fontWeight(.bold)
                     Text("let's get you started")
-                        .font(.headline)
+                        .font(.smaller(.headline))
                         .padding(.bottom, Padding.standard / 2)
                     Text("You'll first need to create an account on Bluesky")
                         .padding(.bottom, Padding.standard * 1.5)
@@ -75,11 +75,11 @@ extension AuthenticationView {
                 // MARK: SIGN IN
             case .signinSection:
                 VStack(alignment: .leading) {
-                    Text("Hey!")
-                        .font(.title)
+                    Text("Hey")
+                        .font(.smaller(.title))
                         .fontWeight(.bold)
                     Text("welcome back")
-                        .font(.headline)
+                        .font(.smaller(.headline))
                         .padding(.bottom, Padding.standard / 2)
                     Text("There is lots happening, sign in with your Bluesky account to continue")
                         .padding(.bottom, Padding.standard * 1.5)

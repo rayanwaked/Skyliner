@@ -39,7 +39,7 @@ struct ComposeView: View {
 
 // MARK: - TEXT FIELD
 extension ComposeView {
-    private var textField: some View {
+    var textField: some View {
         ZStack(alignment: .topLeading) {
             TextEditor(text: $postText)
                 .scrollContentBackground(.hidden)
@@ -56,7 +56,7 @@ extension ComposeView {
 
 // MARK: - ACTIONS
 extension ComposeView {
-    private var actions: some View {
+    var actions: some View {
         HStack {
             Spacer()
             
@@ -78,6 +78,7 @@ extension ComposeView {
             ButtonComponent(
                 systemName: "xmark" ,
                 variation: .secondary,
+                size: .compose,
                 haptic: .soft,
                 action: {
                     routerCoordinator.showingCreate.toggle()

@@ -80,7 +80,7 @@ extension AuthenticationView {
                 if !error.isEmpty {
                     Text(error)
                         .foregroundColor(.red)
-                        .font(.footnote)
+                        .font(.smaller(.footnote))
                         .padding(.top, 4)
                         .padding(.leading, 4)
                 }
@@ -89,7 +89,7 @@ extension AuthenticationView {
             .transition(.move(edge: .trailing))
             .overlay(
                 Text("☀️")
-                    .font(.largeTitle)
+                    .font(.smaller(.largeTitle))
                     .padding(Padding.standard)
                     .padding(Padding.standard),
                 alignment: .topTrailing

@@ -23,7 +23,12 @@ struct HomeView: View {
                     LoadMoreHelper(appState: appState, location: .home)
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
-                .padding(.top, Screen.height * 0.125)
+                .padding(.top, Screen.height * 0.12)
+            }
+            .refreshable {
+                Task {
+                    await appState.postsManager.refreshPosts()
+                }
             }
             .defaultScrollAnchor(.top)
             .scrollIndicators(.hidden)

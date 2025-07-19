@@ -38,11 +38,11 @@ struct AuthenticationView: View {
     public var body: some View {
         ZStack(alignment: .bottomLeading) {
             // MARK: - BACKGROUND
-            BackgroundComponent(isAnimated: true)
+            BackgroundDesign(isAnimated: true)
                 .ignoresSafeArea(.keyboard)
-//                .backport.glassEffect(in: RoundedRectangle(
-//                    cornerRadius: Radius.large
-//                ))
+                .backport.glassEffect(in: RoundedRectangle(
+                    cornerRadius: Radius.large
+                ))
                 .ignoresSafeArea()
 
             // MARK: - CONTENT

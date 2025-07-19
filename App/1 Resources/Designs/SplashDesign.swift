@@ -1,5 +1,5 @@
 //
-//  SplashComponent.swift
+//  SplashDesign.swift
 //  Skyliner
 //
 //  Created by Rayan Waked on 6/23/25.
@@ -8,7 +8,7 @@
 import SwiftUI
 
 // MARK: - VIEW
-struct SplashComponent: View {
+struct SplashDesign: View {
     // MARK: - PROPERTIES
     @State private var didAppear: Bool = false
     @State private var animationProgress: Double = 0
@@ -25,7 +25,7 @@ struct SplashComponent: View {
             let rotation = -25 * animationProgress
             
             ZStack {
-                BackgroundComponent(isAnimated: true)
+                BackgroundDesign(isAnimated: true)
                 Image("SkylinerImage")
                     .resizable()
                     .scaledToFit()
@@ -49,5 +49,5 @@ struct SplashComponent: View {
 
 // MARK: - PREVIEW
 #Preview {
-    SplashComponent()
+    SplashDesign()
 }

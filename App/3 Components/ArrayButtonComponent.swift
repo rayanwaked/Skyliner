@@ -27,14 +27,6 @@ struct ArrayButtonComponent<T: Hashable, Content: View>: View {
         }
     }
     
-    private var itemRadius: CGFloat {
-        if #available(iOS 26.0, *) {
-            return 0
-        } else {
-            return Radius.standard
-        }
-    }
-    
     // MARK: - BODY
     var body: some View {
         ScrollView(.horizontal) {
@@ -42,21 +34,21 @@ struct ArrayButtonComponent<T: Hashable, Content: View>: View {
                 ForEach(items, id: \.self) { item in
                     content(item)
                         .padding(Padding.small)
-//                        .backport.glassEffect(
-//                            .tintedAndInteractive(
-//                                color: .blue.opacity(Opacity.light),
-//                                isEnabled: true
-//                            )
-//                        )
+                        .backport.glassEffect(
+                            .tintedAndInteractive(
+                                color: .blue.opacity(Opacity.light),
+                                isEnabled: true
+                            )
+                        )
                         .background(itemBackground)
                         .clipShape(
-                            RoundedRectangle(cornerRadius: itemRadius)
+                            RoundedRectangle(cornerRadius: Radius.standard)
                         )
                         .padding(.vertical, Padding.tiny / 1.3)
                         .hapticAction(.soft) { action?(item) }
                 }
             }
-            .font(.callout)
+            .font(.smaller(.callout))
             .fontWeight(.semibold)
             .foregroundStyle(.primary)
             .padding(.horizontal, Padding.standard)

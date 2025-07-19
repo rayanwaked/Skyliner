@@ -7,6 +7,29 @@
 
 import SwiftUI
 
+// MARK: - COORDINATOR
+@Observable
+final class RouterCoordinator {
+    // MARK: - PROPERTIES
+    var isLoaded: Bool = false
+    var selectedTab: Tabs = .home
+    var showingCreate: Bool = false
+    var exploreSearch: String = ""
+    
+    // MARK: - METHODS
+    func selectTab(_ tab: Tabs) {
+        selectedTab = tab
+    }
+    
+    func toggleCreate() {
+        showingCreate.toggle()
+    }
+    
+    func clearExploreSearch() {
+        exploreSearch = ""
+    }
+}
+
 // MARK: - VIEW
 struct RouterView: View {
     // MARK: - PROPERTIES
@@ -27,7 +50,7 @@ struct RouterView: View {
 // MARK: - SPLASH VIEW
 extension RouterView {
     var splashView: some View {
-        SplashComponent()
+        SplashDesign()
             .onAppear {
                 withAnimation(Animation.easeInOut.delay(1.5)) {
                     routerCoordinator.isLoaded = true
