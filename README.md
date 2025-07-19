@@ -33,7 +33,6 @@
 
 * **Native SwiftUI App:** Written entirely in Swift and SwiftUI for a fully native iOS experience.
 * **Bluesky Integration:** Connects to the decentralized Bluesky social network via ATProtoKit, handling authentication and feed data through the AT Protocol.
-* **Modern Architecture:** Uses a scalable MVVM-like architecture with managers and view models, making the code easy to understand and extend.
 * **UI/UX Focus:** Polished interface elements and animations (custom components, icons, and backgrounds) for an engaging user experience.
 * **Extensible Foundation:** The codebase is organized for easy refactoring and addition of new features without breaking existing functionality.
 
@@ -66,7 +65,7 @@ These packages are defined in the project’s SwiftPM configuration. The exact v
 
 ## Project Structure
 
-The project is organized into logical groups, with each top-level folder numbered (`1` through `5`) followed by an em dash and the folder name. This naming convention enforces a linear, intentional order in Xcode’s project navigator (making the flow of the app easier to follow). For example, **`1 — Documents`** contains documentation, **`2 — Resources`** contains app assets, **`3 — Managers`** contains the data/business logic layer, and so on. This structure improves searchability and logical flow at the expense of some rigidity (renaming these folders would require updating references in Xcode settings, e.g. if the Resources folder name changes, it must be updated in build settings).
+The project is organized into logical groups, with each top-level folder numbered (`1` through `5`) followed by a space and the folder name. This naming convention enforces a linear, intentional order in Xcode’s project navigator (making the flow of the app easier to follow). For example, **`1 Documents`** contains documentation, **`2 Resources`** contains app assets, **`3 Managers`** contains the data/business logic layer, and so on. This structure improves searchability and logical flow at the expense of some rigidity (renaming these folders would require updating references in Xcode settings, e.g. if the Resources folder name changes, it must be updated in build settings).
 
 All SwiftUI view files (in **Components** and **Views**) include live Preview providers to allow interface testing and iteration in Xcode’s canvas. The codebase is intended to be clean and straightforward – refactoring a component should be localized (avoiding cascade changes across many files).
 
