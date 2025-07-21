@@ -23,7 +23,7 @@ extension ProfilePictureComponent {
             case .large:
                 CGSize(width: Screen.width * 0.2, height: Screen.width * 0.2)
             case .xlarge:
-                CGSize(width: Screen.width * 0.3, height: Screen.width * 0.25)
+                CGSize(width: Screen.width * 0.29, height: Screen.width * 0.29)
             }
         }
     }
@@ -63,7 +63,7 @@ extension ProfilePictureComponent {
                             .fill(Color.secondary.opacity(0.3))
                     }
                 }
-                .frame(width: size.frame.width)
+                .frame(width: size.frame.width, height: size.frame.height)
                 .clipShape(Circle())
                 .backport.glassEffect(.tintedAndInteractive(color: .clear, isEnabled: true), in: Circle())
             } else {
@@ -71,7 +71,7 @@ extension ProfilePictureComponent {
                     .font(.smaller(.title2))
                     .fontWeight(.semibold)
                     .frame(maxWidth: .infinity)
-                    .frame(width: size.frame.width)
+                    .frame(width: size.frame.width, height: size.frame.height)
                     .backport.glassEffect(.tintedAndInteractive(color: .clear, isEnabled: true))
             }
         }

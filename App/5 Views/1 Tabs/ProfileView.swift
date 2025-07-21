@@ -32,9 +32,7 @@ struct ProfileView: View {
                     
                     description
                     
-                    Rectangle()
-                        .foregroundStyle(.standardBackground)
-                        .frame(width: Screen.width, height: Screen.height)
+                    posts
                 }
             }
             .onScrollGeometryChange(for: CGFloat.self) { geo in
@@ -50,8 +48,6 @@ struct ProfileView: View {
             if userProfile == nil {
                 userProfile = appState.accountManager
             }
-        }
-        .onAppear {
             PostHogSDK.shared.capture("Profile View")
         }
     }
@@ -156,19 +152,59 @@ extension ProfileView {
 
 extension ProfileView {
     var description: some View {
-        Text("\(userProfile?.description ?? "")")
-            .font(.smaller(.body))
-            .padding(.top, Padding.small)
-            .padding(.horizontal, Padding.standard)
-            .frame(width: Screen.width, alignment: .leading)
+        VStack(alignment: .leading) {
+            Text("\(userProfile?.name ?? "")")
+                .font(.smaller(.title3))
+                .fontWeight(.bold)
+            
+            Text("@\(userProfile?.handle ?? "")")
+                .font(.smaller(.body))
+                .fontWeight(.light)
+                .padding(.bottom, Padding.tiny / 2)
+                .opacity(Opacity.heavy)
+            
+            Text("\(userProfile?.description ?? "")")
+                .font(.smaller(.body))
+        }
+        .padding(.vertical, Padding.small)
+        .padding(.horizontal, Padding.standard)
+        .frame(width: Screen.width, alignment: .leading)
     }
 }
 
-//extension ProfileView {
-//    var posts: some View {
-//
-//    }
-//}
+extension ProfileView {
+    @ViewBuilder
+    var posts: some View {
+        ArrayButtonComponent<String, Text>(
+            items: ["Posts"],
+            content: { post in
+                Text(post)
+            },
+            action: { _ in })
+        
+        let posts = appState.postManager.authorData
+        if posts.isEmpty {
+            Text("No posts yet.")
+                .font(.smaller(.headline))
+                .opacity(0.6)
+                .frame(maxWidth: .infinity, alignment: .center)
+                .padding(.vertical, Padding.large)
+        } else {
+            LazyVStack {
+                ForEach(Array(posts.enumerated()), id: \.offset) { index, post in
+                    PostCell(
+                        postID: post.postID,
+                        imageURL: post.imageURL,
+                        name: post.name,
+                        handle: post.handle,
+                        message: post.message
+                    )
+                }
+            }
+            .padding(.top, Padding.standard)
+        }
+    }
+}
 
 // MARK: - PREVIEW
 #Preview {
@@ -177,3 +213,4 @@ extension ProfileView {
     ProfileView()
         .environment(appState)
 }
+

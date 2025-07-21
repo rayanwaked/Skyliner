@@ -24,5 +24,6 @@ class DataCoordinator {
         await appState?.accountManager.loadProfile()
         await appState?.trendsManager.loadTrends()
         await appState?.postManager.loadPosts()
+        await appState?.postManager.loadAuthorPosts(shouldIncludePins: true)
     }
 }

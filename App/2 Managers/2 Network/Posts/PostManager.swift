@@ -19,13 +19,28 @@ public final class PostManager {
     var userDID: String? { appState?.userDID }
     
     public private(set) var homeFeed: [AppBskyLexicon.Feed.GetTimelineOutput] = []
-    public private(set) var authorFeed: AppBskyLexicon.Feed.GetAuthorFeedOutput?
+    public private(set) var authorFeed: [AppBskyLexicon.Feed.FeedViewPostDefinition] = []
     private var homeCursor: String?
     private var authorCursor: String?
     
     // MARK: - COMPUTED PROPERTIES
     var postData: [(postID: String, imageURL: URL?, name: String, handle: String, message: String)] {
         homeFeed.flatMap(\.feed).compactMap { feed in
+            let author = feed.post.author
+            let message = extractMessage(from: feed.post.record)
+            
+            return (
+                postID: feed.post.uri,
+                imageURL: author.avatarImageURL,
+                name: author.displayName ?? author.actorHandle,
+                handle: author.actorHandle,
+                message: message
+            )
+        }
+    }
+    
+    var authorData: [(postID: String, imageURL: URL?, name: String, handle: String, message: String)] {
+        authorFeed.compactMap { feed in
             let author = feed.post.author
             let message = extractMessage(from: feed.post.record)
             
@@ -61,7 +76,7 @@ extension PostManager {
     }
     
     // MARK: - GET AUTHOR POSTS
-    public func loadAuthorPosts(by did: String, shouldIncludePins: Bool) async {
+    public func loadAuthorPosts(shouldIncludePins: Bool) async {
         guard let clientManager else {
             logError("No valid client manager available")
             return
@@ -69,7 +84,7 @@ extension PostManager {
         
         await execute("Getting author feed") {
             let feedResult = try await clientManager.account.getAuthorFeed(
-                by: did,
+                by: appState?.userDID ?? "",
                 limit: nil,
                 cursor: authorCursor,
                 postFilter: nil,
@@ -77,7 +92,7 @@ extension PostManager {
             )
             
             authorCursor = feedResult.cursor
-            authorFeed = feedResult
+            authorFeed = feedResult.feed
         }
     }
     
@@ -89,16 +104,16 @@ extension PostManager {
     }
     
     // MARK: - REFRESH AUTHOR FEED
-    public func refreshAuthorPosts(for did: String, shouldIncludePins: Bool = false) async {
+    public func refreshAuthorPosts(shouldIncludePins: Bool = false) async {
         authorCursor = nil
-        authorFeed = nil
-        await loadAuthorPosts(by: did, shouldIncludePins: shouldIncludePins)
+        authorFeed = []
+        await loadAuthorPosts(shouldIncludePins: shouldIncludePins)
     }
     
     // MARK: - CLEAR CACHE
     public func clearPostsCache() {
         homeFeed.removeAll()
-        authorFeed = nil
+        authorFeed = []
         homeCursor = nil
         authorCursor = nil
     }

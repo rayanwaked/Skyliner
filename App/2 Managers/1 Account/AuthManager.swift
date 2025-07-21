@@ -61,7 +61,10 @@ extension AuthManager {
     public func authenticate(handle: String, password: String) async throws {
         let config = try await authenticateWith(handle: handle, password: password)
         await setClientManager(with: config)
-        self.configState = .restored
+        
+        withAnimation(Animation.snappy(duration: 1.5)) {
+            self.configState = .restored
+        }
     }
     
     // MARK: - LOG OUT
