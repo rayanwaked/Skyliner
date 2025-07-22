@@ -44,6 +44,8 @@ struct SplashDesign: View {
                     }
             }
         }
+        .backport.glassEffect(in: RoundedRectangle(cornerRadius: Radius.glass))
+        .ignoresSafeArea(.all)
     }
 }
 

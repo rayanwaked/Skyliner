@@ -74,7 +74,7 @@ struct TabBarFeature: View {
             .padding(.bottom, keyboard.currentHeight > 0 ? Padding.small : -Padding.small)
         }
         .shadow(
-            color: colorScheme == .light ? .black.opacity(0.25) : .black.opacity(0.8),
+            color: colorScheme == .light ? .black.opacity(0.35) : .black.opacity(0.8),
             radius: Radius.standard,
             x: 0,
             y: Padding.standard * 2.5
@@ -108,7 +108,10 @@ extension TabBarFeature {
         .padding(.horizontal, Padding.standard)
         .padding(.vertical, Padding.standard / 3)
         .frame(height: Screen.height * 0.06)
-        .backport.glassEffect(.tintedAndInteractive(color: .clear, isEnabled: true))
+        .backport.glassEffect(
+            .tintedAndInteractive(color: .clear, isEnabled: true),
+            fallbackBackground: .thickMaterial
+        )
         .clipShape(RoundedRectangle(cornerRadius: 100))
     }
     

@@ -39,10 +39,10 @@ struct RouterView: View {
     // MARK: - BODY
     var body: some View {
         switch (routerCoordinator.isLoaded, appState.authManager.configState) {
-        case (true, .empty): splashView
-        case (true, .failed): AuthenticationView()
+        case (false, _): splashView.id("splash")
+        case (_, .empty): splashView.id("splash")
+        case (true, .failed): AuthenticationView().id("auth")
         case (true, .restored): appView
-        case (false, _): splashView
         }
     }
 }
@@ -77,6 +77,8 @@ extension RouterView {
             
             TabBarFeature()
         }
+        .transition(.move(edge: .bottom))
+        .zIndex(-1)
     }
 }
 
@@ -89,3 +91,4 @@ extension RouterView {
         .environment(appState)
         .environment(routerCoordinator)
 }
+

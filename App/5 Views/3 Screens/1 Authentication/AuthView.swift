@@ -13,7 +13,7 @@ extension AuthenticationView {
     @Observable
     class ViewModel {
         public enum AuthenticationSections {
-            case welcomeSection, createAccountSection, signinSection
+            case welcomeSection, createAccountSection, signinSection, authenticationSection
         }
         
         var selectedSection: AuthenticationSections = .welcomeSection
@@ -24,6 +24,7 @@ extension AuthenticationView {
         var signinHandle: String = ""
         var signinPassword: String = ""
         var signinError: String = ""
+        var authenticationCode: String = ""
     }
 }
 
@@ -32,7 +33,6 @@ struct AuthenticationView: View {
     @Environment(AppState.self) private var appState
     @State var isPresentPrivacy = false
     @State var isPresentTerms = false
-    @State var isPresentCreate = false
     @State var viewModel = ViewModel()
     
     // MARK: - BODY
@@ -42,7 +42,7 @@ struct AuthenticationView: View {
             BackgroundDesign(isAnimated: true)
                 .ignoresSafeArea(.keyboard)
                 .backport.glassEffect(in: RoundedRectangle(
-                    cornerRadius: Radius.large
+                    cornerRadius: Radius.glass
                 ))
                 .ignoresSafeArea()
 
@@ -85,7 +85,7 @@ struct AuthenticationView: View {
                             PostHogSDK.shared.capture("Create Account View")
                         }
 
-                    // MARK: - SIGN IN
+                        // MARK: - SIGN IN
                     case .signinSection:
                         Spacer()
                         signinSection(
@@ -94,12 +94,16 @@ struct AuthenticationView: View {
                             error: viewModel.signinError,
                             onSignIn: {
                                 Task {
-                                    try await appState.authManager
-                                        .authenticate(
+                                    do {
+                                        try await appState.authManager.authenticate(
                                             handle: viewModel.signinHandle,
                                             password: viewModel.signinPassword
                                         )
-                                    print("🌸 Authentication View: Authenticate function called")
+                                        dismissKeyboard()
+                                    } catch {
+                                        viewModel.signinError = error.localizedDescription
+                                        dismissKeyboard()
+                                    }
                                 }
                             },
                             onGoBack: {
@@ -110,6 +114,19 @@ struct AuthenticationView: View {
                         )
                         .onAppear {
                             PostHogSDK.shared.capture("Sign In View")
+                        }
+                        
+                    // MARK: - TWO FACTOR AUTHENTICATION
+                    case .authenticationSection:
+                        Spacer()
+                        authenticationSection(
+                            code: $viewModel.authenticationCode,
+                            onSubmit: {
+                                
+                            }
+                        )
+                        .onAppear {
+                            PostHogSDK.shared.capture("Authentication View")
                         }
                     }
                 }
@@ -123,7 +140,6 @@ struct AuthenticationView: View {
 
             }
         }
-        .background(.blue)
     }
 }
 

@@ -54,7 +54,10 @@ extension InputFieldComponent {
         }
         .padding()
         .frame(maxHeight: searchBar ? Screen.height * 0.06 : Screen.height * 0.06)
-        .backport.glassEffect(.interactive(isEnabled: true))
+        .backport.glassEffect(
+            .tintedAndInteractive(color: .clear, isEnabled: true),
+            fallbackBackground: .thickMaterial
+        )
         .background(searchBar ? .clear : inputOpacity)
         .clipShape(RoundedRectangle(cornerRadius: 100))
     }

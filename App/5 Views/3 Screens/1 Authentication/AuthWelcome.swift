@@ -85,6 +85,17 @@ extension AuthenticationView {
                     Text("There is lots happening, sign in with your Bluesky account to continue")
                         .padding(.bottom, Padding.standard * 1.5)
                 }
+            case .authenticationSection:
+                VStack(alignment: .leading) {
+                    Text("One more thing")
+                        .font(.smaller(.title))
+                        .fontWeight(.bold)
+                    Text("You've got mail!")
+                        .font(.smaller(.headline))
+                        .padding(.bottom, Padding.standard / 2)
+                    Text("Enter the code you've received from Bluesky to continue")
+                        .padding(.bottom, Padding.standard * 1.5)
+                }
             }
         }
     }

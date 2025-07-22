@@ -13,11 +13,8 @@ import PostHog
 struct ProfileView: View {
     // MARK: - PROPERTIES
     @Environment(AppState.self) private var appState
+    @StateObject var bannerManager = BannerPositionManager()
     @State private var userProfile: AccountManager?
-    
-    @State private var scrollOffset: CGFloat = 0
-    private let bannerHeight: CGFloat = Screen.height * 0.15
-    private let maxStretch: CGFloat = Screen.height * 0.25
     
     // MARK: - BODY
     var body: some View {
@@ -28,7 +25,7 @@ struct ProfileView: View {
             ScrollView {
                 VStack(alignment: .leading, spacing: 0) {
                     subBanner
-                        .padding(.top, currentBannerHeight * 2)
+                        .padding(.top, bannerManager.currentBannerHeight * 2)
                     
                     description
                     
@@ -38,7 +35,7 @@ struct ProfileView: View {
             .onScrollGeometryChange(for: CGFloat.self) { geo in
                 geo.contentOffset.y
             } action: { _, newValue in
-                scrollOffset = newValue
+                bannerManager.scrollOffset = newValue
             }
         }
         .background(.standardBackground)
@@ -56,48 +53,7 @@ struct ProfileView: View {
 // MARK: - PARALLAX BANNER
 extension ProfileView {
     private var parallaxBanner: some View {
-        VStack(spacing: 0) {
-            Image("PlaceholderBanner")
-                .resizable()
-                .aspectRatio(contentMode: .fill)
-                .frame(width: Screen.width, height: currentBannerHeight)
-                .clipped()
-            
-            Image("PlaceholderBanner")
-                .resizable()
-                .aspectRatio(contentMode: .fill)
-                .frame(width: Screen.width, height: currentBannerHeight)
-                .clipped()
-                .scaleEffect(y: -1)
-        }
-        .glur(radius: Radius.small, offset: 0.45, interpolation: 1.0, direction: .down)
-        .clipShape(.rect(
-            topLeadingRadius: Radius.glass,
-            bottomLeadingRadius: Radius.small,
-            bottomTrailingRadius: Radius.small,
-            topTrailingRadius: Radius.glass))
-        .backport.glassEffect(in: .rect(
-            topLeadingRadius: Radius.glass,
-            bottomLeadingRadius: Radius.small,
-            bottomTrailingRadius: Radius.small,
-            topTrailingRadius: Radius.glass))
-        .offset(y: parallaxOffset)
-        .background(.standardBackground)
-    }
-    
-    private var currentBannerHeight: CGFloat {
-        if scrollOffset < 0 {
-            return min(bannerHeight + abs(scrollOffset), maxStretch)
-        }
-        return bannerHeight
-    }
-    
-    private var parallaxOffset: CGFloat {
-        if scrollOffset < 0 {
-            scrollOffset > 0 ? -scrollOffset * 0.5 : 0
-        } else {
-            -scrollOffset
-        }
+        BannerFeature(manager: bannerManager)
     }
 }
 
@@ -107,7 +63,7 @@ extension ProfileView {
         HStack {
             ZStack {
                 Circle()
-                    .frame(width: Screen.width * 0.335)
+                    .frame(width: Screen.width * 0.32)
                     .foregroundStyle(Color.standardBackground)
                 ProfilePictureComponent(size: .xlarge)
             }
@@ -155,7 +111,7 @@ extension ProfileView {
         VStack(alignment: .leading) {
             Text("\(userProfile?.name ?? "")")
                 .font(.smaller(.title3))
-                .fontWeight(.bold)
+                .fontWeight(.heavy)
             
             Text("@\(userProfile?.handle ?? "")")
                 .font(.smaller(.body))
@@ -166,7 +122,7 @@ extension ProfileView {
             Text("\(userProfile?.description ?? "")")
                 .font(.smaller(.body))
         }
-        .padding(.vertical, Padding.small)
+        .padding(.bottom, Padding.tiny)
         .padding(.horizontal, Padding.standard)
         .frame(width: Screen.width, alignment: .leading)
     }
@@ -181,6 +137,9 @@ extension ProfileView {
                 Text(post)
             },
             action: { _ in })
+        .padding(.bottom, Padding.tiny)
+        
+        Divider()
         
         let posts = appState.postManager.authorData
         if posts.isEmpty {
@@ -202,6 +161,7 @@ extension ProfileView {
                 }
             }
             .padding(.top, Padding.standard)
+            .padding(.bottom, Padding.large * 4)
         }
     }
 }

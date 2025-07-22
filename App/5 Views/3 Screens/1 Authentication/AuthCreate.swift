@@ -19,28 +19,27 @@ extension AuthenticationView {
             VStack(alignment: .leading) {
                 // MARK: HEADER
                 headerSection
-                
-                //            // MARK: INPUT
-                //            InputFieldComponent(
-                //                icon: Image(systemName: "at"),
-                //                title: "Create new handle",
-                //                text: handle
-                //            )
-                //            .keyboardType(.emailAddress)
-                //            .autocapitalization(.none)
-                //            InputFieldComponent(
-                //                secure: true,
-                //                icon: Image(systemName: "lock"),
-                //                title: "Create new password",
-                //                text: password
-                //            )
-                //            InputFieldComponent(
-                //                secure: true,
-                //                icon: Image(systemName: "lock"),
-                //                title: "Re-Enter new password",
-                //                text: reenteredPassword
-                //            )
-                //            .padding(.bottom, Size.height * 0.02)
+                            // MARK: INPUT
+                            InputFieldComponent(
+                                icon: Image(systemName: "at"),
+                                title: "Create new handle",
+                                text: handle
+                            )
+                            .keyboardType(.emailAddress)
+                            .autocapitalization(.none)
+                            InputFieldComponent(
+                                secure: true,
+                                icon: Image(systemName: "lock"),
+                                title: "Create new password",
+                                text: password
+                            )
+                            InputFieldComponent(
+                                secure: true,
+                                icon: Image(systemName: "lock"),
+                                title: "Re-Enter new password",
+                                text: reenteredPassword
+                            )
+                            .padding(.bottom, Screen.height * 0.02)
                 
                 // MARK: BUTTON
                 HStack {
@@ -61,20 +60,8 @@ extension AuthenticationView {
                         variation: .primary,
                         haptic: .success
                     ) {
-                        isPresentCreate = true
-                    }
-                    .sheet(isPresented: $isPresentCreate) {
-                        WebViewComponent(
-                            url: URL(string: "https://bsky.app/settings")!
-                        )
-                        .ignoresSafeArea(.all)
-                    }
-                    .onChange(of: isPresentCreate) { _, newValue in
-                        if newValue == false {
-                            viewModel.selectedSection = .signinSection
-                        }
-                    }
-                }
+                        
+                    }                }
                 
                 // MARK: ERROR
                 if !error.isEmpty {

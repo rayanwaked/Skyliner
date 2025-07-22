@@ -74,7 +74,7 @@ struct PostCell: View {
                 Spacer()
             }
             .padding(.leading, Padding.standard)
-            .padding(.vertical, Padding.tiny)
+            .padding(.vertical, Padding.tiny / 2)
             .background(.standardBackground)
             
             Divider()
