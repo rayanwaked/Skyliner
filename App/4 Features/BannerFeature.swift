@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import NukeUI
 import Glur
 internal import Combine
 
@@ -14,18 +15,22 @@ struct BannerFeature: View {
     
     var body: some View {
         VStack(spacing: 0) {
-            Image("PlaceholderBanner")
-                .resizable()
-                .aspectRatio(contentMode: .fill)
-                .frame(width: Screen.width, height: manager.currentBannerHeight)
-                .clipped()
+            LazyImage(url: manager.bannerURL) { result in
+                result.image?
+                    .resizable()
+                    .aspectRatio(contentMode: .fill)
+                    .frame(width: Screen.width, height: manager.currentBannerHeight)
+                    .clipped()
+            }
             
-            Image("PlaceholderBanner")
-                .resizable()
-                .aspectRatio(contentMode: .fill)
-                .frame(width: Screen.width, height: manager.currentBannerHeight)
-                .clipped()
-                .scaleEffect(y: -1)
+            LazyImage(url: manager.bannerURL) { result in
+                result.image?
+                    .resizable()
+                    .aspectRatio(contentMode: .fill)
+                    .frame(width: Screen.width, height: manager.currentBannerHeight)
+                    .clipped()
+                    .scaleEffect(y: -1)
+            }
         }
         .glur(radius: Radius.small, offset: 0.45, interpolation: 1.0, direction: .down)
         .clipShape(.rect(
@@ -46,6 +51,7 @@ struct BannerFeature: View {
 @MainActor
 final class BannerPositionManager: ObservableObject {
     @Published var scrollOffset: CGFloat = 0
+    @Published var bannerURL: URL? = URL(string: "")
     let bannerHeight: CGFloat = Screen.height * 0.15
     let maxStretch: CGFloat = Screen.height * 0.25
     
@@ -67,5 +73,10 @@ final class BannerPositionManager: ObservableObject {
 
 #Preview {
     @Previewable @StateObject var manager = BannerPositionManager()
+    
+    // Due to the nature of the functionality, there is no practical way to simulate the scrolling offset in previews. Therefore, this preview is just visual representation
     BannerFeature(manager: manager)
+        .onAppear {
+            manager.bannerURL = URL(string: "https://cdn.bsky.app/img/banner/plain/did:plc:fid77rvrx44chjgehhbpduun/bafkreidaqpiitbwjcd4ny3lvkuwetkoz5nrdt2brpdm2cpfkvt4xxbt4zm@jpeg")
+        }
 }

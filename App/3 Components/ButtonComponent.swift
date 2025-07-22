@@ -15,7 +15,7 @@ struct ButtonConfig {
         
         var backgroundColor: Color {
             switch self {
-            case .primary: .blue
+            case .primary: .blue.opacity(0.8)
             case .secondary: .blue.opacity(Opacity.standard)
             case .tertiary: .clear
             case .quaternary: .standardBackground

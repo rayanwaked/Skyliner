@@ -65,9 +65,4 @@ struct ArrayButtonComponent<T: Hashable, Content: View>: View {
         content: { Text($0) },
         action: { print("Selected: \($0)") }
     )
-    ArrayButtonComponent(
-        items: ["One", "Two", "Three"],
-        content: { Text($0) },
-        action: { print("Selected: \($0)") }
-    )
 }

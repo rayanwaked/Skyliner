@@ -11,7 +11,7 @@ import SwiftUI
 @Observable
 final class RouterCoordinator {
     // MARK: - PROPERTIES
-    var isLoaded: Bool = false
+    var splashCompleted: Bool = false
     var selectedTab: Tabs = .home
     var showingCreate: Bool = false
     var exploreSearch: String = ""
@@ -38,9 +38,9 @@ struct RouterView: View {
     
     // MARK: - BODY
     var body: some View {
-        switch (routerCoordinator.isLoaded, appState.authManager.configState) {
+        switch (routerCoordinator.splashCompleted, appState.authManager.configState) {
         case (false, _): splashView.id("splash")
-        case (_, .empty): splashView.id("splash")
+        case (true, .empty): splashView.id("splash")
         case (true, .failed): AuthenticationView().id("auth")
         case (true, .restored): appView
         }
@@ -52,8 +52,10 @@ extension RouterView {
     var splashView: some View {
         SplashDesign()
             .onAppear {
-                withAnimation(Animation.easeInOut.delay(1.5)) {
-                    routerCoordinator.isLoaded = true
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+                    withAnimation(.easeInOut(duration: 0.5)) {
+                        routerCoordinator.splashCompleted = true
+                    }
                 }
             }
     }

@@ -72,7 +72,7 @@ extension AuthManager {
         try await logoutWith(config: clientManager?.credentials)
         self.clientManager = nil
         clientManagerContinuation.yield(nil)
-        self.configState = .empty
+        self.configState = .failed
         print("🍄✅ Authentication Manager: Log out successful")
     }
     

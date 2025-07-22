@@ -19,9 +19,9 @@ struct InputFieldComponent: View {
     
     private var inputOpacity: Color {
         if #available(iOS 26.0, *) {
-            return .gray.opacity(Opacity.dark * 1.5)
+            return .gray.opacity(Opacity.dark * 1.15)
         } else {
-            return .standardBackground.opacity(1.0)
+            return .gray.opacity(Opacity.standard)
         }
     }
     

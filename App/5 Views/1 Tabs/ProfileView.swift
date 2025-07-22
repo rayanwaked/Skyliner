@@ -54,6 +54,9 @@ struct ProfileView: View {
 extension ProfileView {
     private var parallaxBanner: some View {
         BannerFeature(manager: bannerManager)
+            .onAppear {
+                bannerManager.bannerURL = appState.accountManager.bannerURL
+            }
     }
 }
 
@@ -106,21 +109,38 @@ extension ProfileView {
     }
 }
 
+// MARK: - DESCRIPTION
 extension ProfileView {
     var description: some View {
-        VStack(alignment: .leading) {
-            Text("\(userProfile?.name ?? "")")
-                .font(.smaller(.title3))
-                .fontWeight(.heavy)
+        HStack(alignment: .top) {
+            VStack(alignment: .leading) {
+                Text("\(userProfile?.name ?? "")")
+                    .font(.smaller(.title3))
+                    .fontWeight(.heavy)
+                
+                Text("@\(userProfile?.handle ?? "")")
+                    .font(.smaller(.body))
+                    .fontWeight(.light)
+                    .padding(.bottom, Padding.tiny / 2)
+                    .opacity(Opacity.heavy)
+                
+                Text("\(userProfile?.description ?? "")")
+                    .font(.smaller(.body))
+            }
             
-            Text("@\(userProfile?.handle ?? "")")
-                .font(.smaller(.body))
-                .fontWeight(.light)
-                .padding(.bottom, Padding.tiny / 2)
-                .opacity(Opacity.heavy)
+            Spacer()
             
-            Text("\(userProfile?.description ?? "")")
-                .font(.smaller(.body))
+            ButtonComponent(
+                "Log out",
+                variation: .primary,
+                size: .compact,
+                haptic: .rigid)
+            {
+                Task {
+                    try await appState.authManager.logout()
+                }
+            }
+            .frame(width: Screen.width * 0.225)
         }
         .padding(.bottom, Padding.tiny)
         .padding(.horizontal, Padding.standard)
@@ -128,6 +148,7 @@ extension ProfileView {
     }
 }
 
+// MARK: - POSTS
 extension ProfileView {
     @ViewBuilder
     var posts: some View {
