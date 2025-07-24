@@ -123,10 +123,12 @@ struct LinkPreview: View {
                 // Description
                 if !external.description.isEmpty {
                     Text(external.description)
-                        .font(.subheadline)
+                        .font(.smaller(.subheadline))
                         .foregroundColor(.secondary)
                         .lineLimit(3)
                         .multilineTextAlignment(.leading)
+                        .padding(.top, Padding.tiny / 2)
+                        .padding(.bottom, 1)
                 }
                 
                 // URL with domain extraction

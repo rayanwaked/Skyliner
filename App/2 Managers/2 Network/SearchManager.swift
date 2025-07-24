@@ -26,7 +26,7 @@ public final class SearchManager {
     private var currentQuery: String?
     
     // MARK: - COMPUTED PROPERTIES
-    var postData: [(postID: String, imageURL: URL?, name: String, handle: String, message: String, embed: AppBskyLexicon.Feed.PostViewDefinition.EmbedUnion?)] {
+    var postData: [(postID: String, imageURL: URL?, name: String, handle: String, time: String, message: String, embed: AppBskyLexicon.Feed.PostViewDefinition.EmbedUnion?)] {
         searchFeed.postData
     }
     

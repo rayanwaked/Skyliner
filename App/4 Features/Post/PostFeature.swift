@@ -19,7 +19,7 @@ struct PostFeature: View {
         case home, explore, profile
     }
     
-    var posts: [(postID: String, imageURL: URL?, name: String, handle: String, message: String, embed: AppBskyLexicon.Feed.PostViewDefinition.EmbedUnion?)] {
+    var posts: [(postID: String, imageURL: URL?, name: String, handle: String, time: String, message: String, embed: AppBskyLexicon.Feed.PostViewDefinition.EmbedUnion?)] {
         switch location {
         case .home:
             return appState.postManager.postData
@@ -42,6 +42,7 @@ struct PostFeature: View {
                             name: post.name,
                             handle: post.handle,
                             message: post.message,
+                            time: post.time,
                             embed: post.embed,
                             location: location
                         )
@@ -63,6 +64,7 @@ struct PostCell: View {
     var name: String = "Name"
     var handle: String = "account@bsky.social"
     var message: String = ""
+    var time: String = ""
     var embed: AppBskyLexicon.Feed.PostViewDefinition.EmbedUnion? = nil
     var location: PostFeature.Location
     
@@ -80,14 +82,15 @@ struct PostCell: View {
                     .padding(.trailing, Padding.tiny)
                 
                 VStack(alignment: .leading, spacing: Padding.tiny) {
-                    HStack(alignment: .top) {
+                    HStack(alignment: .center) {
                         Text(name)
                             .fontWeight(.medium)
                             .lineLimit(1)
                         Text("@\(handle)")
                             .foregroundStyle(.gray.opacity(0.9))
                             .lineLimit(1)
-                        // Time
+                        Text("· \(time)")
+                            .foregroundStyle(.gray.opacity(0.9))
                     }
                     
                     if !message.isEmpty {
@@ -105,7 +108,7 @@ struct PostCell: View {
                 
                 Spacer()
             }
-            .padding(.leading, Padding.standard)
+            .padding(.horizontal, Padding.standard)
             .padding(.vertical, Padding.tiny / 2)
             .background(.standardBackground)
             

@@ -14,6 +14,7 @@ public struct PostItem {
     let imageURL: URL?
     let name: String
     let handle: String
+    let time: String
     let message: String
     let embed: AppBskyLexicon.Feed.PostViewDefinition.EmbedUnion?
     let rawPost: any PostViewProtocol
@@ -56,8 +57,8 @@ public final class PostModel {
     private var rawPosts: [any PostViewProtocol] = []
     
     // MARK: - COMPUTED PROPERTIES
-    var postData: [(postID: String, imageURL: URL?, name: String, handle: String, message: String, embed: AppBskyLexicon.Feed.PostViewDefinition.EmbedUnion?)] {
-        posts.map { ($0.postID, $0.imageURL, $0.name, $0.handle, $0.message, $0.embed) }
+    var postData: [(postID: String, imageURL: URL?, name: String, handle: String, time: String, message: String, embed: AppBskyLexicon.Feed.PostViewDefinition.EmbedUnion?)] {
+        posts.map { ($0.postID, $0.imageURL, $0.name, $0.handle, $0.time, $0.message, $0.embed) }
     }
     
     // MARK: - METHODS
@@ -69,6 +70,7 @@ public final class PostModel {
                 imageURL: post.author.avatarImageURL,
                 name: post.author.displayName ?? post.author.actorHandle,
                 handle: post.author.actorHandle,
+                time: DateHelper.formattedRelativeDate(from: extractDate(from: post.record)),
                 message: extractMessage(from: post.record),
                 embed: post.embed,
                 rawPost: post
@@ -83,6 +85,7 @@ public final class PostModel {
                 imageURL: post.author.avatarImageURL,
                 name: post.author.displayName ?? post.author.actorHandle,
                 handle: post.author.actorHandle,
+                time: DateHelper.formattedRelativeDate(from: extractDate(from: post.record)),
                 message: extractMessage(from: post.record),
                 embed: post.embed,
                 rawPost: post
@@ -125,5 +128,16 @@ public final class PostModel {
         }
         
         return "Unable to parse content"
+    }
+    
+    private func extractDate(from record: UnknownType) -> Date {
+        let mirror = Mirror(reflecting: record)
+        
+        if let recordChild = mirror.children.first(where: { $0.label == "record" }),
+           let postRecord = recordChild.value as? AppBskyLexicon.Feed.PostRecord {
+            return postRecord.createdAt
+        }
+        
+        return Date() // Fallback to current date if unable to parse
     }
 }
