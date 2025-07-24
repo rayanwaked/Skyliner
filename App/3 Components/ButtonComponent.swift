@@ -33,11 +33,11 @@ struct ButtonConfig {
     
     // MARK: - SIZE
     enum Size {
-        case compact, inline, standard, tabBar, header, compose
+        case compact, inline, standard, tabBar, header, compose, profile
         
         var font: Font {
             switch self {
-            case .compact, .standard: .smaller(.subheadline)
+            case .compact, .standard, .profile: .smaller(.subheadline)
             case .inline: .smaller(.caption)
             case .tabBar, .header: .smaller(.title3)
             case .compose: .smaller(.footnote)
@@ -46,12 +46,13 @@ struct ButtonConfig {
         
         var padding: CGFloat {
             switch self {
-            case .compact: Padding.standard * 0.85
+            case .compact: Padding.standard * 0.9
             case .inline: Padding.standard * 0.70
             case .standard: 0.00
             case .tabBar: Padding.standard * 0.95
             case .header: Padding.standard * 0.50
             case .compose: Padding.standard * 1.10
+            case .profile: Padding.standard * 0.90
             }
         }
     }
@@ -121,6 +122,7 @@ struct ButtonComponent: View {
                 .fontWeight(.semibold)
                 .foregroundStyle(variation.foregroundColor)
                 .padding(size.padding)
+                .padding(.vertical, size == .profile ? -Padding.tiny : 0)
                 .frame(maxWidth: size == .standard ? .infinity : nil)
                 .frame(maxHeight: size == .standard ? Screen.height * 0.055 : nil)
                 .background {

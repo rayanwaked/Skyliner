@@ -12,35 +12,37 @@ import ATProtoKit
 @Observable
 // MARK: - MANAGER
 public final class SearchManager {
-    // MARK: - Properties
+    // MARK: - PROPERTIES
     @ObservationIgnored
     var appState: AppState?
     var clientManager: ClientManager? { appState?.clientManager }
-    public private(set) var searchResults: [AppBskyLexicon.Feed.SearchPostsOutput] = []
+    
+    // Unified feed
+    public let searchFeed = PostModel()
+    
+    // Raw data for pagination
+    private var rawSearchResults: [AppBskyLexicon.Feed.SearchPostsOutput] = []
     private var currentCursor: String?
     private var currentQuery: String?
     
-    // MARK: - Computed Properties
+    // MARK: - COMPUTED PROPERTIES
     var postData: [(postID: String, imageURL: URL?, name: String, handle: String, message: String)] {
-        searchResults.flatMap(\.posts).compactMap { result in
-            let author = result.author
-            let message = extractMessage(from: result.record)
-            
-            return (
-                postID: result.uri,
-                imageURL: author.avatarImageURL,
-                name: author.displayName ?? author.actorHandle,
-                handle: author.actorHandle,
-                message: message
-            )
-        }
+        searchFeed.postData
     }
     
-    // MARK: - Methods
+    var searchResults: [AppBskyLexicon.Feed.SearchPostsOutput] {
+        rawSearchResults
+    }
+    
+    // MARK: - METHODS
     func searchBluesky(query: String) async {
-        currentQuery = query
-        currentCursor = nil
-        searchResults = []
+        // Only clear if this is a new query
+        if currentQuery != query {
+            currentQuery = query
+            currentCursor = nil
+            rawSearchResults = []
+            searchFeed.clear()
+        }
         
         await loadMoreResults()
     }
@@ -62,7 +64,13 @@ public final class SearchManager {
             if let result {
                 currentCursor = result.cursor
                 withAnimation(.snappy) {
-                    searchResults.append(result)
+                    if rawSearchResults.isEmpty {
+                        rawSearchResults = [result]
+                        searchFeed.updatePosts(result.posts)
+                    } else {
+                        rawSearchResults.append(result)
+                        searchFeed.appendPosts(result.posts)
+                    }
                 }
             }
         } catch {
@@ -71,19 +79,9 @@ public final class SearchManager {
     }
     
     func clearSearch() {
-        searchResults = []
+        rawSearchResults = []
+        searchFeed.clear()
         currentCursor = nil
         currentQuery = nil
-    }
-    
-    private func extractMessage(from record: UnknownType) -> String {
-        let mirror = Mirror(reflecting: record)
-        
-        if let recordChild = mirror.children.first(where: { $0.label == "record" }),
-           let postRecord = recordChild.value as? AppBskyLexicon.Feed.PostRecord {
-            return postRecord.text
-        }
-        
-        return "Unable to parse content"
     }
 }

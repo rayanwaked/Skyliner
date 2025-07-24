@@ -37,6 +37,15 @@ struct ProfileView: View {
             } action: { _, newValue in
                 bannerManager.scrollOffset = newValue
             }
+            .refreshable {
+                Task {
+                    await appState.accountManager.loadProfile()
+                    await appState.postManager.refreshPosts()
+                    await appState.postManager
+                        .refreshAuthorPosts(shouldIncludePins: true)
+                    hapticFeedback(.success)
+                }
+            }
         }
         .background(.standardBackground)
         .ignoresSafeArea(.all)
@@ -133,13 +142,14 @@ extension ProfileView {
             ButtonComponent(
                 "Log out",
                 variation: .primary,
-                size: .compact,
+                size: .profile,
                 haptic: .rigid)
             {
                 Task {
                     try await appState.authManager.logout()
                 }
             }
+            .padding(.trailing, -Padding.standard)
             .frame(width: Screen.width * 0.225)
         }
         .padding(.bottom, Padding.tiny)
@@ -171,15 +181,7 @@ extension ProfileView {
                 .padding(.vertical, Padding.large)
         } else {
             LazyVStack {
-                ForEach(Array(posts.enumerated()), id: \.offset) { index, post in
-                    PostCell(
-                        postID: post.postID,
-                        imageURL: post.imageURL,
-                        name: post.name,
-                        handle: post.handle,
-                        message: post.message
-                    )
-                }
+                PostFeature(location: .profile)
             }
             .padding(.top, Padding.standard)
             .padding(.bottom, Padding.large * 4)

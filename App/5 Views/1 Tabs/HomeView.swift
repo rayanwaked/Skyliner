@@ -20,7 +20,7 @@ struct HomeView: View {
         ZStack(alignment: .top) {
             ScrollView {
                 LazyVStack {
-                    PostFeature()
+                    PostFeature(location: .home)
                     LoadMoreHelper(appState: appState, location: .home)
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -29,6 +29,7 @@ struct HomeView: View {
             .refreshable {
                 Task {
                     await appState.postManager.refreshPosts()
+                    hapticFeedback(.success)
                 }
             }
             .defaultScrollAnchor(.top)

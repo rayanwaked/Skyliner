@@ -136,7 +136,7 @@ extension TabBarFeature {
 // MARK: - EXPLORE SEARCH BAR
 extension TabBarFeature {
     var exploreSearchBar: some View {
-        HStack {
+        HStack(alignment: .center) {
             ButtonComponent(
                 systemName: "chevron.left",
                 variation: .secondary,

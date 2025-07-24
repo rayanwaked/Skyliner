@@ -12,9 +12,25 @@ struct PostFeature: View {
     // MARK: - PROPERTIES
     @Environment(AppState.self) private var appState
     
+    let location: Location
+    
+    enum Location {
+        case home, explore, profile
+    }
+    
+    var posts: [(postID: String, imageURL: URL?, name: String, handle: String, message: String)] {
+        switch location {
+        case .home:
+            return appState.postManager.postData
+        case .explore:
+            return appState.searchManager.postData
+        case .profile:
+            return appState.postManager.authorData
+        }
+    }
+    
     // MARK: - BODY
     var body: some View {
-        let posts = appState.postManager.postData
         
         if !posts.isEmpty {
             return AnyView(
@@ -25,7 +41,8 @@ struct PostFeature: View {
                             imageURL: post.imageURL,
                             name: post.name,
                             handle: post.handle,
-                            message: post.message
+                            message: post.message,
+                            location: location
                         )
                     }
                 }
@@ -45,10 +62,16 @@ struct PostCell: View {
     var name: String = "Name"
     var handle: String = "account@bsky.social"
     var message: String = ""
+    var location: PostFeature.Location
+    
+    // State variables for reactive UI updates
+    @State private var isLiked: Bool = false
+    @State private var isReposted: Bool = false
+    @State private var likeCount: Int = 0
+    @State private var repostCount: Int = 0
+    @State private var replyCount: Int = 0
     
     var body: some View {
-        let postState = appState.postManager.getPostState(postID: postID)
-        
         Group {
             HStack(alignment: .top) {
                 ProfilePictureComponent(isUser: false, profilePictureURL: imageURL, size: .medium)
@@ -58,6 +81,7 @@ struct PostCell: View {
                     HStack(alignment: .top) {
                         Text(name)
                             .fontWeight(.medium)
+                            .lineLimit(1)
                         Text("@\(handle)")
                             .foregroundStyle(.gray.opacity(0.9))
                             .lineLimit(1)
@@ -67,7 +91,7 @@ struct PostCell: View {
                     
                     Text(message)
                     
-                    actions(postState: postState)
+                    actions
                 }
                 .font(.smaller(.body))
                 
@@ -79,46 +103,108 @@ struct PostCell: View {
             
             Divider()
         }
+        .onAppear {
+            updatePostState()
+        }
+    }
+    
+    // MARK: - UPDATE POST STATE
+    private func updatePostState() {
+        let postState = switch location {
+        case .home, .profile:
+            appState.postManager.getPostState(postID: postID)
+        case .explore:
+            appState.searchManager.getPostState(postID: postID)
+        }
+        
+        isLiked = postState.isLiked
+        isReposted = postState.isReposted
+        likeCount = postState.likeCount
+        repostCount = postState.repostCount
+        replyCount = postState.replyCount
     }
 }
 
 // MARK: - ACTIONS
 extension PostCell {
-    func actions(postState: (isLiked: Bool, isReposted: Bool, likeCount: Int, repostCount: Int)) -> some View {
+    var actions: some View {
         HStack {
             Button {
                 Task {
-                    await appState.postManager.toggleRepost(postID: postID)
+                    // Optimistic update
+                    isReposted.toggle()
+                    withAnimation(.bouncy()) {
+                        repostCount += isReposted ? 1 : -1
+                    }
+                    
+                    // Call appropriate manager method
+                    switch location {
+                    case .home, .profile:
+                        await appState.postManager.toggleRepost(postID: postID)
+                    case .explore:
+                        await appState.searchManager.toggleRepost(postID: postID)
+                    }
                 }
             } label: {
-                Image(systemName: "arrow.trianglehead.2.clockwise")
-                    .foregroundStyle(postState.isReposted ? .blue : .primary)
+                HStack {
+                    Image(systemName: "arrow.trianglehead.2.clockwise")
+                    Text("\(repostCount)")
+                        .contentTransition(.numericText())
+                }
+                .foregroundStyle(isReposted ? .blue : .primary)
             }
             
             Spacer()
             
             Button {
                 // Handle reply action
+                Task {
+                    // TODO: Implement reply functionality
+                }
             } label: {
-                Image(systemName: "message")
-                    .foregroundStyle(.foreground)
+                HStack {
+                    Image(systemName: "message")
+                    Text("\(replyCount)")
+                }
+                .foregroundStyle(.foreground)
             }
             
             Spacer()
             
             Button {
                 Task {
-                    await appState.postManager.toggleLike(postID: postID)
+                    // Optimistic update
+                    isLiked.toggle()
+                    withAnimation(.bouncy()) {
+                        likeCount += isLiked ? 1 : -1
+                    }
+                    
+                    // Call appropriate manager method
+                    switch location {
+                    case .home, .profile:
+                        await appState.postManager.toggleLike(postID: postID)
+                    case .explore:
+                        await appState.searchManager.toggleLike(postID: postID)
+                    }
                 }
             } label: {
-                Image(systemName: postState.isLiked ? "heart.fill" : "heart")
-                    .foregroundStyle(postState.isLiked ? .red : .primary)
+                HStack {
+                    Image(systemName: isLiked ? "heart.fill" : "heart")
+                    Text("\(likeCount)")
+                        .contentTransition(.numericText())
+                }
+                .foregroundStyle(isLiked ? .red : .primary)
             }
             
             Spacer()
             
             Button {
-                appState.postManager.sharePost(postID: postID)
+                switch location {
+                case .home, .profile:
+                    appState.postManager.sharePost(postID: postID)
+                case .explore:
+                    appState.searchManager.sharePost(postID: postID)
+                }
             } label: {
                 Image(systemName: "square.and.arrow.up")
                     .foregroundStyle(.foreground)
@@ -128,7 +214,12 @@ extension PostCell {
             
             Menu {
                 Button("Copy Link") {
-                    appState.postManager.copyPostLink(postID: postID)
+                    switch location {
+                    case .home, .profile:
+                        appState.postManager.copyPostLink(postID: postID)
+                    case .explore:
+                        appState.searchManager.copyPostLink(postID: postID)
+                    }
                 }
             } label: {
                 Image(systemName: "ellipsis")
@@ -145,6 +236,6 @@ extension PostCell {
 #Preview {
     @Previewable @State var appState: AppState = .init()
     
-    PostFeature()
+    PostFeature(location: .home)
         .environment(appState)
 }

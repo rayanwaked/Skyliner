@@ -21,7 +21,6 @@ struct SkylinerApp: App {
         let config = PostHogConfig(apiKey: posthogKey, host: posthogHost)
         
         PostHogSDK.shared.setup(config)
-        PostHogSDK.shared.capture("App Launch")
     }
     
     // MARK: - BODY

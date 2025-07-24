@@ -18,40 +18,22 @@ public final class PostManager {
     var clientManager: ClientManager? { appState?.clientManager }
     var userDID: String? { appState?.userDID }
     
-    public private(set) var homeFeed: [AppBskyLexicon.Feed.GetTimelineOutput] = []
-    public private(set) var authorFeed: [AppBskyLexicon.Feed.FeedViewPostDefinition] = []
+    // Unified feeds
+    public let homeFeed = PostModel()
+    public let authorFeed = PostModel()
+    
+    // Raw data storage for pagination
+    private var rawHomeFeed: [AppBskyLexicon.Feed.GetTimelineOutput] = []
     private var homeCursor: String?
     private var authorCursor: String?
     
     // MARK: - COMPUTED PROPERTIES
     var postData: [(postID: String, imageURL: URL?, name: String, handle: String, message: String)] {
-        homeFeed.flatMap(\.feed).compactMap { feed in
-            let author = feed.post.author
-            let message = extractMessage(from: feed.post.record)
-            
-            return (
-                postID: feed.post.uri,
-                imageURL: author.avatarImageURL,
-                name: author.displayName ?? author.actorHandle,
-                handle: author.actorHandle,
-                message: message
-            )
-        }
+        homeFeed.postData
     }
     
     var authorData: [(postID: String, imageURL: URL?, name: String, handle: String, message: String)] {
-        authorFeed.compactMap { feed in
-            let author = feed.post.author
-            let message = extractMessage(from: feed.post.record)
-            
-            return (
-                postID: feed.post.uri,
-                imageURL: author.avatarImageURL,
-                name: author.displayName ?? author.actorHandle,
-                handle: author.actorHandle,
-                message: message
-            )
-        }
+        authorFeed.postData
     }
 }
 
@@ -71,7 +53,11 @@ extension PostManager {
         await execute("Loading posts") {
             let feedResult = try await clientManager.account.getTimeline(using: userDID, cursor: homeCursor)
             homeCursor = feedResult.cursor
-            homeFeed.append(feedResult)
+            rawHomeFeed.append(feedResult)
+            
+            // Update unified feed with all posts
+            let allPosts = rawHomeFeed.flatMap(\.feed)
+            homeFeed.updatePosts(allPosts)
         }
     }
     
@@ -92,29 +78,38 @@ extension PostManager {
             )
             
             authorCursor = feedResult.cursor
-            authorFeed = feedResult.feed
+            authorFeed.appendPosts(feedResult.feed)
         }
     }
     
     // MARK: - REFRESH HOME FEED
     public func refreshPosts() async {
         homeCursor = nil
-        homeFeed.removeAll()
+        let oldRawFeed = rawHomeFeed
+        rawHomeFeed = []
+        homeFeed.clear()
+        
         await loadPosts()
+        
+        // Restore if failed
+        if homeFeed.posts.isEmpty {
+            rawHomeFeed = oldRawFeed
+            let allPosts = rawHomeFeed.flatMap(\.feed)
+            homeFeed.updatePosts(allPosts)
+        }
     }
     
     // MARK: - REFRESH AUTHOR FEED
     public func refreshAuthorPosts(shouldIncludePins: Bool = false) async {
         authorCursor = nil
-        authorFeed = []
+        let oldFeed = authorFeed.posts
+        authorFeed.clear()
+        
         await loadAuthorPosts(shouldIncludePins: shouldIncludePins)
-    }
-    
-    // MARK: - CLEAR CACHE
-    public func clearPostsCache() {
-        homeFeed.removeAll()
-        authorFeed = []
-        homeCursor = nil
-        authorCursor = nil
+        
+        // Restore if failed (this is simplified - you might want to store raw data)
+        if authorFeed.posts.isEmpty {
+            // You'd need to implement restoration logic here if needed
+        }
     }
 }
