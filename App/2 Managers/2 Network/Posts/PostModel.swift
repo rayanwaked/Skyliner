@@ -8,22 +8,24 @@
 import SwiftUI
 import ATProtoKit
 
-// MARK: - POST ITEM MODEL
+// MARK: - ITEM MODEL
 public struct PostItem {
     let postID: String
     let imageURL: URL?
     let name: String
     let handle: String
     let message: String
+    let embed: AppBskyLexicon.Feed.PostViewDefinition.EmbedUnion?
     let rawPost: any PostViewProtocol
 }
 
-// MARK: - POST VIEW PROTOCOL
+// MARK: - VIEW PROTOCOL
 protocol PostViewProtocol {
     var uri: String { get }
     var cid: String { get }
     var author: AppBskyLexicon.Actor.ProfileViewBasicDefinition { get }
     var record: UnknownType { get }
+    var embed: AppBskyLexicon.Feed.PostViewDefinition.EmbedUnion? { get }
     var viewer: AppBskyLexicon.Feed.ViewerStateDefinition? { get }
     var likeCount: Int? { get }
     var repostCount: Int? { get }
@@ -31,20 +33,21 @@ protocol PostViewProtocol {
 }
 
 // MARK: - PROTOCOL CONFORMANCE
-extension AppBskyLexicon.Feed.PostViewDefinition: PostViewProtocol {}
+extension AppBskyLexicon.Feed.PostViewDefinition: PostViewProtocol { }
 
 extension AppBskyLexicon.Feed.FeedViewPostDefinition: PostViewProtocol {
     var uri: String { post.uri }
     var cid: String { post.cid }
     var author: AppBskyLexicon.Actor.ProfileViewBasicDefinition { post.author }
     var record: UnknownType { post.record }
+    var embed: AppBskyLexicon.Feed.PostViewDefinition.EmbedUnion? { post.embed }
     var viewer: AppBskyLexicon.Feed.ViewerStateDefinition? { post.viewer }
     var likeCount: Int? { post.likeCount }
     var repostCount: Int? { post.repostCount }
     var replyCount: Int? { post.replyCount }
 }
 
-// MARK: - UNIFIED POST FEED
+// MARK: - POST MODEL
 @MainActor
 @Observable
 public final class PostModel {
@@ -53,8 +56,8 @@ public final class PostModel {
     private var rawPosts: [any PostViewProtocol] = []
     
     // MARK: - COMPUTED PROPERTIES
-    var postData: [(postID: String, imageURL: URL?, name: String, handle: String, message: String)] {
-        posts.map { ($0.postID, $0.imageURL, $0.name, $0.handle, $0.message) }
+    var postData: [(postID: String, imageURL: URL?, name: String, handle: String, message: String, embed: AppBskyLexicon.Feed.PostViewDefinition.EmbedUnion?)] {
+        posts.map { ($0.postID, $0.imageURL, $0.name, $0.handle, $0.message, $0.embed) }
     }
     
     // MARK: - METHODS
@@ -67,6 +70,7 @@ public final class PostModel {
                 name: post.author.displayName ?? post.author.actorHandle,
                 handle: post.author.actorHandle,
                 message: extractMessage(from: post.record),
+                embed: post.embed,
                 rawPost: post
             )
         }
@@ -80,6 +84,7 @@ public final class PostModel {
                 name: post.author.displayName ?? post.author.actorHandle,
                 handle: post.author.actorHandle,
                 message: extractMessage(from: post.record),
+                embed: post.embed,
                 rawPost: post
             )
         }

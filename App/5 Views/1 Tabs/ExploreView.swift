@@ -7,6 +7,7 @@
 
 import SwiftUI
 import PostHog
+import ATProtoKit
 
 // MARK: - VIEW
 struct ExploreView: View {
@@ -15,7 +16,7 @@ struct ExploreView: View {
     @Environment(RouterCoordinator.self) private var routerCoordinator
     
     // MARK: - COMPUTED PROPERTIES
-    private var posts: [(postID: String, imageURL: URL?, name: String, handle: String, message: String)] {
+    private var posts: [(postID: String, imageURL: URL?, name: String, handle: String, message: String, embed: AppBskyLexicon.Feed.PostViewDefinition.EmbedUnion?)] {
         appState.searchManager.postData
     }
     

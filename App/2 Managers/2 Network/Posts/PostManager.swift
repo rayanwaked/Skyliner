@@ -28,11 +28,11 @@ public final class PostManager {
     private var authorCursor: String?
     
     // MARK: - COMPUTED PROPERTIES
-    var postData: [(postID: String, imageURL: URL?, name: String, handle: String, message: String)] {
+    var postData: [(postID: String, imageURL: URL?, name: String, handle: String, message: String, embed: AppBskyLexicon.Feed.PostViewDefinition.EmbedUnion?)] {
         homeFeed.postData
     }
     
-    var authorData: [(postID: String, imageURL: URL?, name: String, handle: String, message: String)] {
+    var authorData: [(postID: String, imageURL: URL?, name: String, handle: String, message: String, embed: AppBskyLexicon.Feed.PostViewDefinition.EmbedUnion?)] {
         authorFeed.postData
     }
 }
@@ -102,14 +102,8 @@ extension PostManager {
     // MARK: - REFRESH AUTHOR FEED
     public func refreshAuthorPosts(shouldIncludePins: Bool = false) async {
         authorCursor = nil
-        let oldFeed = authorFeed.posts
         authorFeed.clear()
         
         await loadAuthorPosts(shouldIncludePins: shouldIncludePins)
-        
-        // Restore if failed (this is simplified - you might want to store raw data)
-        if authorFeed.posts.isEmpty {
-            // You'd need to implement restoration logic here if needed
-        }
     }
 }
