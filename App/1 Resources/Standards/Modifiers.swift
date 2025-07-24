@@ -27,6 +27,7 @@ extension View {
     }
 }
 
+// MARK: - SHADOW OVERLAY
 struct ShadowOverlay: View {
     @Environment(\.colorScheme) private var colorScheme
     
@@ -35,19 +36,16 @@ struct ShadowOverlay: View {
             .fill(.standardBackground)
             .frame(height: 3)
             .padding(.top, -3)
-            .shadow(color: .black, radius: Radius.small,
-                    x: 0, y: 0
+            .shadow(color: colorScheme == .dark ? .black : .white, radius: Radius.small)
+            .shadow(color: colorScheme == .dark ? .black : .white, radius: Radius.small)
+            .shadow(color: colorScheme == .dark ? .black : .white.opacity((Opacity.standard)), radius: Radius.small)
+            .shadow(color: colorScheme == .dark ? .black : .white, radius: Radius.standard)
+            .shadow(
+                color: colorScheme == .light ? .white : .clear,
+                radius: Radius.standard * 1.25
             )
-            .shadow(color: .black, radius: Radius.small,
-                    x: 0, y: 0
-            )
-            .shadow(color: colorScheme == .dark ? .black : .black.opacity((Opacity.standard)), radius: Radius.small,
-                    x: 0, y: 0
-            )
-            .shadow(color: colorScheme == .dark ? .black : .clear, radius: Radius.standard,
-                    x: 0, y: 0
-            )
-            .ignoresSafeArea(.all)
+            .ignoresSafeArea(.container, edges: .top)
+            .allowsHitTesting(false)
     }
 }
 
