@@ -27,6 +27,30 @@ extension View {
     }
 }
 
+struct ShadowOverlay: View {
+    @Environment(\.colorScheme) private var colorScheme
+    
+    var body: some View {
+        Rectangle()
+            .fill(.standardBackground)
+            .frame(height: 3)
+            .padding(.top, -3)
+            .shadow(color: .black, radius: Radius.small,
+                    x: 0, y: 0
+            )
+            .shadow(color: .black, radius: Radius.small,
+                    x: 0, y: 0
+            )
+            .shadow(color: colorScheme == .dark ? .black : .black.opacity((Opacity.standard)), radius: Radius.small,
+                    x: 0, y: 0
+            )
+            .shadow(color: colorScheme == .dark ? .black : .clear, radius: Radius.standard,
+                    x: 0, y: 0
+            )
+            .ignoresSafeArea(.all)
+    }
+}
+
 // MARK: - NUMBER FORMATTER
 extension Int {
     var abbreviated: String {

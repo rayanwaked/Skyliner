@@ -29,14 +29,14 @@ struct ExploreView: View {
         ZStack(alignment: .top) {
             if posts.isEmpty {
                 VStack {
-                    WeatherFeature()
+                    HeaderFeature(location: .explore)
+//                        .padding(.bottom, Padding.standard)
+//                    WeatherFeature()
                     trending
                 }
             } else {
                 results
             }
-            
-            HeaderFeature(location: .explore)
         }
         .background(.standardBackground)
         .onChange(of: routerCoordinator.exploreSearch) {_, newValue in
@@ -92,24 +92,28 @@ extension ExploreView {
 // MARK: - RESULTS
 extension ExploreView {
     var results: some View {
-        ScrollView {
-            LazyVStack {
-                PostFeature(location: .explore)
-                LoadMoreHelper(appState: appState, location: .explore)
+        ZStack(alignment: .top) {
+            ScrollView {
+                LazyVStack {
+                    PostFeature(location: .explore)
+                    LoadMoreHelper(appState: appState, location: .explore)
+                }
+                .padding(.top, Screen.height * 0.07)
             }
-            .padding(.top, Screen.height * 0.07)
+            .scrollIndicators(.hidden)
+            .transition(.asymmetric(
+                insertion: .push(from: .top),
+                removal: .move(edge: .bottom)
+            ))
+            .transition(.opacity)
+            .frame(
+                maxWidth: .infinity,
+                maxHeight: .infinity,
+                alignment: .topLeading
+            )
+            
+            ShadowOverlay()
         }
-        .scrollIndicators(.hidden)
-        .transition(.asymmetric(
-            insertion: .push(from: .top),
-            removal: .move(edge: .bottom)
-        ))
-        .transition(.opacity)
-        .frame(
-            maxWidth: .infinity,
-            maxHeight: .infinity,
-            alignment: .topLeading
-        )
     }
 }
 

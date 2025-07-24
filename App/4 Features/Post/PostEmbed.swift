@@ -127,8 +127,7 @@ struct LinkPreview: View {
                         .foregroundColor(.secondary)
                         .lineLimit(3)
                         .multilineTextAlignment(.leading)
-                        .padding(.top, Padding.tiny / 2)
-                        .padding(.bottom, 1)
+                        .padding(.top, 1)
                 }
                 
                 // URL with domain extraction
@@ -149,15 +148,17 @@ struct LinkPreview: View {
                         .font(.caption2)
                         .foregroundColor(.blue)
                 }
+                .padding(.top, Padding.tiny)
             }
             .padding(Padding.small)
         }
-        .background(.blue.opacity(Opacity.soft))
-        .clipShape(RoundedRectangle(cornerRadius: Radius.small))
-        .overlay(
-            RoundedRectangle(cornerRadius: Radius.small)
-                .stroke(.primary.opacity(Opacity.soft))
+        .backport.glassEffect(.tintedAndInteractive(
+            color: Color.blue.opacity(Opacity.soft),
+            isEnabled: true),
+                              in: RoundedRectangle(cornerRadius: Radius.small)
         )
+        .clipShape(RoundedRectangle(cornerRadius: Radius.small))
+        .overlay(RoundedRectangle(cornerRadius: Radius.small).stroke(.primary.opacity(Opacity.soft)))
         .scaleEffect(isPressed ? 0.98 : 1.0)
         .animation(.easeInOut(duration: 0.1), value: isPressed)
         .onTapGesture {
@@ -166,7 +167,6 @@ struct LinkPreview: View {
             }
         }
         .onLongPressGesture(minimumDuration: 0) {
-            // Handle press state for visual feedback
         } onPressingChanged: { pressing in
             isPressed = pressing
         }
@@ -347,6 +347,9 @@ struct SpecialRecordView: View {
 #Preview {
     @Previewable @State var appState: AppState = .init()
     
-    PostEmbed(embed: nil)
-        .environment(appState)
+    ScrollView {
+        PostFeature(location: .home)
+            .environment(appState)
+    }
 }
+

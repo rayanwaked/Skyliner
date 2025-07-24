@@ -14,6 +14,7 @@ struct HeaderFeature: View {
     // MARK: - PROPERTIES
     @Environment(AppState.self) private var appState
     @Environment(RouterCoordinator.self) private var routerCoordinator
+    @Environment(\.colorScheme) private var colorScheme
     var location: headerLocation = .home
     
     enum headerLocation {
@@ -96,6 +97,22 @@ extension HeaderFeature {
         }
         .padding(.bottom, Padding.tiny)
         .scrollIndicators(.hidden)
+    }
+}
+
+extension HeaderFeature {
+    var shadow: some View {
+        VStack {
+            Rectangle()
+                .frame(width: 1, height: 1)
+                .shadow(
+                    color: colorScheme == .light ? .black.opacity(0.35) : .black.opacity(0.8),
+                    radius: Radius.standard,
+                    x: 0,
+                    y: Padding.standard * 2.5
+                )
+            Spacer()
+        }
     }
 }
 

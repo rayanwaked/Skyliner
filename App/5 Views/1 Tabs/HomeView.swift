@@ -12,7 +12,6 @@ import PostHog
 struct HomeView: View {
     // MARK: - PROPERTIES
     @Environment(AppState.self) private var appState
-    @Environment(\.colorScheme) private var colorScheme
     @StateObject var headerManager = HeaderVisibilityManager()
     
     // MARK: - BODY
@@ -39,7 +38,12 @@ struct HomeView: View {
             if headerManager.isVisible {
                 HeaderFeature()
                     .zIndex(1)
-                    .baselineOffset(headerManager.isVisible ? 0 : Screen.height * -1)
+                    .transition(.asymmetric(
+                        insertion: .move(edge: .top).combined(with: .opacity),
+                        removal: .offset(y: -Screen.height * 0.2).combined(with: .opacity)
+                    ))
+            } else {
+                ShadowOverlay()
                     .transition(.asymmetric(
                         insertion: .move(edge: .top).combined(with: .opacity),
                         removal: .offset(y: -Screen.height * 0.2).combined(with: .opacity)
@@ -56,7 +60,9 @@ struct HomeView: View {
 // MARK: - PREVIEW
 #Preview {
     @Previewable @State var appState: AppState = .init()
+    @Previewable @State var routerCoordinator: RouterCoordinator = .init()
     
     HomeView()
         .environment(appState)
+        .environment(routerCoordinator)
 }

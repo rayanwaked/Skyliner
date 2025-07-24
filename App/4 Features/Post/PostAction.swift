@@ -11,6 +11,7 @@ import SwiftUI
 extension PostCell {
     var actions: some View {
         HStack {
+            // MARK: - REPOST
             Button {
                 Task {
                     // Optimistic update
@@ -33,13 +34,13 @@ extension PostCell {
                     Text("\(repostCount)")
                         .contentTransition(.numericText())
                 }
-                .foregroundStyle(isReposted ? .blue : .primary)
+                .foregroundStyle(isReposted ? .blue : .primary.opacity(Opacity.heavy))
             }
             
             Spacer()
             
+            // MARK: - REPLY
             Button {
-                // Handle reply action
                 Task {
                     // TODO: Implement reply functionality
                 }
@@ -48,11 +49,12 @@ extension PostCell {
                     Image(systemName: "message")
                     Text("\(replyCount)")
                 }
-                .foregroundStyle(.foreground)
+                .foregroundStyle(.foreground.opacity(Opacity.heavy))
             }
             
             Spacer()
             
+            // MARK: - LIKE
             Button {
                 Task {
                     // Optimistic update
@@ -61,7 +63,6 @@ extension PostCell {
                         likeCount += isLiked ? 1 : -1
                     }
                     
-                    // Call appropriate manager method
                     switch location {
                     case .home, .profile:
                         await appState.postManager.toggleLike(postID: postID)
@@ -75,11 +76,12 @@ extension PostCell {
                     Text("\(likeCount)")
                         .contentTransition(.numericText())
                 }
-                .foregroundStyle(isLiked ? .red : .primary)
+                .foregroundStyle(isLiked ? .red : .primary.opacity(Opacity.heavy))
             }
             
             Spacer()
             
+            // MARK: - SHARE
             Button {
                 switch location {
                 case .home, .profile:
@@ -89,11 +91,12 @@ extension PostCell {
                 }
             } label: {
                 Image(systemName: "square.and.arrow.up")
-                    .foregroundStyle(.foreground)
+                    .foregroundStyle(.foreground.opacity(Opacity.heavy))
             }
             
             Spacer()
             
+            // MARK: - MENU
             Menu {
                 Button("Copy Link") {
                     switch location {
@@ -105,11 +108,21 @@ extension PostCell {
                 }
             } label: {
                 Image(systemName: "ellipsis")
-                    .foregroundStyle(.foreground)
+                    .foregroundStyle(.foreground.opacity(Opacity.heavy))
             }
         }
         .font(.smaller(.subheadline))
         .padding(.top, Padding.small)
-        .padding(.trailing, Padding.standard)
+        .padding(.trailing, Padding.tiny)
+    }
+}
+
+// MARK: - PREVIEW
+#Preview {
+    @Previewable @State var appState: AppState = .init()
+    
+    ScrollView {
+        PostFeature(location: .home)
+            .environment(appState)
     }
 }

@@ -31,7 +31,6 @@ struct WeatherFeature: View {
         .backport.glassEffect(in: RoundedRectangle(cornerRadius: Radius.standard))
         .shadow(color: .gray, radius: 1)
         .padding(.horizontal, Padding.standard)
-        .padding(.top, Screen.height * 0.065)
     }
 }
 

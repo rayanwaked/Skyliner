@@ -108,7 +108,8 @@ struct PostCell: View {
                 
                 Spacer()
             }
-            .padding(.horizontal, Padding.standard)
+            .padding(.leading, Padding.standard)
+            .padding(.trailing, Padding.small)
             .padding(.vertical, Padding.tiny / 2)
             .background(.standardBackground)
             
@@ -140,6 +141,8 @@ struct PostCell: View {
 #Preview {
     @Previewable @State var appState: AppState = .init()
     
-    PostFeature(location: .home)
-        .environment(appState)
+    ScrollView {
+        PostFeature(location: .home)
+            .environment(appState)
+    }
 }

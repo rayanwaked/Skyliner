@@ -19,6 +19,11 @@ struct ProfileView: View {
     // MARK: - BODY
     var body: some View {
         ZStack(alignment: .top) {
+            if bannerManager.scrollOffset > Screen.height * 0.3 {
+                ShadowOverlay()
+                    .zIndex(1)
+            }
+            
             parallaxBanner
                 .zIndex(0)
       
@@ -43,6 +48,7 @@ struct ProfileView: View {
                     await appState.postManager.refreshPosts()
                     await appState.postManager
                         .refreshAuthorPosts(shouldIncludePins: true)
+                    bannerManager.bannerURL = appState.accountManager.bannerURL
                     hapticFeedback(.success)
                 }
             }
@@ -121,36 +127,38 @@ extension ProfileView {
 // MARK: - DESCRIPTION
 extension ProfileView {
     var description: some View {
-        HStack(alignment: .top) {
-            VStack(alignment: .leading) {
-                Text("\(userProfile?.name ?? "")")
-                    .font(.smaller(.title3))
-                    .fontWeight(.heavy)
-                
-                Text("@\(userProfile?.handle ?? "")")
-                    .font(.smaller(.body))
-                    .fontWeight(.light)
-                    .padding(.bottom, Padding.tiny / 2)
-                    .opacity(Opacity.heavy)
-                
-                Text("\(userProfile?.description ?? "")")
-                    .font(.smaller(.body))
-            }
-            
-            Spacer()
-            
-            ButtonComponent(
-                "Log out",
-                variation: .primary,
-                size: .profile,
-                haptic: .rigid)
-            {
-                Task {
-                    try await appState.authManager.logout()
+        VStack(alignment: .leading) {
+            HStack(alignment: .top) {
+                VStack(alignment: .leading) {
+                    Text("\(userProfile?.name ?? "")")
+                        .font(.smaller(.title3))
+                        .fontWeight(.heavy)
+                    
+                    Text("@\(userProfile?.handle ?? "")")
+                        .font(.smaller(.body))
+                        .fontWeight(.light)
+                        .padding(.bottom, Padding.tiny / 2)
+                        .opacity(Opacity.heavy)
                 }
+                
+                Spacer()
+                
+                ButtonComponent(
+                    "Log out",
+                    variation: .primary,
+                    size: .profile,
+                    haptic: .rigid)
+                {
+                    Task {
+                        try await appState.authManager.logout()
+                    }
+                }
+                .padding(.trailing, -Padding.standard)
+                .frame(width: Screen.width * 0.225)
             }
-            .padding(.trailing, -Padding.standard)
-            .frame(width: Screen.width * 0.225)
+            
+            Text("\(userProfile?.description ?? "")")
+                .font(.smaller(.body))
         }
         .padding(.bottom, Padding.tiny)
         .padding(.horizontal, Padding.standard)

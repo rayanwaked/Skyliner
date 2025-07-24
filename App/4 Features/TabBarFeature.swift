@@ -41,7 +41,7 @@ struct TabBarFeature: View {
     var body: some View {
         VStack {
             Spacer()
-            
+
             HStack {
                 HStack {
                     if routerCoordinator.selectedTab != .explore {
@@ -71,7 +71,7 @@ struct TabBarFeature: View {
                 ComposeView()
             }
             .padding(.horizontal, Padding.standard)
-            .padding(.bottom, keyboard.currentHeight > 0 ? Padding.small : -Padding.small)
+            .padding(.bottom, keyboard.currentHeight > 0 ? Padding.tiny : -Padding.small)
         }
         .shadow(
             color: colorScheme == .light ? .black.opacity(0.35) : .black.opacity(0.8),
