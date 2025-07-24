@@ -74,7 +74,7 @@ struct TabBarFeature: View {
             .padding(.bottom, keyboard.currentHeight > 0 ? Padding.tiny : -Padding.small)
         }
         .shadow(
-            color: colorScheme == .light ? .white : .black.opacity(0.8),
+            color: colorScheme == .light ? .white.opacity(0.9) : .black.opacity(0.8),
             radius: Radius.standard,
             y: Padding.standard * 2.5
         )
