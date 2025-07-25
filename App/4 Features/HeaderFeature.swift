@@ -15,6 +15,7 @@ struct HeaderFeature: View {
     @Environment(AppState.self) private var appState
     @Environment(RouterCoordinator.self) private var routerCoordinator
     @Environment(\.colorScheme) private var colorScheme
+    @State var showingTrends: Bool = true
     var location: headerLocation = .home
     
     enum headerLocation {
@@ -26,7 +27,9 @@ struct HeaderFeature: View {
         VStack(spacing: 0) {
             if location == .home {
                 settingsSection
-                trendingSection
+                if showingTrends {
+                    trendingSection
+                }
             } else {
                 settingsSection
                     .padding(.bottom, Padding.small)

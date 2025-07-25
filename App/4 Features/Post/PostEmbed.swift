@@ -21,6 +21,9 @@ struct PostEmbed: View {
                 switch embed {
                 case .embedImagesView(let imagesEmbed):
                     MediaGrid(images: imagesEmbed.images)
+                case .embedVideoView(let videoEmbed):
+                    VideoThumbnail(video: videoEmbed)
+                        .environment(appState)
                 case .embedExternalView(let externalEmbed):
                     LinkPreview(external: externalEmbed.external)
                         .environment(appState)
@@ -92,6 +95,51 @@ struct AsyncImageView: View {
         .accessibilityLabel(altText ?? "")
     }
 }
+
+// MARK: - VIDEO THUMBNAIL
+struct VideoThumbnail: View {
+    @Environment(AppState.self) private var appState
+    let video: AppBskyLexicon.Embed.VideoDefinition.View
+    
+    var body: some View {
+        VStack(alignment: .leading, spacing: Padding.small) {
+            ZStack {
+                AsyncImageView(url: video.thumbnailImageURL.flatMap(URL.init), altText: video.altText)
+                    .frame(maxHeight: 200)
+                    .aspectRatio(16/9, contentMode: .fit) // Add aspect ratio constraint
+                
+                Button {
+                    if let altText = video.altText, !altText.isEmpty {
+//                        appState.postManager.playVideo(from: video.cid)
+                    }
+                } label: {
+                    Image(systemName: "play.circle.fill")
+                        .font(.system(size: 50))
+                        .foregroundColor(.white)
+                        .background(.black.opacity(Opacity.standard), in: Circle())
+                }
+            }
+            
+            if let altText = video.altText, !altText.isEmpty {
+                Text(altText)
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+                    .padding(.horizontal, Padding.small)
+                    .multilineTextAlignment(.leading)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+        }
+        .fixedSize(horizontal: false, vertical: true) // Allow proper vertical sizing
+        .clipShape(RoundedRectangle(cornerRadius: Radius.small))
+        .overlay(RoundedRectangle(cornerRadius: Radius.small).stroke(.primary.opacity(Opacity.soft)))
+        .backport.glassEffect(.tintedAndInteractive(
+            color: Color.blue.opacity(Opacity.soft),
+            isEnabled: true),
+                              in: RoundedRectangle(cornerRadius: Radius.small)
+        )
+    }
+}
+
 
 // MARK: - LINK PREVIEW
 struct LinkPreview: View {
@@ -206,7 +254,7 @@ struct QuotedPostContent: View {
     
     var body: some View {
         VStack(alignment: .leading, spacing: Padding.small) {
-            HStack(spacing: Padding.small) {
+            HStack(alignment: .top, spacing: Padding.small) {
                 AsyncImageView(url: record.author.avatarImageURL, altText: nil)
                     .frame(width: 24, height: 24)
                     .clipShape(Circle())
@@ -247,7 +295,6 @@ struct QuotedPostContent: View {
         }
         .padding(Padding.small)
         .fixedSize(horizontal: false, vertical: true) // Allow proper vertical sizing
-        .background(.blue.opacity(Opacity.soft))
         .backport.glassEffect(.tintedAndInteractive(
             color: Color.blue.opacity(Opacity.soft),
             isEnabled: true),
@@ -266,6 +313,8 @@ struct NestedEmbed: View {
         switch embed {
         case .embedImagesView(let imagesView):
             MediaGrid(images: imagesView.images)
+        case .embedVideoView(let videoView):
+            VideoThumbnail(video: videoView)
         case .embedExternalView(let externalView):
             LinkPreview(external: externalView.external)
         default:
@@ -283,6 +332,9 @@ struct EmbedMedia: View {
         switch media {
         case .embedImagesView(let imagesView):
             MediaGrid(images: imagesView.images)
+        case .embedVideoView(let videoView):
+            VideoThumbnail(video: videoView)
+                .environment(appState)
         case .embedExternalView(let externalView):
             LinkPreview(external: externalView.external)
                 .environment(appState)

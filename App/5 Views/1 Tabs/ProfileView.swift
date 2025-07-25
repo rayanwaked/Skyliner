@@ -14,8 +14,8 @@ struct ProfileView: View {
     // MARK: - PROPERTIES
     @Environment(AppState.self) private var appState
     @StateObject var bannerManager = BannerPositionManager()
-    @State private var userProfile: AccountManager?
-    
+    @State var userProfile: AccountManager?
+     
     // MARK: - BODY
     var body: some View {
         ZStack(alignment: .top) {
@@ -70,7 +70,7 @@ extension ProfileView {
     private var parallaxBanner: some View {
         BannerFeature(manager: bannerManager)
             .onAppear {
-                bannerManager.bannerURL = appState.accountManager.bannerURL
+                bannerManager.bannerURL = userProfile?.bannerURL
             }
     }
 }

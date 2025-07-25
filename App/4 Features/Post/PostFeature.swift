@@ -12,7 +12,7 @@ import ATProtoKit
 struct PostFeature: View {
     // MARK: - PROPERTIES
     @Environment(AppState.self) private var appState
-    
+    @Environment(RouterCoordinator.self) private var routerCoordinator
     let location: Location
     
     enum Location {
@@ -80,6 +80,11 @@ struct PostCell: View {
             HStack(alignment: .top) {
                 ProfilePictureComponent(isUser: false, profilePictureURL: imageURL, size: .medium)
                     .padding(.trailing, Padding.tiny)
+                    .onTapGesture {
+//                        appState.viewAccountManager.userDID = ""
+                        ProfileView()
+                        hapticFeedback(.light)
+                    }
                 
                 VStack(alignment: .leading, spacing: Padding.tiny) {
                     HStack(alignment: .center) {
@@ -140,9 +145,11 @@ struct PostCell: View {
 // MARK: - PREVIEW
 #Preview {
     @Previewable @State var appState: AppState = .init()
+    @Previewable @State var routerCoordinator: RouterCoordinator = .init()
     
     ScrollView {
         PostFeature(location: .home)
             .environment(appState)
+            .environment(routerCoordinator)
     }
 }

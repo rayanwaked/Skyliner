@@ -45,7 +45,7 @@ struct ArrayButtonComponent<T: Hashable, Content: View>: View {
                             RoundedRectangle(cornerRadius: Radius.standard)
                         )
                         .padding(.vertical, Padding.tiny / 1.3)
-                        .hapticAction(.soft) { action?(item) }
+                        .hapticAction(.light) { action?(item) }
                 }
             }
             .font(.smaller(.callout))

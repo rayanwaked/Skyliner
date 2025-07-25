@@ -15,6 +15,7 @@ public final class AccountManager {
     // MARK: - PROPERTIES
     @ObservationIgnored
     var appState: AppState? = nil
+    var userDID: String? { appState?.userDID }
     var profilePictureURL: URL? = nil
     var bannerURL: URL? = nil
     var follows: Int? = nil
@@ -32,7 +33,7 @@ public final class AccountManager {
             return
         }
         
-        guard let userDID = appState?.userDID, !userDID.isEmpty else {
+        guard let userDID, !userDID.isEmpty else {
             print("❌ No valid userDID available")
             return
         }
@@ -60,7 +61,7 @@ public final class AccountManager {
             return
         }
         
-        guard let userDID = appState?.userDID, !userDID.isEmpty else {
+        guard let userDID, !userDID.isEmpty else {
             print("❌ No valid userDID available")
             return
         }
