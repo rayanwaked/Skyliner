@@ -10,6 +10,7 @@ import ATProtoKit
 
 // MARK: - ITEM MODEL
 public struct PostItem {
+    let authorDID: String
     let postID: String
     let imageURL: URL?
     let name: String
@@ -57,8 +58,8 @@ public final class PostModel {
     private var rawPosts: [any PostViewProtocol] = []
     
     // MARK: - COMPUTED PROPERTIES
-    var postData: [(postID: String, imageURL: URL?, name: String, handle: String, time: String, message: String, embed: AppBskyLexicon.Feed.PostViewDefinition.EmbedUnion?)] {
-        posts.map { ($0.postID, $0.imageURL, $0.name, $0.handle, $0.time, $0.message, $0.embed) }
+    var postData: [(authorDID: String, postID: String, imageURL: URL?, name: String, handle: String, time: String, message: String, embed: AppBskyLexicon.Feed.PostViewDefinition.EmbedUnion?)] {
+        posts.map { ($0.authorDID, $0.postID, $0.imageURL, $0.name, $0.handle, $0.time, $0.message, $0.embed) }
     }
     
     // MARK: - METHODS
@@ -66,6 +67,7 @@ public final class PostModel {
         rawPosts = newPosts
         posts = newPosts.map { post in
             PostItem(
+                authorDID: post.author.actorDID,
                 postID: post.uri,
                 imageURL: post.author.avatarImageURL,
                 name: post.author.displayName ?? post.author.actorHandle,
@@ -81,6 +83,7 @@ public final class PostModel {
     func appendPosts<T: PostViewProtocol>(_ newPosts: [T]) {
         let newItems = newPosts.map { post in
             PostItem(
+                authorDID: post.author.actorDID,
                 postID: post.uri,
                 imageURL: post.author.avatarImageURL,
                 name: post.author.displayName ?? post.author.actorHandle,

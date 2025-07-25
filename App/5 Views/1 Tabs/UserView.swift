@@ -1,5 +1,5 @@
 //
-//  ProfileView.swift
+//  UserView.swift
 //  Skyliner
 //
 //  Created by Rayan Waked on 7/13/25.
@@ -10,12 +10,12 @@ import Glur
 import PostHog
 
 // MARK: - VIEW
-struct ProfileView: View {
+struct UserView: View {
     // MARK: - PROPERTIES
     @Environment(AppState.self) private var appState
     @StateObject var bannerManager = BannerPositionManager()
-    @State var userProfile: AccountManager?
-     
+    @State private var isLoading = false
+    
     // MARK: - BODY
     var body: some View {
         ZStack(alignment: .top) {
@@ -26,7 +26,7 @@ struct ProfileView: View {
             
             parallaxBanner
                 .zIndex(0)
-      
+            
             ScrollView {
                 VStack(alignment: .leading, spacing: 0) {
                     subBanner
@@ -36,6 +36,8 @@ struct ProfileView: View {
                     
                     posts
                 }
+                .opacity(isLoading ? 0.3 : 1.0)
+                .animation(.easeInOut(duration: 0.4), value: isLoading)
             }
             .onScrollGeometryChange(for: CGFloat.self) { geo in
                 geo.contentOffset.y
@@ -44,12 +46,7 @@ struct ProfileView: View {
             }
             .refreshable {
                 Task {
-                    await appState.accountManager.loadProfile()
-                    await appState.postManager.refreshPosts()
-                    await appState.postManager
-                        .refreshAuthorPosts(shouldIncludePins: true)
-                    bannerManager.bannerURL = appState.accountManager.bannerURL
-                    hapticFeedback(.success)
+                    await loadUserDataWithAnimation()
                 }
             }
         }
@@ -57,26 +54,47 @@ struct ProfileView: View {
         .ignoresSafeArea(.all)
         .scrollIndicators(.hidden)
         .onAppear {
-            if userProfile == nil {
-                userProfile = appState.accountManager
+            Task {
+                await loadUserDataWithAnimation()
             }
-            PostHogSDK.shared.capture("Profile View")
+            PostHogSDK.shared.capture("User View")
         }
+    }
+    
+    // MARK: - LOAD USER DATA WITH ANIMATION
+    private func loadUserDataWithAnimation() async {
+        withAnimation(.easeInOut(duration: 0.2)) {
+            isLoading = true
+        }
+        
+        // Load user profile data
+        await appState.userManager.refreshProfile()
+        
+        // Small delay to ensure smooth transition
+        try? await Task.sleep(nanoseconds: 100_000_000)
+        
+        withAnimation(.spring(response: 0.6, dampingFraction: 0.8)) {
+            bannerManager.bannerURL = appState.userManager.bannerURL
+            isLoading = false
+        }
+        
+        hapticFeedback(.success)
     }
 }
 
 // MARK: - PARALLAX BANNER
-extension ProfileView {
+extension UserView {
     private var parallaxBanner: some View {
         BannerFeature(manager: bannerManager)
             .onAppear {
-                bannerManager.bannerURL = userProfile?.bannerURL
+                bannerManager.bannerURL = appState.userManager.bannerURL
             }
+            .animation(.easeInOut(duration: 0.5), value: bannerManager.bannerURL)
     }
 }
 
 // MARK: - SUB BANNER
-extension ProfileView {
+extension UserView {
     var subBanner: some View {
         HStack {
             ZStack {
@@ -84,6 +102,9 @@ extension ProfileView {
                     .frame(width: Screen.width * 0.32)
                     .foregroundStyle(Color.standardBackground)
                 ProfilePictureComponent(size: .xlarge)
+                    .scaleEffect(isLoading ? 0.9 : 1.0)
+                    .animation(.spring(response: 0.5, dampingFraction: 0.7), value: appState.userManager.profilePictureURL)
+                    .animation(.spring(response: 0.3, dampingFraction: 0.6), value: isLoading)
             }
             .padding(.top, -Padding.large * 3)
             
@@ -95,12 +116,14 @@ extension ProfileView {
 }
 
 // MARK: - PROFILE STATS
-extension ProfileView {
+extension UserView {
     var profileStats: some View {
         HStack {
             Spacer()
             VStack {
-                Text("\(userProfile?.followers ?? 0)").bold()
+                Text("\(appState.userManager.followers ?? 0)")
+                    .bold()
+                    .contentTransition(.numericText())
                 Text("followers")
             }
             Spacer()
@@ -108,7 +131,9 @@ extension ProfileView {
                 .frame(maxHeight: Screen.height * 0.03)
             Spacer()
             VStack{
-                Text("\(userProfile?.follows ?? 0)").bold()
+                Text("\(appState.userManager.follows ?? 0)")
+                    .bold()
+                    .contentTransition(.numericText())
                 Text("following")
             }
             Spacer()
@@ -116,30 +141,39 @@ extension ProfileView {
                 .frame(maxHeight: Screen.height * 0.03)
             Spacer()
             VStack {
-                Text("\(userProfile?.posts ?? 0)").bold()
+                Text("\(appState.userManager.posts ?? 0)")
+                    .bold()
+                    .contentTransition(.numericText())
                 Text("posts")
             }
         }
         .font(.smaller(.subheadline))
+        .animation(.spring(response: 0.6, dampingFraction: 0.8), value: appState.userManager.followers)
+        .animation(.spring(response: 0.6, dampingFraction: 0.8), value: appState.userManager.follows)
+        .animation(.spring(response: 0.6, dampingFraction: 0.8), value: appState.userManager.posts)
     }
 }
 
 // MARK: - DESCRIPTION
-extension ProfileView {
+extension UserView {
     var description: some View {
         VStack(alignment: .leading) {
             HStack(alignment: .top) {
                 VStack(alignment: .leading) {
-                    Text("\(userProfile?.name ?? "")")
+                    Text("\(appState.userManager.name ?? "")")
                         .font(.smaller(.title3))
                         .fontWeight(.heavy)
+                        .contentTransition(.opacity)
                     
-                    Text("@\(userProfile?.handle ?? "")")
+                    Text("@\(appState.userManager.handle ?? "")")
                         .font(.smaller(.body))
                         .fontWeight(.light)
                         .padding(.bottom, Padding.tiny / 2)
                         .opacity(Opacity.heavy)
+                        .contentTransition(.opacity)
                 }
+                .animation(.easeInOut(duration: 0.4), value: appState.userManager.name)
+                .animation(.easeInOut(duration: 0.4), value: appState.userManager.handle)
                 
                 Spacer()
                 
@@ -155,10 +189,14 @@ extension ProfileView {
                 }
                 .padding(.trailing, -Padding.standard)
                 .frame(width: Screen.width * 0.225)
+                .scaleEffect(isLoading ? 0.95 : 1.0)
+                .animation(.spring(response: 0.4, dampingFraction: 0.7), value: isLoading)
             }
             
-            Text("\(userProfile?.description ?? "")")
+            Text("\(appState.userManager.description ?? "")")
                 .font(.smaller(.body))
+                .contentTransition(.opacity)
+                .animation(.easeInOut(duration: 0.5), value: appState.userManager.description)
         }
         .padding(.bottom, Padding.tiny)
         .padding(.horizontal, Padding.standard)
@@ -167,7 +205,7 @@ extension ProfileView {
 }
 
 // MARK: - POSTS
-extension ProfileView {
+extension UserView {
     @ViewBuilder
     var posts: some View {
         ArrayButtonComponent<String, Text>(
@@ -180,19 +218,22 @@ extension ProfileView {
         
         Divider()
         
-        let posts = appState.postManager.authorData
+        // Use userManager's postData instead of postManager
+        let posts = appState.userManager.postData
         if posts.isEmpty {
             Text("No posts yet.")
                 .font(.smaller(.headline))
                 .opacity(0.6)
                 .frame(maxWidth: .infinity, alignment: .center)
                 .padding(.vertical, Padding.large)
+                .transition(.scale.combined(with: .opacity))
         } else {
             LazyVStack {
-                PostFeature(location: .profile)
+                PostFeature(location: .user)
             }
             .padding(.top, Padding.standard)
             .padding(.bottom, Padding.large * 4)
+            .transition(.move(edge: .bottom).combined(with: .opacity))
         }
     }
 }
@@ -201,7 +242,6 @@ extension ProfileView {
 #Preview {
     @Previewable @State var appState: AppState = .init()
     
-    ProfileView()
+    UserView()
         .environment(appState)
 }
-

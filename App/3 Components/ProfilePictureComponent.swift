@@ -52,7 +52,7 @@ struct ProfilePictureComponent: View {
 extension ProfilePictureComponent {
     var user: some View {
         Group {
-            if let profilePictureURL = appState.accountManager.profilePictureURL {
+            if let profilePictureURL = appState.userManager.profilePictureURL {
                 LazyImage(url: profilePictureURL) { state in
                     if let image = state.image {
                         image
@@ -82,7 +82,7 @@ extension ProfilePictureComponent {
 extension ProfilePictureComponent {
     var others: some View {
         Group {
-            if let profilePictureURL {
+            if (profilePictureURL != nil) {
                 LazyImage(url: profilePictureURL) { state in
                     if let image = state.image {
                         image

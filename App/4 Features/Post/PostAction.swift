@@ -22,10 +22,12 @@ extension PostCell {
                     
                     // Call appropriate manager method
                     switch location {
-                    case .home, .profile:
+                    case .home, .user:
                         await appState.postManager.toggleRepost(postID: postID)
                     case .explore:
                         await appState.searchManager.toggleRepost(postID: postID)
+                    case .profile:
+                        await appState.profileManager.toggleRepost(postID: postID)
                     }
                 }
             } label: {
@@ -64,10 +66,12 @@ extension PostCell {
                     }
                     
                     switch location {
-                    case .home, .profile:
+                    case .home, .user:
                         await appState.postManager.toggleLike(postID: postID)
                     case .explore:
                         await appState.searchManager.toggleLike(postID: postID)
+                    case .profile:
+                        await appState.profileManager.toggleLike(postID: postID)
                     }
                 }
             } label: {
@@ -84,10 +88,12 @@ extension PostCell {
             // MARK: - SHARE
             Button {
                 switch location {
-                case .home, .profile:
+                case .home, .user:
                     appState.postManager.sharePost(postID: postID)
                 case .explore:
                     appState.searchManager.sharePost(postID: postID)
+                case .profile:
+                    appState.profileManager.sharePost(postID: postID)
                 }
             } label: {
                 Image(systemName: "square.and.arrow.up")
@@ -100,10 +106,12 @@ extension PostCell {
             Menu {
                 Button("Copy Link") {
                     switch location {
-                    case .home, .profile:
+                    case .home, .user:
                         appState.postManager.copyPostLink(postID: postID)
                     case .explore:
                         appState.searchManager.copyPostLink(postID: postID)
+                    case .profile:
+                        appState.profileManager.copyPostLink(postID: postID)
                     }
                 }
             } label: {

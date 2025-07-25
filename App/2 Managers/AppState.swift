@@ -15,8 +15,8 @@ class AppState {
     var clientManager: ClientManager?
     var config: ATProtocolConfiguration?
     let authManager = AuthManager()
-    let accountManager = AccountManager()
-    let viewAccountManager = AccountManager()
+    let userManager = UserManager()
+    let profileManager = ProfileManager(userDID: "")
     let trendsManager = TrendsManager()
     let postManager = PostManager()
     let searchManager = SearchManager()
@@ -52,8 +52,8 @@ class AppState {
     
     // MARK: - METHODS
     func updateManagers(with clientManager: ClientManager?, with appState: AppState?) {
-        accountManager.appState = self
-        viewAccountManager.appState = self
+        userManager.appState = self
+        profileManager.appState = self
         trendsManager.appState = self
         postManager.appState = self
         searchManager.appState = self

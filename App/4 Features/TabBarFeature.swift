@@ -11,7 +11,7 @@ internal import Combine
 
 // MARK: - ENUM
 enum Tabs: CaseIterable, Identifiable, Hashable {
-    case home, explore, profile
+    case home, explore, user
     
     var id: Self { self }
     
@@ -19,7 +19,7 @@ enum Tabs: CaseIterable, Identifiable, Hashable {
         switch self {
         case .home: selected ? "bubble.fill" : "bubble"
         case .explore: selected ? "binoculars.fill" : "binoculars"
-        case .profile: selected ? "person.crop.circle.fill" : "person"
+        case .user: selected ? "person.crop.circle.fill" : "person"
         }
     }
 }
@@ -65,13 +65,21 @@ struct TabBarFeature: View {
                     action: routerCoordinator.toggleCreate
                 )
             }
+            .padding(.horizontal, Padding.standard)
+            .padding(.bottom, keyboard.currentHeight > 0 ? Padding.tiny : -Padding.small)
+            // Compose
             .sheet(isPresented: .constant(routerCoordinator.showingCreate), onDismiss: {
                 routerCoordinator.showingCreate = false
             }) {
                 ComposeView()
+                    .presentationCornerRadius(Radius.glass / 1.6)
             }
-            .padding(.horizontal, Padding.standard)
-            .padding(.bottom, keyboard.currentHeight > 0 ? Padding.tiny : -Padding.small)
+            // Profile
+            .sheet(isPresented: .constant(routerCoordinator.showingProfile), onDismiss: {
+                routerCoordinator.showingProfile = false
+            }) {
+                ProfileView()    .presentationCornerRadius(Radius.glass / 1.6)
+            }
         }
         .shadow(
             color: colorScheme == .light ? .white.opacity(0.9) : .black.opacity(0.8),
@@ -92,8 +100,8 @@ extension TabBarFeature {
                     }
                     hapticFeedback(.soft)
                 } label: {
-                    if tab == .profile {
-                        profileTabContent
+                    if tab == .user {
+                        userTabContent
                     } else {
                         Image(systemName: tab.systemImage(forSelected: routerCoordinator.selectedTab == tab))
                             .font(.smaller(.title2))
@@ -115,14 +123,14 @@ extension TabBarFeature {
     }
     
     // MARK: - PROFILE TAB CONTENT
-    var profileTabContent: some View {
+    var userTabContent: some View {
         Group {
-            if appState.accountManager.profilePictureURL != nil {
-                ProfilePictureComponent(isUser: true, size: .small)
+            if appState.userManager.profilePictureURL != nil {
+                ProfilePictureComponent(size: .small)
                     .padding(.trailing, Screen.width * 0.09)
                     .padding(.leading, Screen.width * 0.04)
             } else {
-                Image(systemName: Tabs.profile.systemImage(forSelected: routerCoordinator.selectedTab == .profile))
+                Image(systemName: Tabs.user.systemImage(forSelected: routerCoordinator.selectedTab == .user))
                     .font(.smaller(.title2))
                     .fontWeight(.semibold)
                     .frame(maxWidth: .infinity)

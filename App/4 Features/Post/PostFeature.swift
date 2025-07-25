@@ -12,21 +12,22 @@ import ATProtoKit
 struct PostFeature: View {
     // MARK: - PROPERTIES
     @Environment(AppState.self) private var appState
-    @Environment(RouterCoordinator.self) private var routerCoordinator
     let location: Location
     
     enum Location {
-        case home, explore, profile
+        case home, explore, user, profile
     }
     
-    var posts: [(postID: String, imageURL: URL?, name: String, handle: String, time: String, message: String, embed: AppBskyLexicon.Feed.PostViewDefinition.EmbedUnion?)] {
+    var posts: [(authorDID: String, postID: String, imageURL: URL?, name: String, handle: String, time: String, message: String, embed: AppBskyLexicon.Feed.PostViewDefinition.EmbedUnion?)] {
         switch location {
         case .home:
             return appState.postManager.postData
         case .explore:
             return appState.searchManager.postData
+        case .user:
+            return appState.userManager.postData
         case .profile:
-            return appState.postManager.authorData
+            return appState.profileManager.postData
         }
     }
     
@@ -37,6 +38,7 @@ struct PostFeature: View {
                 LazyVStack {
                     ForEach(Array(posts.enumerated()), id: \.offset) { index, post in
                         PostCell(
+                            authorDID: post.authorDID,
                             postID: post.postID,
                             imageURL: post.imageURL,
                             name: post.name,
@@ -58,7 +60,9 @@ struct PostFeature: View {
 // MARK: - POST CELL
 struct PostCell: View {
     @Environment(AppState.self) var appState
+    @Environment(RouterCoordinator.self) private var routerCoordinator
     
+    var authorDID: String
     var postID: String
     var imageURL: URL? = nil
     var name: String = "Name"
@@ -81,8 +85,10 @@ struct PostCell: View {
                 ProfilePictureComponent(isUser: false, profilePictureURL: imageURL, size: .medium)
                     .padding(.trailing, Padding.tiny)
                     .onTapGesture {
-//                        appState.viewAccountManager.userDID = ""
-                        ProfileView()
+                        withAnimation(.bouncy(duration: 0.5)) {
+                            appState.profileManager.userDID = authorDID
+                            routerCoordinator.showingProfile = true
+                        }
                         hapticFeedback(.light)
                     }
                 
@@ -128,10 +134,12 @@ struct PostCell: View {
     // MARK: - UPDATE POST STATE
     private func updatePostState() {
         let postState = switch location {
-        case .home, .profile:
-            appState.postManager.getPostState(postID: postID)
+        case .home, .user:
+            appState.userManager.getPostState(postID: postID)
         case .explore:
             appState.searchManager.getPostState(postID: postID)
+        case .profile:
+            appState.profileManager.getPostState(postID: postID)
         }
         
         isLiked = postState.isLiked

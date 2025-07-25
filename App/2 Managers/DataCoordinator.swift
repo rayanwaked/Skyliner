@@ -20,10 +20,8 @@ class DataCoordinator {
     // MARK: - METHODS
     func loadAllData() async {
         await appState?.updateUserDID()
-        await appState?.accountManager.loadProfilePicture()
-        await appState?.accountManager.loadProfile()
+        await appState?.userManager.loadProfile()
         await appState?.trendsManager.loadTrends()
         await appState?.postManager.loadPosts()
-        await appState?.postManager.loadAuthorPosts(shouldIncludePins: true)
     }
 }

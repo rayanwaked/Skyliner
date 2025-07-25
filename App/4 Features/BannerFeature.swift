@@ -12,6 +12,7 @@ internal import Combine
 
 struct BannerFeature: View {
     @StateObject var manager: BannerPositionManager
+    var isUser: Bool = true
     
     var body: some View {
         VStack(spacing: 0) {
@@ -34,15 +35,15 @@ struct BannerFeature: View {
         }
         .glur(radius: Radius.small, offset: 0.45, interpolation: 1.0, direction: .down)
         .clipShape(.rect(
-            topLeadingRadius: Radius.glass,
+            topLeadingRadius: isUser ? Radius.glass : 0,
             bottomLeadingRadius: Radius.small,
             bottomTrailingRadius: Radius.small,
-            topTrailingRadius: Radius.glass))
+            topTrailingRadius: isUser ? Radius.glass : 0))
         .backport.glassEffect(in: .rect(
-            topLeadingRadius: Radius.glass,
+            topLeadingRadius: isUser ? Radius.glass : Radius.glass / 1.6,
             bottomLeadingRadius: Radius.small,
             bottomTrailingRadius: Radius.small,
-            topTrailingRadius: Radius.glass))
+            topTrailingRadius: isUser ? Radius.glass : Radius.glass / 1.6))
         .offset(y: manager.parallaxOffset)
         .background(.standardBackground)
     }

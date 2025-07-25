@@ -16,7 +16,7 @@ struct ExploreView: View {
     @Environment(RouterCoordinator.self) private var routerCoordinator
     
     // MARK: - COMPUTED PROPERTIES
-    private var posts: [(postID: String, imageURL: URL?, name: String, handle: String, time: String, message: String, embed: AppBskyLexicon.Feed.PostViewDefinition.EmbedUnion?)] {
+    private var posts: [(authorDID: String, postID: String, imageURL: URL?, name: String, handle: String, time: String, message: String, embed: AppBskyLexicon.Feed.PostViewDefinition.EmbedUnion?)] {
         appState.searchManager.postData
     }
     
@@ -98,7 +98,7 @@ extension ExploreView {
                     PostFeature(location: .explore)
                     LoadMoreHelper(appState: appState, location: .explore)
                 }
-                .padding(.top, Screen.height * 0.07)
+                .padding(.top, Padding.large)
             }
             .scrollIndicators(.hidden)
             .transition(.asymmetric(

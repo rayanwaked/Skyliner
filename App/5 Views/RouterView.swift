@@ -14,6 +14,7 @@ final class RouterCoordinator {
     var splashCompleted: Bool = false
     var selectedTab: Tabs = .home
     var showingCreate: Bool = false
+    var showingProfile: Bool = false
     var exploreSearch: String = ""
     
     // MARK: - METHODS
@@ -78,8 +79,8 @@ extension RouterView {
             case .explore:
                 ExploreView()
                     .transition(.move(edge: .top))
-            case .profile:
-                ProfileView()
+            case .user:
+                UserView()
                     .transition(.move(edge: .bottom))
             }
             
