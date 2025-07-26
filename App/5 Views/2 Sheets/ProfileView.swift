@@ -168,20 +168,20 @@ extension ProfileView {
                 
                 Spacer()
                 
-                ButtonComponent(
-                    "Follow",
-                    variation: .primary,
-                    size: .profile,
-                    haptic: .rigid)
-                {
-                    Task {
-                        try await appState.authManager.logout()
-                    }
-                }
-                .padding(.trailing, -Padding.standard)
-                .frame(width: Screen.width * 0.225)
-                .scaleEffect(isLoading ? 0.95 : 1.0)
-                .animation(.spring(response: 0.4, dampingFraction: 0.7), value: isLoading)
+//                ButtonComponent(
+//                    "Follow",
+//                    variation: .primary,
+//                    size: .profile,
+//                    haptic: .rigid)
+//                {
+//                    Task {
+//                        try await appState.authManager.logout()
+//                    }
+//                }
+//                .padding(.trailing, -Padding.standard)
+//                .frame(width: Screen.width * 0.225)
+//                .scaleEffect(isLoading ? 0.95 : 1.0)
+//                .animation(.spring(response: 0.4, dampingFraction: 0.7), value: isLoading)
             }
             
             Text("\(appState.profileManager.description ?? "")")

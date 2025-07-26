@@ -81,6 +81,13 @@ struct TabBarFeature: View {
                 ProfileView()
                     .presentationCornerRadius(Radius.glass / 1.6)
             }
+            // Profile
+            .sheet(isPresented: .constant(routerCoordinator.showingSettings), onDismiss: {
+                routerCoordinator.showingSettings = false
+            }) {
+                SettingsView()
+                    .presentationCornerRadius(Radius.glass / 1.6)
+            }
         }
         .shadow(
             color: colorScheme == .light ? .white.opacity(0.9) : .black.opacity(0.8),

@@ -13,6 +13,7 @@ import PostHog
 struct SkylinerApp: App {
     @State private var appState = AppState()
     @State private var routerCoordinator = RouterCoordinator()
+    @State private var headerCoordinator = HeaderCoordinator()
     
     // MARK: - POSTHOG
     init() {
@@ -29,6 +30,7 @@ struct SkylinerApp: App {
             RouterView()
                 .environment(appState)
                 .environment(routerCoordinator)
+                .environment(headerCoordinator)
         }
     }
 }

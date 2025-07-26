@@ -34,6 +34,15 @@ class AppState {
         storedUserDID.isEmpty ? nil : storedUserDID
     }
     
+    private var storedShowingTrends: Bool {
+        get { UserDefaults.standard.object(forKey: "showingTrends") as? Bool ?? true }
+        set { UserDefaults.standard.set(newValue, forKey: "showingTrends") }
+    }
+    var showingTrends: Bool {
+        get { storedShowingTrends }
+        set { storedShowingTrends = newValue }
+    }
+    
     // MARK: - INITIALIZATION
     init() {
         Task { @MainActor in

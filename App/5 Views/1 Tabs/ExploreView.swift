@@ -82,7 +82,7 @@ extension ExploreView {
         }
         .frame(maxWidth: .infinity)
         .padding(.horizontal, Padding.standard)
-        .padding(.top, Padding.large)
+        .padding(.top, Padding.standard)
         .transition(.move(edge: .top).combined(with: .opacity))
         .onAppear {
             PostHogSDK.shared.capture("Explore View")

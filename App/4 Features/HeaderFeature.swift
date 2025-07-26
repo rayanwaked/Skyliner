@@ -9,13 +9,27 @@ import SwiftUI
 import NukeUI
 internal import Combine
 
+@Observable
+final class HeaderCoordinator {
+    private let showingTrendsKey = "HeaderManager.showingTrends"
+    
+    var showingTrends: Bool {
+        get {
+            UserDefaults.standard.object(forKey: showingTrendsKey) as? Bool ?? true
+        }
+        set {
+            UserDefaults.standard.set(newValue, forKey: showingTrendsKey)
+        }
+    }
+}
+
 // MARK: - VIEW
 struct HeaderFeature: View {
     // MARK: - PROPERTIES
     @Environment(AppState.self) private var appState
     @Environment(RouterCoordinator.self) private var routerCoordinator
+    @Environment(HeaderCoordinator.self) private var headerCoordinator
     @Environment(\.colorScheme) private var colorScheme
-    @State var showingTrends: Bool = true
     var location: headerLocation = .home
     
     enum headerLocation {
@@ -27,15 +41,15 @@ struct HeaderFeature: View {
         VStack(spacing: 0) {
             if location == .home {
                 settingsSection
-                if showingTrends {
+                if headerCoordinator.showingTrends {
                     trendingSection
                 }
             } else {
                 settingsSection
-                    .padding(.bottom, Padding.small)
             }
             
             Divider()
+                .padding(.top, Padding.tiny)
         }
         .background(.standardBackground)
     }
@@ -98,7 +112,6 @@ extension HeaderFeature {
             }
             .padding(.horizontal, Padding.standard)
         }
-        .padding(.bottom, Padding.tiny)
         .scrollIndicators(.hidden)
     }
 }
@@ -159,8 +172,11 @@ extension View {
 #Preview {
     @Previewable @State var appState: AppState = .init()
     @Previewable @State var routerCoordinator: RouterCoordinator = .init()
+    @Previewable @State var headerCoordinator: HeaderCoordinator = .init()
     
     HeaderFeature()
         .environment(appState)
         .environment(routerCoordinator)
+        .environment(headerCoordinator)
 }
+

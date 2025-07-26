@@ -12,6 +12,7 @@ import PostHog
 struct HomeView: View {
     // MARK: - PROPERTIES
     @Environment(AppState.self) private var appState
+    @Environment(HeaderCoordinator.self) private var headerCoordinator
     @StateObject var headerManager = HeaderVisibilityManager()
     
     // MARK: - BODY
@@ -23,7 +24,10 @@ struct HomeView: View {
                     LoadMoreHelper(appState: appState, location: .home)
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
-                .padding(.top, Screen.height * 0.12)
+                .padding(
+                    .top,
+                    headerCoordinator.showingTrends ? Screen.height * 0.12 : Screen.height * 0.07
+                )
             }
             .refreshable {
                 Task {
@@ -61,8 +65,10 @@ struct HomeView: View {
 #Preview {
     @Previewable @State var appState: AppState = .init()
     @Previewable @State var routerCoordinator: RouterCoordinator = .init()
+    @Previewable @State var headerCoordinator: HeaderCoordinator = .init()
     
     HomeView()
         .environment(appState)
         .environment(routerCoordinator)
+        .environment(headerCoordinator)
 }

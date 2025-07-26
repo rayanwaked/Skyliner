@@ -13,6 +13,7 @@ import PostHog
 struct UserView: View {
     // MARK: - PROPERTIES
     @Environment(AppState.self) private var appState
+    @Environment(RouterCoordinator.self) private var routerCoordinator
     @StateObject var bannerManager = BannerPositionManager()
     @State private var isLoading = false
     
@@ -175,20 +176,32 @@ extension UserView {
                 
                 Spacer()
                 
-                ButtonComponent(
-                    "Log out",
-                    variation: .primary,
-                    size: .profile,
-                    haptic: .rigid)
-                {
-                    Task {
-                        try await appState.authManager.logout()
+                HStack {
+                    Spacer()
+                    ButtonComponent(
+                        "Log out",
+                        variation: .primary,
+                        size: .profile,
+                        haptic: .rigid)
+                    {
+                        Task {
+                            try await appState.authManager.logout()
+                        }
                     }
+                    .scaleEffect(isLoading ? 0.95 : 1.0)
+                    .animation(.spring(response: 0.4, dampingFraction: 0.7), value: isLoading)
+                    
+                    ButtonComponent(
+                        systemName: "gearshape",
+                        variation: .secondary,
+                        size: .profile,
+                        haptic: .rigid)
+                    {
+                        routerCoordinator.showingSettings = true
+                    }
+                    .scaleEffect(isLoading ? 0.95 : 1.0)
+                    .animation(.spring(response: 0.4, dampingFraction: 0.7), value: isLoading)
                 }
-                .padding(.trailing, -Padding.standard)
-                .frame(width: Screen.width * 0.225)
-                .scaleEffect(isLoading ? 0.95 : 1.0)
-                .animation(.spring(response: 0.4, dampingFraction: 0.7), value: isLoading)
             }
             
             Text("\(appState.userManager.description ?? "")")
@@ -237,7 +250,9 @@ extension UserView {
 // MARK: - PREVIEW
 #Preview {
     @Previewable @State var appState: AppState = .init()
+    @Previewable @State var routerCoordinator: RouterCoordinator = .init()
     
     UserView()
         .environment(appState)
+        .environment(routerCoordinator)
 }

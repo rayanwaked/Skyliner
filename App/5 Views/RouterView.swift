@@ -15,6 +15,7 @@ final class RouterCoordinator {
     var selectedTab: Tabs = .home
     var showingCreate: Bool = false
     var showingProfile: Bool = false
+    var showingSettings: Bool = false
     var exploreSearch: String = ""
     
     // MARK: - METHODS
@@ -95,9 +96,11 @@ extension RouterView {
 #Preview {
     @Previewable @State var appState: AppState = .init()
     @Previewable @State var routerCoordinator: RouterCoordinator = .init()
+    @Previewable @State var headerCoordinator: HeaderCoordinator = .init()
     
     RouterView()
         .environment(appState)
         .environment(routerCoordinator)
+        .environment(headerCoordinator)
 }
 
