@@ -8,7 +8,7 @@
 import SwiftUI
 import ATProtoKit
 
-// MARK: - ITEM MODEL
+// MARK: - POST ITEM
 public struct PostItem {
     let authorDID: String
     let postID: String
@@ -19,6 +19,15 @@ public struct PostItem {
     let message: String
     let embed: AppBskyLexicon.Feed.PostViewDefinition.EmbedUnion?
     let rawPost: any PostViewProtocol
+}
+
+// MARK: - POST STATE
+public struct PostState {
+    let isLiked: Bool
+    let isReposted: Bool
+    let likeCount: Int
+    let repostCount: Int
+    let replyCount: Int
 }
 
 // MARK: - VIEW PROTOCOL
@@ -57,44 +66,26 @@ public final class PostModel {
     private(set) var posts: [PostItem] = []
     private var rawPosts: [any PostViewProtocol] = []
     
-    // MARK: - COMPUTED PROPERTIES
-    var postData: [(authorDID: String, postID: String, imageURL: URL?, name: String, handle: String, time: String, message: String, embed: AppBskyLexicon.Feed.PostViewDefinition.EmbedUnion?)] {
-        posts.map { ($0.authorDID, $0.postID, $0.imageURL, $0.name, $0.handle, $0.time, $0.message, $0.embed) }
-    }
-    
     // MARK: - METHODS
     func updatePosts<T: PostViewProtocol>(_ newPosts: [T]) {
         rawPosts = newPosts
-        posts = newPosts.map { post in
-            PostItem(
-                authorDID: post.author.actorDID,
-                postID: post.uri,
-                imageURL: post.author.avatarImageURL,
-                name: post.author.displayName ?? post.author.actorHandle,
-                handle: post.author.actorHandle,
-                time: DateHelper.formattedRelativeDate(from: extractDate(from: post.record)),
-                message: extractMessage(from: post.record),
-                embed: post.embed,
-                rawPost: post
-            )
-        }
+        posts = newPosts.map { createPostItem(from: $0) }
     }
     
     func appendPosts<T: PostViewProtocol>(_ newPosts: [T]) {
-        let newItems = newPosts.map { post in
-            PostItem(
-                authorDID: post.author.actorDID,
-                postID: post.uri,
-                imageURL: post.author.avatarImageURL,
-                name: post.author.displayName ?? post.author.actorHandle,
-                handle: post.author.actorHandle,
-                time: DateHelper.formattedRelativeDate(from: extractDate(from: post.record)),
-                message: extractMessage(from: post.record),
-                embed: post.embed,
-                rawPost: post
-            )
-        }
+        let newItems = newPosts.map { createPostItem(from: $0) }
         rawPosts.append(contentsOf: newPosts)
+        posts.append(contentsOf: newItems)
+    }
+    
+    func appendPostsWithDuplicateCheck<T: PostViewProtocol>(_ newPosts: [T]) {
+        let existingURIs = Set(rawPosts.map { $0.uri })
+        let uniqueNewPosts = newPosts.filter { !existingURIs.contains($0.uri) }
+        
+        guard !uniqueNewPosts.isEmpty else { return }
+        
+        let newItems = uniqueNewPosts.map { createPostItem(from: $0) }
+        rawPosts.append(contentsOf: uniqueNewPosts)
         posts.append(contentsOf: newItems)
     }
     
@@ -107,12 +98,12 @@ public final class PostModel {
         rawPosts.first { $0.uri == postID }
     }
     
-    func getPostState(postID: String) -> (isLiked: Bool, isReposted: Bool, likeCount: Int, repostCount: Int, replyCount: Int) {
+    func getPostState(postID: String) -> PostState {
         guard let post = findPost(by: postID) else {
-            return (false, false, 0, 0, 0)
+            return PostState(isLiked: false, isReposted: false, likeCount: 0, repostCount: 0, replyCount: 0)
         }
         
-        return (
+        return PostState(
             isLiked: post.viewer?.likeURI != nil,
             isReposted: post.viewer?.repostURI != nil,
             likeCount: post.likeCount ?? 0,
@@ -121,26 +112,36 @@ public final class PostModel {
         )
     }
     
-    // MARK: - HELPER METHODS
+    // MARK: - PRIVATE HELPERS
+    private func createPostItem(from post: any PostViewProtocol) -> PostItem {
+        PostItem(
+            authorDID: post.author.actorDID,
+            postID: post.uri,
+            imageURL: post.author.avatarImageURL,
+            name: post.author.displayName ?? post.author.actorHandle,
+            handle: post.author.actorHandle,
+            time: DateHelper.formattedRelativeDate(from: extractDate(from: post.record)),
+            message: extractMessage(from: post.record),
+            embed: post.embed,
+            rawPost: post
+        )
+    }
+    
     private func extractMessage(from record: UnknownType) -> String {
-        let mirror = Mirror(reflecting: record)
+        guard let postRecord = Mirror(reflecting: record).children
+            .first(where: { $0.label == "record" })?
+            .value as? AppBskyLexicon.Feed.PostRecord
+        else { return "Unable to parse content" }
         
-        if let recordChild = mirror.children.first(where: { $0.label == "record" }),
-           let postRecord = recordChild.value as? AppBskyLexicon.Feed.PostRecord {
-            return postRecord.text
-        }
-        
-        return "Unable to parse content"
+        return postRecord.text
     }
     
     private func extractDate(from record: UnknownType) -> Date {
-        let mirror = Mirror(reflecting: record)
+        guard let postRecord = Mirror(reflecting: record).children
+            .first(where: { $0.label == "record" })?
+            .value as? AppBskyLexicon.Feed.PostRecord
+        else { return Date() }
         
-        if let recordChild = mirror.children.first(where: { $0.label == "record" }),
-           let postRecord = recordChild.value as? AppBskyLexicon.Feed.PostRecord {
-            return postRecord.createdAt
-        }
-        
-        return Date() // Fallback to current date if unable to parse
+        return postRecord.createdAt
     }
 }

@@ -18,23 +18,15 @@ public final class PostManager {
     var clientManager: ClientManager? { appState?.clientManager }
     var userDID: String? { appState?.userDID }
     
-    // Unified feeds
     public let homeFeed = PostModel()
     public let authorFeed = PostModel()
     
-    // Raw data storage for pagination
-    private var rawHomeFeed: [AppBskyLexicon.Feed.GetTimelineOutput] = []
     private var homeCursor: String?
     private var authorCursor: String?
     
     // MARK: - COMPUTED PROPERTIES
-    var postData: [(authorDID: String, postID: String, imageURL: URL?, name: String, handle: String, time: String, message: String, embed: AppBskyLexicon.Feed.PostViewDefinition.EmbedUnion?)] {
-        homeFeed.postData
-    }
-    
-    var authorData: [(authorDID: String, postID: String, imageURL: URL?, name: String, handle: String, time: String, message: String, embed: AppBskyLexicon.Feed.PostViewDefinition.EmbedUnion?)] {
-        authorFeed.postData
-    }
+    var homePosts: [PostItem] { homeFeed.posts }
+    var authorPosts: [PostItem] { authorFeed.posts }
 }
 
 // MARK: - CORE FUNCTIONS
@@ -52,12 +44,16 @@ extension PostManager {
         
         await execute("Loading posts") {
             let feedResult = try await clientManager.account.getTimeline(using: userDID, cursor: homeCursor)
-            homeCursor = feedResult.cursor
-            rawHomeFeed.append(feedResult)
             
-            // Update unified feed with all posts
-            let allPosts = rawHomeFeed.flatMap(\.feed)
-            homeFeed.updatePosts(allPosts)
+            // Update cursor for next pagination
+            homeCursor = feedResult.cursor
+            
+            // For initial load, replace posts; for pagination, append with duplicate check
+            if homeFeed.posts.isEmpty {
+                homeFeed.updatePosts(feedResult.feed)
+            } else {
+                homeFeed.appendPostsWithDuplicateCheck(feedResult.feed)
+            }
         }
     }
     
@@ -78,29 +74,29 @@ extension PostManager {
             )
             
             authorCursor = feedResult.cursor
-            authorFeed.appendPosts(feedResult.feed)
+            
+            // For initial load, replace posts; for pagination, append with duplicate check
+            if authorFeed.posts.isEmpty {
+                authorFeed.updatePosts(feedResult.feed)
+            } else {
+                authorFeed.appendPostsWithDuplicateCheck(feedResult.feed)
+            }
         }
     }
     
     // MARK: - REFRESH HOME FEED
     public func refreshPosts() async {
+        // Reset cursor and clear existing data
         homeCursor = nil
-        let oldRawFeed = rawHomeFeed
-        rawHomeFeed = []
         homeFeed.clear()
         
+        // Load fresh data
         await loadPosts()
-        
-        // Restore if failed
-        if homeFeed.posts.isEmpty {
-            rawHomeFeed = oldRawFeed
-            let allPosts = rawHomeFeed.flatMap(\.feed)
-            homeFeed.updatePosts(allPosts)
-        }
     }
     
     // MARK: - REFRESH AUTHOR FEED
     public func refreshAuthorPosts(shouldIncludePins: Bool = false) async {
+        // Reset cursor and clear existing data
         authorCursor = nil
         authorFeed.clear()
         

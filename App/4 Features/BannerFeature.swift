@@ -35,10 +35,10 @@ struct BannerFeature: View {
         }
         .glur(radius: Radius.small, offset: 0.45, interpolation: 1.0, direction: .down)
         .clipShape(.rect(
-            topLeadingRadius: isUser ? Radius.glass : 0,
+            topLeadingRadius: isUser ? Radius.glass : Radius.glass / 1.6,
             bottomLeadingRadius: Radius.small,
             bottomTrailingRadius: Radius.small,
-            topTrailingRadius: isUser ? Radius.glass : 0))
+            topTrailingRadius: isUser ? Radius.glass : Radius.glass / 1.6))
         .backport.glassEffect(in: .rect(
             topLeadingRadius: isUser ? Radius.glass : Radius.glass / 1.6,
             bottomLeadingRadius: Radius.small,

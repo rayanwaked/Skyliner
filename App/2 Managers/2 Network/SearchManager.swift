@@ -10,48 +10,43 @@ import ATProtoKit
 
 @MainActor
 @Observable
-// MARK: - MANAGER
 public final class SearchManager {
     // MARK: - PROPERTIES
     @ObservationIgnored
     var appState: AppState?
     var clientManager: ClientManager? { appState?.clientManager }
     
-    // Unified feed
     public let searchFeed = PostModel()
     
-    // Raw data for pagination
-    private var rawSearchResults: [AppBskyLexicon.Feed.SearchPostsOutput] = []
     private var currentCursor: String?
     private var currentQuery: String?
     
     // MARK: - COMPUTED PROPERTIES
-    var postData: [(authorDID: String, postID: String, imageURL: URL?, name: String, handle: String, time: String, message: String, embed: AppBskyLexicon.Feed.PostViewDefinition.EmbedUnion?)] {
-        searchFeed.postData
-    }
-    
-    var searchResults: [AppBskyLexicon.Feed.SearchPostsOutput] {
-        rawSearchResults
-    }
-    
-    // MARK: - METHODS
+    var searchPosts: [PostItem] { searchFeed.posts }
+}
+
+// MARK: - CORE FUNCTIONS
+extension SearchManager {
+    // MARK: - SEARCH BLUESKY
     func searchBluesky(query: String) async {
-        // Only clear if this is a new query
+        // If it's a new query, reset everything
         if currentQuery != query {
             currentQuery = query
             currentCursor = nil
-            rawSearchResults = []
             searchFeed.clear()
         }
         
         await loadMoreResults()
     }
     
+    // MARK: - LOAD MORE RESULTS
     func loadMoreResults() async {
-        guard let query = currentQuery else { return }
+        guard let query = currentQuery,
+                !query.isEmpty,
+              let clientManager else { return }
         
-        do {
-            let result = try await clientManager?.account.searchPosts(
+        await execute("Loading search results") {
+            let result = try await clientManager.account.searchPosts(
                 matching: query,
                 author: nil,
                 language: Locale(identifier: "en"),
@@ -61,27 +56,43 @@ public final class SearchManager {
                 cursor: currentCursor
             )
             
-            if let result {
-                currentCursor = result.cursor
-                withAnimation(.snappy) {
-                    if rawSearchResults.isEmpty {
-                        rawSearchResults = [result]
-                        searchFeed.updatePosts(result.posts)
-                    } else {
-                        rawSearchResults.append(result)
-                        searchFeed.appendPosts(result.posts)
-                    }
+            // Update cursor for next pagination
+            currentCursor = result.cursor
+            
+            withAnimation(.snappy) {
+                // For initial search, replace posts; for pagination, append
+                if searchFeed.posts.isEmpty {
+                    searchFeed.updatePosts(result.posts)
+                } else {
+                    // Use duplicate-safe append method
+                    searchFeed.appendPostsWithDuplicateCheck(result.posts)
                 }
             }
-        } catch {
-            print("Search error: \(error.localizedDescription)")
         }
     }
     
+    // MARK: - CLEAR SEARCH
     func clearSearch() {
-        rawSearchResults = []
         searchFeed.clear()
         currentCursor = nil
         currentQuery = nil
+    }
+    
+    // MARK: - PRIVATE HELPERS
+    private func execute(_ operationName: String, operation: () async throws -> Void) async {
+        do {
+            try await operation()
+            logSuccess("\(operationName) completed successfully")
+        } catch {
+            logError("Failed to \(operationName.lowercased()): \(error.localizedDescription)")
+        }
+    }
+    
+    private func logSuccess(_ message: String) {
+        print("✅ \(message)")
+    }
+    
+    private func logError(_ message: String) {
+        print("❌ \(message)")
     }
 }

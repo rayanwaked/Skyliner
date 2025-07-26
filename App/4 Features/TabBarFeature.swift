@@ -78,7 +78,8 @@ struct TabBarFeature: View {
             .sheet(isPresented: .constant(routerCoordinator.showingProfile), onDismiss: {
                 routerCoordinator.showingProfile = false
             }) {
-                ProfileView()    .presentationCornerRadius(Radius.glass / 1.6)
+                ProfileView()
+                    .presentationCornerRadius(Radius.glass / 1.6)
             }
         }
         .shadow(

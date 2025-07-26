@@ -61,7 +61,6 @@ struct ProfileView: View {
         
         await appState.profileManager.loadProfile()
         
-        // Small delay to ensure smooth transition
         try? await Task.sleep(nanoseconds: 100_000_000)
         
         withAnimation(.spring(response: 0.6, dampingFraction: 0.8)) {
@@ -210,8 +209,7 @@ extension ProfileView {
         
         Divider()
         
-        let timeline = appState.profileManager.timeline ?? []
-        if timeline.isEmpty {
+        if appState.profileManager.profilePosts.isEmpty {
             Text("No posts yet.")
                 .font(.smaller(.headline))
                 .opacity(0.6)

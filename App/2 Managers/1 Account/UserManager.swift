@@ -14,73 +14,52 @@ import NukeUI
 public final class UserManager {
     // MARK: - PROPERTIES
     @ObservationIgnored
-    var appState: AppState? = nil
+    var appState: AppState?
     var clientManager: ClientManager? { appState?.clientManager }
     var userDID: String? { appState?.userDID }
-    var profilePictureURL: URL? = nil
-    var bannerURL: URL? = nil
-    var follows: Int? = nil
-    var followers: Int? = nil
-    var posts: Int? = nil
-    var description: String? = nil
-    var name: String? = nil
-    var handle: String? = nil
+    var profilePictureURL: URL?
+    var bannerURL: URL?
+    var follows: Int?
+    var followers: Int?
+    var posts: Int?
+    var description: String?
+    var name: String?
+    var handle: String?
     var isLoadingProfile = false
     
-    // Integrated PostModel for timeline
     public let userFeed = PostModel()
     private var timelineCursor: String?
     
     // MARK: - COMPUTED PROPERTIES
-    var postData: [(authorDID: String, postID: String, imageURL: URL?, name: String, handle: String, time: String, message: String, embed: AppBskyLexicon.Feed.PostViewDefinition.EmbedUnion?)] {
-        userFeed.postData
-    }
-    
-    // Legacy timeline property for backward compatibility
-    var timeline: [AppBskyLexicon.Feed.FeedViewPostDefinition]? {
-        userFeed.posts.compactMap { $0.rawPost as? AppBskyLexicon.Feed.FeedViewPostDefinition }
-    }
-    
-    // MARK: - METHODS
+    var userPosts: [PostItem] { userFeed.posts }
+}
+
+// MARK: - CORE FUNCTIONS
+extension UserManager {
+    // MARK: - LOAD PROFILE PICTURE
     public func loadProfilePicture() async {
-        guard let clientManager = self.clientManager else {
-            print("❌ No clientManager available")
+        guard let clientManager, let userDID, !userDID.isEmpty else {
+            logError("No clientManager or userDID available")
             return
         }
         
-        guard let userDID, !userDID.isEmpty else {
-            print("❌ No valid userDID available")
-            return
-        }
-        
-        isLoadingProfile = true
-        
-        do {
+        await execute("Loading profile picture") {
+            isLoadingProfile = true
             let profile = try await clientManager.account.getProfile(for: userDID)
-            self.profilePictureURL = profile.avatarImageURL
-            self.isLoadingProfile = false
-            print("✅ Profile loaded, avatar URL: \(profile.avatarImageURL?.absoluteString ?? "none")")
-        } catch {
-            self.isLoadingProfile = false
-            print("❌ Failed to load profile picture: \(error)")
+            profilePictureURL = profile.avatarImageURL
+            isLoadingProfile = false
         }
     }
     
+    // MARK: - LOAD TIMELINE
     public func loadTimeline() async {
-        guard let clientManager = self.clientManager else {
-            print("❌ No clientManager available")
+        guard let clientManager, let userDID, !userDID.isEmpty else {
+            logError("No clientManager or userDID available")
             return
         }
         
-        guard let userDID, !userDID.isEmpty else {
-            print("❌ No valid userDID available")
-            return
-        }
-        
-        isLoadingProfile = true
-        
-        do {
-            // Always use the current user's DID for UserManager
+        await execute("Loading user timeline") {
+            isLoadingProfile = true
             let authorFeed = try await clientManager.account.getAuthorFeed(
                 by: userDID,
                 cursor: timelineCursor
@@ -92,63 +71,68 @@ public final class UserManager {
             } else {
                 userFeed.appendPosts(authorFeed.feed)
             }
-            
-            self.isLoadingProfile = false
-            print("✅ User timeline loaded with \(authorFeed.feed.count) posts")
-        } catch {
-            self.isLoadingProfile = false
-            print("❌ Failed to load user timeline: \(error)")
+            isLoadingProfile = false
         }
     }
     
+    // MARK: - LOAD PROFILE
     public func loadProfile() async {
-        guard let clientManager = self.clientManager else {
-            print("❌ No clientManager available")
+        guard let clientManager, let userDID, !userDID.isEmpty else {
+            logError("No clientManager or userDID available")
             return
         }
         
-        guard let userDID, !userDID.isEmpty else {
-            print("❌ No valid userDID available")
-            return
-        }
-        
-        isLoadingProfile = true
-        
-        do {
-            // Always use the current user's DID for UserManager
+        await execute("Loading user profile") {
+            isLoadingProfile = true
             let profile = try await clientManager.account.getProfile(for: userDID)
             let authorFeed = try await clientManager.account.getAuthorFeed(by: userDID)
             
-            // Update all properties
-            self.profilePictureURL = profile.avatarImageURL
-            self.bannerURL = profile.bannerImageURL
-            self.follows = profile.followCount
-            self.followers = profile.followerCount
-            self.posts = profile.postCount
-            self.name = profile.displayName
-            self.handle = profile.actorHandle
-            self.description = profile.description
-            
-            // Update timeline using PostModel
+            updateProfile(from: profile)
             userFeed.updatePosts(authorFeed.feed)
             timelineCursor = authorFeed.cursor
-            
-            self.isLoadingProfile = false
-            print("✅ User profile and timeline loaded")
-        } catch {
-            self.isLoadingProfile = false
-            print("❌ Failed to load user profile: \(error)")
+            isLoadingProfile = false
         }
     }
     
+    // MARK: - REFRESH PROFILE
     public func refreshProfile() async {
         timelineCursor = nil
         userFeed.clear()
         await loadProfile()
     }
     
+    // MARK: - LOAD MORE POSTS
     public func loadMorePosts() async {
         await loadTimeline()
+    }
+    
+    // MARK: - PRIVATE HELPERS
+    private func updateProfile(from profile: AppBskyLexicon.Actor.ProfileViewDetailedDefinition) {
+        profilePictureURL = profile.avatarImageURL
+        bannerURL = profile.bannerImageURL
+        follows = profile.followCount
+        followers = profile.followerCount
+        posts = profile.postCount
+        name = profile.displayName
+        handle = profile.actorHandle
+        description = profile.description
+    }
+    
+    private func execute(_ operationName: String, operation: () async throws -> Void) async {
+        do {
+            try await operation()
+            logSuccess("\(operationName) completed successfully")
+        } catch {
+            logError("Failed to \(operationName.lowercased()): \(error.localizedDescription)")
+        }
+    }
+    
+    private func logSuccess(_ message: String) {
+        print("✅ \(message)")
+    }
+    
+    private func logError(_ message: String) {
+        print("❌ \(message)")
     }
 }
 
@@ -156,9 +140,5 @@ public final class UserManager {
 extension UserManager: PostInteractionCapable, PostFinder {
     func findPost(by postID: String) -> (any PostViewProtocol)? {
         userFeed.findPost(by: postID)
-    }
-    
-    func getPostState(postID: String) -> (isLiked: Bool, isReposted: Bool, likeCount: Int, repostCount: Int, replyCount: Int) {
-        userFeed.getPostState(postID: postID)
     }
 }

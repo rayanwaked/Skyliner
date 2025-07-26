@@ -67,10 +67,8 @@ struct UserView: View {
             isLoading = true
         }
         
-        // Load user profile data
         await appState.userManager.refreshProfile()
         
-        // Small delay to ensure smooth transition
         try? await Task.sleep(nanoseconds: 100_000_000)
         
         withAnimation(.spring(response: 0.6, dampingFraction: 0.8)) {
@@ -218,9 +216,7 @@ extension UserView {
         
         Divider()
         
-        // Use userManager's postData instead of postManager
-        let posts = appState.userManager.postData
-        if posts.isEmpty {
+        if appState.userManager.userPosts.isEmpty {
             Text("No posts yet.")
                 .font(.smaller(.headline))
                 .opacity(0.6)

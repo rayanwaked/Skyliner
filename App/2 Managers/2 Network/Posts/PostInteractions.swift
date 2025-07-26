@@ -101,9 +101,11 @@ protocol PostFinder {
 
 // MARK: - INTERACTIONS
 extension PostInteractionCapable where Self: PostFinder {
-    func getPostState(postID: String) -> (isLiked: Bool, isReposted: Bool, likeCount: Int, repostCount: Int, replyCount: Int) {
-        guard let post = findPost(by: postID) else { return (false, false, 0, 0, 0) }
-        return (
+    func getPostState(postID: String) -> PostState {
+        guard let post = findPost(by: postID) else {
+            return PostState(isLiked: false, isReposted: false, likeCount: 0, repostCount: 0, replyCount: 0)
+        }
+        return PostState(
             isLiked: post.viewer?.likeURI != nil,
             isReposted: post.viewer?.repostURI != nil,
             likeCount: post.likeCount ?? 0,

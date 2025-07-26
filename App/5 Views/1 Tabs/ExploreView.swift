@@ -16,8 +16,8 @@ struct ExploreView: View {
     @Environment(RouterCoordinator.self) private var routerCoordinator
     
     // MARK: - COMPUTED PROPERTIES
-    private var posts: [(authorDID: String, postID: String, imageURL: URL?, name: String, handle: String, time: String, message: String, embed: AppBskyLexicon.Feed.PostViewDefinition.EmbedUnion?)] {
-        appState.searchManager.postData
+    private var hasSearchResults: Bool {
+        !appState.searchManager.searchPosts.isEmpty
     }
     
     private var trends: [String] {
@@ -27,15 +27,16 @@ struct ExploreView: View {
     // MARK: - BODY
     var body: some View {
         ZStack(alignment: .top) {
-            if posts.isEmpty {
+            if !hasSearchResults {
                 VStack {
                     HeaderFeature(location: .explore)
-//                        .padding(.bottom, Padding.standard)
-//                    WeatherFeature()
+                    //                        .padding(.bottom, Padding.standard)
+                    //                    WeatherFeature()
                     trending
                 }
             } else {
                 results
+                    .transition(.move(edge: .bottom).animation(.bouncy))
             }
         }
         .background(.standardBackground)

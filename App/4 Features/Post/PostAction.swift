@@ -14,21 +14,11 @@ extension PostCell {
             // MARK: - REPOST
             Button {
                 Task {
-                    // Optimistic update
                     isReposted.toggle()
                     withAnimation(.bouncy()) {
                         repostCount += isReposted ? 1 : -1
                     }
-                    
-                    // Call appropriate manager method
-                    switch location {
-                    case .home, .user:
-                        await appState.postManager.toggleRepost(postID: postID)
-                    case .explore:
-                        await appState.searchManager.toggleRepost(postID: postID)
-                    case .profile:
-                        await appState.profileManager.toggleRepost(postID: postID)
-                    }
+                    await manager.toggleRepost(postID: post.postID)
                 }
             } label: {
                 HStack {
@@ -59,20 +49,11 @@ extension PostCell {
             // MARK: - LIKE
             Button {
                 Task {
-                    // Optimistic update
                     isLiked.toggle()
                     withAnimation(.bouncy()) {
                         likeCount += isLiked ? 1 : -1
                     }
-                    
-                    switch location {
-                    case .home, .user:
-                        await appState.postManager.toggleLike(postID: postID)
-                    case .explore:
-                        await appState.searchManager.toggleLike(postID: postID)
-                    case .profile:
-                        await appState.profileManager.toggleLike(postID: postID)
-                    }
+                    await manager.toggleLike(postID: post.postID)
                 }
             } label: {
                 HStack {
@@ -87,14 +68,7 @@ extension PostCell {
             
             // MARK: - SHARE
             Button {
-                switch location {
-                case .home, .user:
-                    appState.postManager.sharePost(postID: postID)
-                case .explore:
-                    appState.searchManager.sharePost(postID: postID)
-                case .profile:
-                    appState.profileManager.sharePost(postID: postID)
-                }
+                manager.sharePost(postID: post.postID)
             } label: {
                 Image(systemName: "square.and.arrow.up")
                     .foregroundStyle(.foreground.opacity(Opacity.heavy))
@@ -105,14 +79,7 @@ extension PostCell {
             // MARK: - MENU
             Menu {
                 Button("Copy Link") {
-                    switch location {
-                    case .home, .user:
-                        appState.postManager.copyPostLink(postID: postID)
-                    case .explore:
-                        appState.searchManager.copyPostLink(postID: postID)
-                    case .profile:
-                        appState.profileManager.copyPostLink(postID: postID)
-                    }
+                    manager.copyPostLink(postID: post.postID)
                 }
             } label: {
                 Image(systemName: "ellipsis")

@@ -8,6 +8,33 @@
 import SwiftUI
 import ATProtoKit
 
+// MARK: - POST MANAGER PROTOCOL
+protocol PostManaging {
+    var displayPosts: [PostItem] { get }
+    func getPostState(postID: String) -> PostState
+    func toggleLike(postID: String) async
+    func toggleRepost(postID: String) async
+    func sharePost(postID: String)
+    func copyPostLink(postID: String)
+}
+
+// MARK: - MANAGER EXTENSIONS
+extension PostManager: PostManaging {
+    var displayPosts: [PostItem] { homePosts }
+}
+
+extension SearchManager: PostManaging {
+    var displayPosts: [PostItem] { searchPosts }
+}
+
+extension UserManager: PostManaging {
+    var displayPosts: [PostItem] { userPosts }
+}
+
+extension ProfileManager: PostManaging {
+    var displayPosts: [PostItem] { profilePosts }
+}
+
 // MARK: - VIEW
 struct PostFeature: View {
     // MARK: - PROPERTIES
@@ -18,41 +45,23 @@ struct PostFeature: View {
         case home, explore, user, profile
     }
     
-    var posts: [(authorDID: String, postID: String, imageURL: URL?, name: String, handle: String, time: String, message: String, embed: AppBskyLexicon.Feed.PostViewDefinition.EmbedUnion?)] {
+    private var manager: PostManaging {
         switch location {
-        case .home:
-            return appState.postManager.postData
-        case .explore:
-            return appState.searchManager.postData
-        case .user:
-            return appState.userManager.postData
-        case .profile:
-            return appState.profileManager.postData
+        case .home: return appState.postManager
+        case .explore: return appState.searchManager
+        case .user: return appState.userManager
+        case .profile: return appState.profileManager
         }
     }
     
     // MARK: - BODY
     var body: some View {
-        if !posts.isEmpty {
-            return AnyView(
-                LazyVStack {
-                    ForEach(Array(posts.enumerated()), id: \.offset) { index, post in
-                        PostCell(
-                            authorDID: post.authorDID,
-                            postID: post.postID,
-                            imageURL: post.imageURL,
-                            name: post.name,
-                            handle: post.handle,
-                            message: post.message,
-                            time: post.time,
-                            embed: post.embed,
-                            location: location
-                        )
-                    }
+        if !manager.displayPosts.isEmpty {
+            LazyVStack {
+                ForEach(manager.displayPosts, id: \.postID) { post in
+                    PostCell(post: post, manager: manager)
                 }
-            )
-        } else {
-            return AnyView(EmptyView())
+            }
         }
     }
 }
@@ -62,31 +71,23 @@ struct PostCell: View {
     @Environment(AppState.self) var appState
     @Environment(RouterCoordinator.self) private var routerCoordinator
     
-    var authorDID: String
-    var postID: String
-    var imageURL: URL? = nil
-    var name: String = "Name"
-    var handle: String = "account@bsky.social"
-    var message: String = ""
-    var time: String = ""
-    var embed: AppBskyLexicon.Feed.PostViewDefinition.EmbedUnion? = nil
-    var location: PostFeature.Location
+    let post: PostItem
+    let manager: PostManaging
     
-    // State variables for reactive UI updates
-    @State var isLiked: Bool = false
-    @State var isReposted: Bool = false
-    @State var likeCount: Int = 0
-    @State var repostCount: Int = 0
-    @State var replyCount: Int = 0
+    @State var isLiked = false
+    @State var isReposted = false
+    @State var likeCount = 0
+    @State var repostCount = 0
+    @State var replyCount = 0
     
     var body: some View {
         Group {
             HStack(alignment: .top) {
-                ProfilePictureComponent(isUser: false, profilePictureURL: imageURL, size: .medium)
+                ProfilePictureComponent(isUser: false, profilePictureURL: post.imageURL, size: .medium)
                     .padding(.trailing, Padding.tiny)
                     .onTapGesture {
                         withAnimation(.bouncy(duration: 0.5)) {
-                            appState.profileManager.userDID = authorDID
+                            appState.profileManager.userDID = post.authorDID
                             routerCoordinator.showingProfile = true
                         }
                         hapticFeedback(.light)
@@ -94,22 +95,22 @@ struct PostCell: View {
                 
                 VStack(alignment: .leading, spacing: Padding.tiny) {
                     HStack(alignment: .center) {
-                        Text(name)
+                        Text(post.name)
                             .fontWeight(.medium)
                             .lineLimit(1)
-                        Text("@\(handle)")
+                        Text("@\(post.handle)")
                             .foregroundStyle(.gray.opacity(0.9))
                             .lineLimit(1)
-                        Text("· \(time)")
+                        Text("· \(post.time)")
                             .foregroundStyle(.gray.opacity(0.9))
                     }
                     
-                    if !message.isEmpty {
-                        Text(message)
+                    if !post.message.isEmpty {
+                        Text(post.message)
                     }
                     
-                    if embed != nil {
-                        PostEmbed(embed: embed)
+                    if post.embed != nil {
+                        PostEmbed(embed: post.embed)
                             .padding(.top, Padding.small)
                     }
                     
@@ -127,26 +128,13 @@ struct PostCell: View {
             Divider()
         }
         .onAppear {
-            updatePostState()
+            let state = manager.getPostState(postID: post.postID)
+            isLiked = state.isLiked
+            isReposted = state.isReposted
+            likeCount = state.likeCount
+            repostCount = state.repostCount
+            replyCount = state.replyCount
         }
-    }
-    
-    // MARK: - UPDATE POST STATE
-    private func updatePostState() {
-        let postState = switch location {
-        case .home, .user:
-            appState.userManager.getPostState(postID: postID)
-        case .explore:
-            appState.searchManager.getPostState(postID: postID)
-        case .profile:
-            appState.profileManager.getPostState(postID: postID)
-        }
-        
-        isLiked = postState.isLiked
-        isReposted = postState.isReposted
-        likeCount = postState.likeCount
-        repostCount = postState.repostCount
-        replyCount = postState.replyCount
     }
 }
 
