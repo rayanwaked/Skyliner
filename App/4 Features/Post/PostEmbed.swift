@@ -49,20 +49,22 @@ struct MediaGrid: View {
     let images: [AppBskyLexicon.Embed.ImagesDefinition.ViewImage]
     
     var body: some View {
-        let columns = Array(repeating: GridItem(.flexible(), spacing: Padding.tiny), count: images.count == 1 ? 1 : 2)
+        let columns = images.count == 1 ?
+        [GridItem(.flexible())] :
+        Array(repeating: GridItem(.flexible(), spacing: Padding.tiny), count: 2)
         
-        VStack(spacing: 0) { // Wrap in VStack to ensure proper container
-            LazyVGrid(columns: columns, spacing: Padding.tiny) {
-                ForEach(images.indices, id: \.self) { index in
-                    AsyncImageView(url: images[index].fullSizeImageURL, altText: images[index].altText)
-                        .aspectRatio(images.count == 1 ? nil : 1, contentMode: .fill)
-                        .frame(maxHeight: images.count == 1 ? 400 : 200)
-                        .backport.glassEffect(.tintedAndInteractive(
-                            color: Color.blue.opacity(Opacity.soft),
-                            isEnabled: true),
-                            in: RoundedRectangle(cornerRadius: Radius.small)
-                        )
-                }
+        LazyVGrid(columns: columns, spacing: Padding.tiny) {
+            ForEach(images.indices, id: \.self) { index in
+                AsyncImageView(url: images[index].fullSizeImageURL, altText: images[index].altText)
+                    .aspectRatio(1, contentMode: .fill)
+                    .frame(width: (Screen.width * 0.76)/CGFloat(images.count))
+                    .clipped()
+                    .clipShape(RoundedRectangle(cornerRadius: Radius.small / 3))
+                    .backport.glassEffect(.tintedAndInteractive(
+                        color: Color.blue.opacity(Opacity.soft),
+                        isEnabled: true),
+                                          in: RoundedRectangle(cornerRadius: Radius.small / 3)
+                    )
             }
         }
         .clipShape(RoundedRectangle(cornerRadius: Radius.small))
@@ -81,11 +83,9 @@ struct AsyncImageView: View {
                 image
                     .resizable()
                     .aspectRatio(contentMode: .fill)
-                    .clipped()
             } else {
                 Rectangle()
                     .fill(.gray.opacity(Opacity.light))
-                    .frame(minHeight: 200) // Use minHeight instead of height
                     .overlay(
                         ProgressView()
                             .scaleEffect(0.8)

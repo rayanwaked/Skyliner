@@ -10,6 +10,7 @@ import ATProtoKit
 
 @MainActor
 @Observable
+// MARK: - MANAGER
 public final class SearchManager {
     // MARK: - PROPERTIES
     @ObservationIgnored
@@ -59,14 +60,14 @@ extension SearchManager {
             // Update cursor for next pagination
             currentCursor = result.cursor
             
-            withAnimation(.snappy) {
-                // For initial search, replace posts; for pagination, append
-                if searchFeed.posts.isEmpty {
+            // For initial search, replace posts; for pagination, append
+            if searchFeed.posts.isEmpty {
+                withAnimation(.snappy) {
                     searchFeed.updatePosts(result.posts)
-                } else {
-                    // Use duplicate-safe append method
-                    searchFeed.appendPostsWithDuplicateCheck(result.posts)
                 }
+            } else {
+                // Use duplicate-safe append method
+                searchFeed.appendPostsWithDuplicateCheck(result.posts)
             }
         }
     }

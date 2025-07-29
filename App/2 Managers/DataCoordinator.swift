@@ -8,6 +8,7 @@
 import Foundation
 
 @MainActor
+// MARK: - COORDINATOR
 class DataCoordinator {
     // MARK: - PROPERTIES
     private weak var appState: AppState?
@@ -23,5 +24,6 @@ class DataCoordinator {
         await appState?.userManager.loadProfile()
         await appState?.trendsManager.loadTrends()
         await appState?.postManager.loadPosts()
+        await appState?.notificationsManager.loadNotifications()
     }
 }

@@ -16,8 +16,19 @@
 		B9C03E9E2E2499C500D98A25 /* NukeUI in Frameworks */ = {isa = PBXBuildFile; productRef = B9C03E9D2E2499C500D98A25 /* NukeUI */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		B9CEB9882E37E36000050E4C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = B9C03D222E24850D00D98A25 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = B9C03D292E24850D00D98A25;
+			remoteInfo = Skyliner;
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXFileReference section */
 		B9C03D2A2E24850D00D98A25 /* Skyliner.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Skyliner.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		B9CEB9842E37E36000050E4C /* Test.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = Test.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -39,6 +50,11 @@
 			path = App;
 			sourceTree = "<group>";
 		};
+		B9CEB9852E37E36000050E4C /* Test */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = Test;
+			sourceTree = "<group>";
+		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -56,6 +72,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		B9CEB9812E37E36000050E4C /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -63,6 +86,7 @@
 			isa = PBXGroup;
 			children = (
 				B9C03D2C2E24850D00D98A25 /* App */,
+				B9CEB9852E37E36000050E4C /* Test */,
 				B9C03D2B2E24850D00D98A25 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -71,6 +95,7 @@
 			isa = PBXGroup;
 			children = (
 				B9C03D2A2E24850D00D98A25 /* Skyliner.app */,
+				B9CEB9842E37E36000050E4C /* Test.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -107,6 +132,29 @@
 			productReference = B9C03D2A2E24850D00D98A25 /* Skyliner.app */;
 			productType = "com.apple.product-type.application";
 		};
+		B9CEB9832E37E36000050E4C /* Test */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = B9CEB98A2E37E36000050E4C /* Build configuration list for PBXNativeTarget "Test" */;
+			buildPhases = (
+				B9CEB9802E37E36000050E4C /* Sources */,
+				B9CEB9812E37E36000050E4C /* Frameworks */,
+				B9CEB9822E37E36000050E4C /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				B9CEB9892E37E36000050E4C /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				B9CEB9852E37E36000050E4C /* Test */,
+			);
+			name = Test;
+			packageProductDependencies = (
+			);
+			productName = Test;
+			productReference = B9CEB9842E37E36000050E4C /* Test.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -119,6 +167,10 @@
 				TargetAttributes = {
 					B9C03D292E24850D00D98A25 = {
 						CreatedOnToolsVersion = 26.0;
+					};
+					B9CEB9832E37E36000050E4C = {
+						CreatedOnToolsVersion = 26.0;
+						TestTargetID = B9C03D292E24850D00D98A25;
 					};
 				};
 			};
@@ -145,12 +197,20 @@
 			projectRoot = "";
 			targets = (
 				B9C03D292E24850D00D98A25 /* Skyliner */,
+				B9CEB9832E37E36000050E4C /* Test */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
 		B9C03D282E24850D00D98A25 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B9CEB9822E37E36000050E4C /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -167,7 +227,22 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		B9CEB9802E37E36000050E4C /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		B9CEB9892E37E36000050E4C /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = B9C03D292E24850D00D98A25 /* Skyliner */;
+			targetProxy = B9CEB9882E37E36000050E4C /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		B9C03D332E24850E00D98A25 /* Debug */ = {
@@ -304,7 +379,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 33;
+				CURRENT_PROJECT_VERSION = 34;
 				DEVELOPMENT_ASSET_PATHS = "App/1\\ Resources/Icon.icon";
 				DEVELOPMENT_TEAM = 6R2E9P9EPV;
 				ENABLE_PREVIEWS = YES;
@@ -323,7 +398,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.40.0;
+				MARKETING_VERSION = 0.50.0;
 				PRODUCT_BUNDLE_IDENTIFIER = waked.Skyliner;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
@@ -349,7 +424,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 33;
+				CURRENT_PROJECT_VERSION = 34;
 				DEVELOPMENT_ASSET_PATHS = "App/1\\ Resources/Icon.icon";
 				DEVELOPMENT_TEAM = 6R2E9P9EPV;
 				ENABLE_PREVIEWS = YES;
@@ -368,7 +443,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.40.0;
+				MARKETING_VERSION = 0.50.0;
 				PRODUCT_BUNDLE_IDENTIFIER = waked.Skyliner;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
@@ -382,6 +457,56 @@
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 6.0;
 				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
+		B9CEB98B2E37E36000050E4C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 6R2E9P9EPV;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = waked.Test;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Skyliner.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Skyliner";
+			};
+			name = Debug;
+		};
+		B9CEB98C2E37E36000050E4C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 6R2E9P9EPV;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = waked.Test;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Skyliner.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Skyliner";
 			};
 			name = Release;
 		};
@@ -402,6 +527,15 @@
 			buildConfigurations = (
 				B9C03D362E24850E00D98A25 /* Debug */,
 				B9C03D372E24850E00D98A25 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		B9CEB98A2E37E36000050E4C /* Build configuration list for PBXNativeTarget "Test" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B9CEB98B2E37E36000050E4C /* Debug */,
+				B9CEB98C2E37E36000050E4C /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

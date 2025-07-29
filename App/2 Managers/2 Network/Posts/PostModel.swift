@@ -126,6 +126,10 @@ public final class PostModel {
             rawPost: post
         )
     }
+
+    internal func performCreatePostItem(from post: any PostViewProtocol) -> PostItem {
+        createPostItem(from: post)
+    }
     
     private func extractMessage(from record: UnknownType) -> String {
         guard let postRecord = Mirror(reflecting: record).children
@@ -145,3 +149,4 @@ public final class PostModel {
         return postRecord.createdAt
     }
 }
+

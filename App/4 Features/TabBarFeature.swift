@@ -11,7 +11,7 @@ internal import Combine
 
 // MARK: - ENUM
 enum Tabs: CaseIterable, Identifiable, Hashable {
-    case home, explore, user
+    case home, explore, notifications, user
     
     var id: Self { self }
     
@@ -19,6 +19,7 @@ enum Tabs: CaseIterable, Identifiable, Hashable {
         switch self {
         case .home: selected ? "bubble.fill" : "bubble"
         case .explore: selected ? "binoculars.fill" : "binoculars"
+        case .notifications: selected ? "bell.fill" : "bell"
         case .user: selected ? "person.crop.circle.fill" : "person"
         }
     }
@@ -135,7 +136,7 @@ extension TabBarFeature {
         Group {
             if appState.userManager.profilePictureURL != nil {
                 ProfilePictureComponent(size: .small)
-                    .padding(.trailing, Screen.width * 0.09)
+                    .padding(.trailing, Screen.width * 0.06)
                     .padding(.leading, Screen.width * 0.04)
             } else {
                 Image(systemName: Tabs.user.systemImage(forSelected: routerCoordinator.selectedTab == .user))

@@ -20,11 +20,12 @@ class AppState {
     let trendsManager = TrendsManager()
     let postManager = PostManager()
     let searchManager = SearchManager()
-    
+    let notificationsManager = NotificationsManager()
+
     var dataCoordinator: DataCoordinator {
         DataCoordinator(appState: self)
     }
-    
+
     private var storedUserDID: String {
         get { UserDefaults.standard.string(forKey: "userDID") ?? "" }
         set { UserDefaults.standard.set(newValue, forKey: "userDID") }
@@ -33,7 +34,7 @@ class AppState {
     var userDID: String? {
         storedUserDID.isEmpty ? nil : storedUserDID
     }
-    
+
     private var storedShowingTrends: Bool {
         get { UserDefaults.standard.object(forKey: "showingTrends") as? Bool ?? true }
         set { UserDefaults.standard.set(newValue, forKey: "showingTrends") }
@@ -42,7 +43,7 @@ class AppState {
         get { storedShowingTrends }
         set { storedShowingTrends = newValue }
     }
-    
+
     // MARK: - INITIALIZATION
     init() {
         Task { @MainActor in
@@ -50,7 +51,7 @@ class AppState {
                 self.clientManager = clientManager
                 self.config = clientManager?.credentials
                 updateManagers(with: clientManager, with: self)
-                
+
                 // MARK: - FETCH ON LAUNCH
                 if clientManager != nil {
                     await dataCoordinator.loadAllData()
@@ -58,7 +59,7 @@ class AppState {
             }
         }
     }
-    
+
     // MARK: - METHODS
     func updateManagers(with clientManager: ClientManager?, with appState: AppState?) {
         userManager.appState = self
@@ -66,6 +67,7 @@ class AppState {
         trendsManager.appState = self
         postManager.appState = self
         searchManager.appState = self
+        notificationsManager.appState = self
     }
 
     func updateUserDID() async {

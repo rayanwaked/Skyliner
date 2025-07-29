@@ -10,6 +10,7 @@ import SwiftUI
 
 @MainActor
 @Observable
+// MARK: - MANAGER
 public final class ClientManager: Sendable {
     // MARK: - PROPERTIES
     /// Holds all necessary connection and authentication settings for the AT Protocol.

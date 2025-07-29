@@ -80,6 +80,9 @@ extension RouterView {
             case .explore:
                 ExploreView()
                     .transition(.move(edge: .top))
+            case .notifications:
+                NotificationsView()
+                    .transition(.move(edge: .bottom))
             case .user:
                 UserView()
                     .transition(.move(edge: .bottom))

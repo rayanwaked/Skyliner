@@ -10,10 +10,12 @@ import NukeUI
 import Glur
 internal import Combine
 
+// MARK: - FEATURE
 struct BannerFeature: View {
     @StateObject var manager: BannerPositionManager
     var isUser: Bool = true
     
+    // MARK: - BODY
     var body: some View {
         VStack(spacing: 0) {
             LazyImage(url: manager.bannerURL) { result in
@@ -49,6 +51,7 @@ struct BannerFeature: View {
     }
 }
 
+// MARK: - MANAGER
 @MainActor
 final class BannerPositionManager: ObservableObject {
     @Published var scrollOffset: CGFloat = 0
@@ -72,6 +75,7 @@ final class BannerPositionManager: ObservableObject {
     }
 }
 
+// MARK: - PREVIEW
 #Preview {
     @Previewable @StateObject var manager = BannerPositionManager()
     

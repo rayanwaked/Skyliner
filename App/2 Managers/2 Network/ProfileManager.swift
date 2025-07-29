@@ -11,6 +11,7 @@ import NukeUI
 
 @MainActor
 @Observable
+// MARK: - MANAGER
 public final class ProfileManager {
     // MARK: - PROPERTIES
     @ObservationIgnored

@@ -10,6 +10,7 @@ import NukeUI
 internal import Combine
 
 @Observable
+// MARK: - COORDINATOR
 final class HeaderCoordinator {
     private let showingTrendsKey = "HeaderManager.showingTrends"
     

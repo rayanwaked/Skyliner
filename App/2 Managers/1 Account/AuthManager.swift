@@ -11,6 +11,7 @@ import KeychainSwift
 
 @MainActor
 @Observable
+// MARK: - MANAGER
 public final class AuthManager: @unchecked Sendable {
     //MARK: - PROPERTIES
     let keychain = KeychainSwift()
