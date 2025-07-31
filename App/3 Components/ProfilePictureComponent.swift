@@ -11,13 +11,15 @@ import NukeUI
 // MARK: - ENUM
 extension ProfilePictureComponent {
     enum Size {
-        case small, medium, large, xlarge
+        case xsmall, small, medium, large, xlarge
         
         @MainActor
         var frame: CGSize {
             switch self {
-            case .small:
+            case .xsmall:
                 CGSize(width: Screen.width * 0.08, height: Screen.width * 0.08)
+            case .small:
+                CGSize(width: Screen.width * 0.1, height: Screen.width * 0.1)
             case .medium:
                 CGSize(width: Screen.width * 0.115, height: Screen.width * 0.115)
             case .large:

@@ -61,14 +61,12 @@ struct ProfileView: View {
         
         await appState.profileManager.loadProfile()
         
-        try? await Task.sleep(nanoseconds: 100_000_000)
-        
         withAnimation(.spring(response: 0.6, dampingFraction: 0.8)) {
             bannerManager.bannerURL = appState.profileManager.bannerURL
             isLoading = false
         }
         
-        hapticFeedback(.success)
+        hapticFeedback(.light)
     }
 }
 
@@ -76,7 +74,7 @@ struct ProfileView: View {
 extension ProfileView {
     private var parallaxBanner: some View {
         BannerFeature(manager: bannerManager, isUser: false)
-            .animation(.easeInOut(duration: 0.5), value: bannerManager.bannerURL)
+            .animation(.easeInOut(duration: 0.75), value: bannerManager.bannerURL)
     }
 }
 
@@ -139,9 +137,7 @@ extension ProfileView {
             }
         }
         .font(.smaller(.subheadline))
-        .animation(.spring(response: 0.6, dampingFraction: 0.8), value: appState.profileManager.followers)
-        .animation(.spring(response: 0.6, dampingFraction: 0.8), value: appState.profileManager.follows)
-        .animation(.spring(response: 0.6, dampingFraction: 0.8), value: appState.profileManager.posts)
+        .animation(.spring(response: 0.7, dampingFraction: 1.2), value: [appState.profileManager.followers, appState.profileManager.follows, appState.profileManager.posts])
     }
 }
 
@@ -163,8 +159,7 @@ extension ProfileView {
                         .opacity(Opacity.heavy)
                         .contentTransition(.opacity)
                 }
-                .animation(.easeInOut(duration: 0.4), value: appState.profileManager.name)
-                .animation(.easeInOut(duration: 0.4), value: appState.profileManager.handle)
+                .animation(.easeInOut(duration: 0.4), value: [appState.profileManager.name, appState.profileManager.handle])
                 
                 Spacer()
                 

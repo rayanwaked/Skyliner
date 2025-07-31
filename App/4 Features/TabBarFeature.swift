@@ -82,7 +82,7 @@ struct TabBarFeature: View {
                 ProfileView()
                     .presentationCornerRadius(Radius.glass / 1.6)
             }
-            // Profile
+            // Settings
             .sheet(isPresented: .constant(routerCoordinator.showingSettings), onDismiss: {
                 routerCoordinator.showingSettings = false
             }) {
@@ -135,7 +135,7 @@ extension TabBarFeature {
     var userTabContent: some View {
         Group {
             if appState.userManager.profilePictureURL != nil {
-                ProfilePictureComponent(size: .small)
+                ProfilePictureComponent(size: .xsmall)
                     .padding(.trailing, Screen.width * 0.06)
                     .padding(.leading, Screen.width * 0.04)
             } else {
