@@ -75,6 +75,13 @@ struct TabBarFeature: View {
                 ComposeView()
                     .presentationCornerRadius(Radius.glass / 1.6)
             }
+            // Thread
+            .sheet(isPresented: .constant(routerCoordinator.showingThread), onDismiss: {
+                routerCoordinator.showingThread = false
+            }) {
+                ThreadFeature(postURI: routerCoordinator.threadPostURI)
+                    .presentationCornerRadius(Radius.glass / 1.6)
+            }
             // Profile
             .sheet(isPresented: .constant(routerCoordinator.showingProfile), onDismiss: {
                 routerCoordinator.showingProfile = false

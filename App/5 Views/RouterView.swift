@@ -16,6 +16,8 @@ final class RouterCoordinator {
     var showingCreate: Bool = false
     var showingProfile: Bool = false
     var showingSettings: Bool = false
+    var showingThread: Bool = false
+    var threadPostURI: String = ""
     var exploreSearch: String = ""
     
     // MARK: - METHODS
@@ -30,7 +32,13 @@ final class RouterCoordinator {
     func clearExploreSearch() {
         exploreSearch = ""
     }
+    
+    func showThread(uri: String) {
+        threadPostURI = uri
+        showingThread = true
+    }
 }
+
 
 // MARK: - VIEW
 struct RouterView: View {

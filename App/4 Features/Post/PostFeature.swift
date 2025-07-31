@@ -82,47 +82,55 @@ struct PostCell: View {
     
     var body: some View {
         Group {
-            HStack(alignment: .top) {
-                ProfilePictureComponent(isUser: false, profilePictureURL: post.imageURL, size: .medium)
-                    .padding(.trailing, Padding.tiny)
-                    .onTapGesture {
-                        withAnimation(.bouncy(duration: 0.5)) {
-                            appState.profileManager.userDID = post.authorDID
-                            routerCoordinator.showingProfile = true
+            Button {
+                routerCoordinator.showThread(uri: post.postID)
+                hapticFeedback(.light)
+            } label: {
+                HStack(alignment: .top) {
+                    ProfilePictureComponent(isUser: false, profilePictureURL: post.imageURL, size: .medium)
+                        .padding(.trailing, Padding.tiny)
+                        .onTapGesture {
+                            withAnimation(.bouncy(duration: 0.5)) {
+                                appState.profileManager.userDID = post.authorDID
+                                routerCoordinator.showingProfile = true
+                            }
+                            hapticFeedback(.light)
                         }
-                        hapticFeedback(.light)
-                    }
-                
-                VStack(alignment: .leading, spacing: Padding.tiny) {
-                    HStack(alignment: .center) {
-                        Text(post.name)
-                            .fontWeight(.medium)
-                            .lineLimit(1)
-                        Text("@\(post.handle)")
-                            .foregroundStyle(.gray.opacity(0.9))
-                            .lineLimit(1)
-                        Text("· \(post.time)")
-                            .foregroundStyle(.gray.opacity(0.9))
-                    }
                     
-                    if !post.message.isEmpty {
-                        Text(post.message)
+                    VStack(alignment: .leading, spacing: Padding.tiny) {
+                        HStack(alignment: .center) {
+                            Text(post.name)
+                                .fontWeight(.medium)
+                                .lineLimit(1)
+                            Text("@\(post.handle)")
+                                .foregroundStyle(.gray.opacity(0.9))
+                                .lineLimit(1)
+                            Text("· \(post.time)")
+                                .foregroundStyle(.gray.opacity(0.9))
+                        }
+                        
+                        if !post.message.isEmpty {
+                            Text(post.message)
+                                .multilineTextAlignment(.leading)
+                        }
+                        
+                        if post.embed != nil {
+                            PostEmbed(embed: post.embed)
+                                .padding(.top, Padding.small)
+                        }
+                        
+                        actions
                     }
+                    .font(.smaller(.body))
                     
-                    if post.embed != nil {
-                        PostEmbed(embed: post.embed)
-                            .padding(.top, Padding.small)
-                    }
-                    
-                    actions
+                    Spacer()
                 }
-                .font(.smaller(.body))
-                
-                Spacer()
+                .padding(.leading, Padding.standard)
+                .padding(.trailing, Padding.small)
+                .padding(.vertical, Padding.tiny / 2)
+                .contentShape(Rectangle())
             }
-            .padding(.leading, Padding.standard)
-            .padding(.trailing, Padding.small)
-            .padding(.vertical, Padding.tiny / 2)
+            .buttonStyle(.plain)
             .background(.standardBackground)
             
             Divider()
@@ -147,5 +155,12 @@ struct PostCell: View {
         PostFeature(location: .home)
             .environment(appState)
             .environment(routerCoordinator)
+    }
+    .sheet(isPresented: $routerCoordinator.showingThread) {
+        if !routerCoordinator.threadPostURI.isEmpty {
+            ThreadFeature(postURI: routerCoordinator.threadPostURI)
+                .environment(appState)
+                .environment(routerCoordinator)
+        }
     }
 }

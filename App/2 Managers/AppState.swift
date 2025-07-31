@@ -21,6 +21,7 @@ class AppState {
     let postManager = PostManager()
     let searchManager = SearchManager()
     let notificationsManager = NotificationsManager()
+    let threadManager = ThreadManager()
 
     var dataCoordinator: DataCoordinator {
         DataCoordinator(appState: self)
@@ -68,6 +69,7 @@ class AppState {
         postManager.appState = self
         searchManager.appState = self
         notificationsManager.appState = self
+        threadManager.appState = self
     }
 
     func updateUserDID() async {
