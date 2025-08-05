@@ -69,7 +69,7 @@ struct PostFeature: View {
 // MARK: - POST CELL
 struct PostCell: View {
     @Environment(AppState.self) var appState
-    @Environment(RouterCoordinator.self) private var routerCoordinator
+    @Environment(RouterCoordinator.self) var routerCoordinator
     
     let post: PostItem
     let manager: PostManaging

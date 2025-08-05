@@ -42,7 +42,7 @@ struct TabBarFeature: View {
     var body: some View {
         VStack {
             Spacer()
-
+            
             HStack {
                 HStack {
                     if routerCoordinator.selectedTab != .explore {
@@ -81,6 +81,20 @@ struct TabBarFeature: View {
             }) {
                 ThreadFeature(postURI: routerCoordinator.threadPostURI)
                     .presentationCornerRadius(Radius.glass / 1.6)
+            }
+            // Reply
+            .sheet(isPresented: .constant(routerCoordinator.showingReply), onDismiss: {
+                routerCoordinator.hideReply()
+            }) {
+                if let replyPost = routerCoordinator.replyPost {
+                    ReplyView(parentPost: replyPost) {
+                        // Refresh posts after reply is posted
+                        Task {
+                            await appState.postManager.refreshPosts()
+                        }
+                    }
+                    .presentationCornerRadius(Radius.glass / 1.6)
+                }
             }
             // Profile
             .sheet(isPresented: .constant(routerCoordinator.showingProfile), onDismiss: {
@@ -197,4 +211,3 @@ extension TabBarFeature {
         .environment(appState)
         .environment(routerCoordinator)
 }
-

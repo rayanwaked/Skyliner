@@ -19,6 +19,8 @@ final class RouterCoordinator {
     var showingThread: Bool = false
     var threadPostURI: String = ""
     var exploreSearch: String = ""
+    var showingReply: Bool = false
+    var replyPost: PostItem?
     
     // MARK: - METHODS
     func selectTab(_ tab: Tabs) {
@@ -36,6 +38,16 @@ final class RouterCoordinator {
     func showThread(uri: String) {
         threadPostURI = uri
         showingThread = true
+    }
+    
+    func showReply(for post: PostItem) {
+        replyPost = post
+        showingReply = true
+    }
+    
+    func hideReply() {
+        showingReply = false
+        replyPost = nil
     }
 }
 

@@ -34,7 +34,7 @@ extension PostCell {
             // MARK: - REPLY
             Button {
                 Task {
-                    // TODO: Implement reply functionality
+                    routerCoordinator.showingReply = true
                 }
             } label: {
                 HStack {
