@@ -50,7 +50,7 @@ struct ArrayButtonComponent<T: Hashable, Content: View>: View {
             }
             .font(.smaller(.callout))
             .fontWeight(.semibold)
-            .foregroundStyle(.primary)
+            .foregroundStyle(Color.text)
             .padding(.horizontal, Padding.standard)
         }
         .padding(.top, Padding.tiny)

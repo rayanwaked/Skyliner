@@ -261,12 +261,13 @@ struct QuotedPostContent: View {
                 
                 VStack(alignment: .leading, spacing: 1) {
                     Text(record.author.displayName ?? "")
+                        .foregroundStyle(Color.text)
                         .font(.caption)
                         .fontWeight(.medium)
                         .lineLimit(1)
                     Text("@\(record.author.actorHandle)")
                         .font(.caption2)
-                        .foregroundColor(.secondary)
+                        .foregroundStyle(.secondary)
                         .lineLimit(1)
                 }
                 
@@ -279,6 +280,7 @@ struct QuotedPostContent: View {
             
             if let postRecord = record.value.getRecord(ofType: AppBskyLexicon.Feed.PostRecord.self) {
                 Text(postRecord.text)
+                    .foregroundStyle(Color.text)
                     .font(.subheadline)
                     .lineLimit(6)
                     .multilineTextAlignment(.leading)

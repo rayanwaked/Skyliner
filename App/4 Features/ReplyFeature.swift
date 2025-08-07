@@ -13,6 +13,7 @@ import PostHog
 struct ReplyView: View {
     // MARK: - PROPERTIES
     @Environment(AppState.self) private var appState
+    @Environment(RouterCoordinator.self) private var routerCoordinator
     @Environment(\.dismiss) private var dismiss
     @State private var replyText: String = ""
     @State private var isPosting: Bool = false
@@ -55,26 +56,15 @@ struct ReplyView: View {
 extension ReplyView {
     var header: some View {
         HStack {
-            Button {
-                dismiss()
-                hapticFeedback(.soft)
-            } label: {
-                Image(systemName: "xmark")
-                    .font(.body)
-                    .foregroundStyle(.primary)
-            }
-            
             Spacer()
             
             Text("Reply")
                 .fontWeight(.medium)
+                .onTapGesture {
+                    routerCoordinator.showingReply = false
+                }
             
             Spacer()
-            
-            // Invisible placeholder for layout balance
-            Image(systemName: "xmark")
-                .font(.body)
-                .opacity(0)
         }
         .padding(.horizontal, Padding.standard)
         .padding(.bottom, Padding.standard)
@@ -201,6 +191,7 @@ extension ReplyView {
             
             hapticFeedback(.success)
             onReplyPosted?()
+            routerCoordinator.showingReply = false
             dismiss()
             
         } catch {
@@ -253,3 +244,4 @@ extension ReplyView {
 //    ReplyView(parentPost: samplePost)
 //        .environment(appState)
 //}
+

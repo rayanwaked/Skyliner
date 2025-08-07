@@ -33,9 +33,8 @@ extension PostCell {
             
             // MARK: - REPLY
             Button {
-                Task {
-                    routerCoordinator.showingReply = true
-                }
+                routerCoordinator.showReply(for: post)
+                hapticFeedback(.soft)
             } label: {
                 HStack {
                     Image(systemName: "message")
@@ -43,7 +42,6 @@ extension PostCell {
                 }
                 .foregroundStyle(.foreground.opacity(Opacity.heavy))
             }
-            
             Spacer()
             
             // MARK: - LIKE
