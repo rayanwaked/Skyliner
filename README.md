@@ -6,17 +6,15 @@
 
 <h1 align="center"><strong>Skyliner</strong></h1>
 
-<p align="center">
-  <a href="https://bsky.app/profile/skyliner.app">
-    <img src="https://img.shields.io/badge/Follow%20on%20Bluesky-%40skyliner.app-1DA1F2?logo=bluesky&logoColor=white&style=for-the-badge&labelColor=1DA1F2" alt="Follow on Bluesky" />
-  </a>
-  <a href="https://github.com/MasterJ93/ATProtoKit">
-    <img src="https://img.shields.io/badge/Powered%20by-ATProtoKit-1DA1F2?style=for-the-badge&logo=swift&logoColor=white&labelColor=1DA1F2" alt="Powered by ATProtoKit" />
-  </a>
-  <a href="#">
-    <img src="https://img.shields.io/badge/Platform-iOS-ff2d55?style=for-the-badge&logo=apple&logoColor=white&labelColor=ff2d55" alt="Platform iOS" />
-  </a>
-</p>
+<div align="center">
+
+![](https://img.shields.io/badge/-@skyliner.app-informational?style=flat&logo=bluesky&logoColor=white&color=007AFF)
+![](https://img.shields.io/badge/-Swift-informational?style=flat&logo=swift&logoColor=white&color=007AFF)
+![](https://img.shields.io/badge/-SwiftUI-informational?style=flat&logo=swift&logoColor=white&color=007AFF)
+![](https://img.shields.io/badge/-ATProtoKit-informational?style=flat&logo=swift&logoColor=white&color=007AFF)
+![](https://img.shields.io/badge/-iOS-informational?style=flat&logo=apple&logoColor=white&color=007AFF)
+  
+</div>
 
 > [!CAUTION]
 > ***Skyliner is very early on in its development and is subject to large scale refactors including complete reorganization of the project structure.***
