@@ -100,7 +100,10 @@ Skyliner uses Swift Package Manager (SPM) to pull in external libraries. These p
 
 All dependencies are resolved automatically by SPM. If you wish to upgrade or pin different versions, edit the `Package.swift` manifest or the project's package configuration in Xcode.
 
+
 ## Project Structure
+
+<img width="4727" height="3138" alt="Aug 9 Screenshot from Skyliner Resources" src="https://github.com/user-attachments/assets/c21673e2-c334-4aeb-bb68-a60af5487519" />
 
 Skyliner uses a **numbered directory scheme** to convey logical and chronological order. Each top‑level folder begins with a numeral followed by its name:
 
