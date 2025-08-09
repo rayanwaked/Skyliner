@@ -1,6 +1,6 @@
 <p align="center">
   <a href="https://ibb.co/MkmNV8cm">
-    <img src="https://i.ibb.co/zVzfR8Xz/Skyliner-Light.png" alt="Skyliner-Light" width="200" />
+    <img src="https://i.ibb.co/zVzfR8Xz/Skyliner-Light.png" alt="Skyliner-Light" width="150" />
   </a>
 </p>
 
