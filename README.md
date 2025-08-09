@@ -166,7 +166,7 @@ Skyliner is under active development. Planned improvements include:
 - **Accessibility** – enhanced dynamic type and VoiceOver support
 - **Cross‑platform support** – macOS and iPad‑optimised layouts
 
-> 🐛 Track issues and contribute via the project's issue tracker. The API surface is unstable and may change.
+> ⚡️ Track issues and contribute via the project's issue tracker. The API surface is unstable and may change.
 
 ## License
 
