@@ -28,7 +28,7 @@
 
 This is done with an **MVVM‑C** (Model‑View‑ViewModel‑Coordinator) architecture with a centralized `AppState` for dependency injection and global state. The goal is a refined, elegant user experience built on a clean, maintainable codebase. Development experience matters just as much as user experience.
 
-<img width="1489" height="750" alt="Templify App Store Template" src="https://github.com/user-attachments/assets/2e7827f7-7bb9-4091-bc16-dfcef75c417d" />
+<img width="5550" height="2796" alt="Skyliner Resources Group 104" src="https://github.com/user-attachments/assets/562ed463-cda8-430a-b01d-3f079c7a1ce2" />
 
 ### Key Architectural Highlights
 
