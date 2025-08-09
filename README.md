@@ -20,7 +20,7 @@
 > 
 > This repository represents an early‑stage project. The codebase is evolving rapidly and major refactors are expected. APIs, folder names and internal structures may change without notice. If you build on top of Skyliner today, be prepared to rebase often.
 
-<img width="1500" height="250" alt="Banner from Figma" src="https://github.com/user-attachments/assets/f6ee93ad-53dc-45b9-8b90-b8737786cb08" />
+<img width="1500" height="250" alt="Skyliner Resources Banner (1)" src="https://github.com/user-attachments/assets/99d8fb5f-b7f5-4cf1-ac40-289c5c80953f" />
 
 ## Overview
 
