@@ -162,9 +162,8 @@ Top‑level screens composed from components and features:
 Skyliner is under active development. Planned improvements include:
 
 - **Improved thread rendering** – performance and UX improvements for conversation threads
-- **Offline support** – full offline reading and posting capabilities
-- **Accessibility** – enhanced dynamic type and VoiceOver support
-- **Cross‑platform support** – macOS and iPad‑optimised layouts
+- **Cross‑platform support** – iPad‑optimised layouts
+- **UI evolution** — design changes to afford Skyliner a more brand-specific identity
 
 > ⚡️ Track issues and contribute via the project's issue tracker. The API surface is unstable and may change.
 
