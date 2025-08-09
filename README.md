@@ -24,7 +24,9 @@
 
 ## Overview
 
-**Skyliner** is a native iOS client for [Bluesky](https://blueskyweb.xyz), built with Swift and SwiftUI. It utilizes the [ATProtoKit](https://github.com/MasterJ93/ATProtoKit) framework to connect to Bluesky’s AT Protocol. The app focuses on a refined user interface and smooth user experience, with an emphasis on minimalistic and maintainable code. This is done with an **MVVM‑C** (Model‑View‑ViewModel‑Coordinator) architecture with a centralized `AppState` for dependency injection and global state. The goal is a refined, elegant user experience built on a clean, maintainable codebase. Development experience matters just as much as user experience.
+**Skyliner** is a native iOS client for [Bluesky](https://blueskyweb.xyz), built with Swift and SwiftUI. It utilizes the [ATProtoKit](https://github.com/MasterJ93/ATProtoKit) framework to connect to Bluesky’s AT Protocol. The app focuses on a refined user interface and smooth user experience, with an emphasis on minimalistic and maintainable code. 
+
+This is done with an **MVVM‑C** (Model‑View‑ViewModel‑Coordinator) architecture with a centralized `AppState` for dependency injection and global state. The goal is a refined, elegant user experience built on a clean, maintainable codebase. Development experience matters just as much as user experience.
 
 <img width="1489" height="750" alt="Templify App Store Template" src="https://github.com/user-attachments/assets/2e7827f7-7bb9-4091-bc16-dfcef75c417d" />
 
