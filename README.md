@@ -175,3 +175,5 @@ This project is released under a dual license-policy framework. See `LICENSE.md`
 ---
 
 Skyliner aims to be a polished, native client for the Bluesky social network. Its modular architecture, modern SwiftUI patterns and strong emphasis on maintainability make it a solid foundation for future growth. However, it is still very early in its life cycle – expect things to break and evolve. If you decide to explore the project or contribute, tread carefully and be prepared for changes.
+
+<img width="5550" height="1338" alt="Skyliner Resources Banner" src="https://github.com/user-attachments/assets/bf62f722-be87-49d2-9495-cc35af3789ee" />
