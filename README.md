@@ -69,24 +69,6 @@ All SwiftUI view files (in **Components** and **Views**) include live Preview pr
 
 ## Development Notes
 
-### Debug Logging Convention
-
-To make debugging easier and log output more readable, Skyliner uses a unique convention: **each log/print statement is prefixed with an emoji** to indicate its source category. This way, when reading Xcode’s console output, you can quickly filter and identify logs by the emoji. The categories are:
-
-* 🔥 **Views:** Logged from SwiftUI Views (UI layer).
-  *Example:* `print("🔥 AuthenticationView: Sign in button pressed")` – Emitted when a user taps the sign-in button in the AuthenticationView.
-
-* 💧 **Components/Features:** Logged from UI Components (reusable views or controls).
-  *Example:* `print("💧⛔️ Failed to create haptic engine")` – A component (here perhaps the Haptics helper) failed to initialize, indicated by the ⛔️ alongside the flower emoji.
-
-* ☁️ **Managers/Functions:** Logged from manager classes or other functions (business logic layer).
-  *Example:* `print("☁️ AuthenticationManager: Sign in function called")` when an authentication attempt begins.
-  Additionally, the mushroom emoji is combined with **✅** or **⛔️** to denote success or failure outcomes in managers:
-  – `print("☁️✅ AuthenticationManager: Sign in successful")` upon a successful login.
-  – `print("☁️⛔️ AuthenticationManager: Sign in failed")` if credentials were incorrect or network failed.
-
-Using these prefixes, a developer can quickly scan logs: e.g., looking for all 🔥 entries to see user interaction events, or ☁️ to trace the flow in managers. This structured logging aids in debugging by providing context at a glance.
-
 ### SwiftUI Previews and UI Development
 
 All custom views and components in Skyliner are expected to have working **SwiftUI previews**. This means files in **Components** and **Views** include a `PreviewProvider` struct (usually at the bottom of the file) that renders the view with sample data. This allows developers to open the file and get an immediate live preview of the UI component in Xcode’s canvas. It’s a helpful practice for UI development: you can tweak the view’s code and see updates in real time, and ensure that each component can be instantiated in isolation.
