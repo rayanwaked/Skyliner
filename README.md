@@ -16,80 +16,157 @@
   
 </div>
 
-> [!CAUTION]
-> ***Skyliner is very early on in its development and is subject to large scale refactors including complete reorganization of the project structure.***
+> ⚠️ **Caution**
+> 
+> This repository represents an early‑stage project. The codebase is evolving rapidly and major refactors are expected. APIs, folder names and internal structures may change without notice. If you build on top of Skyliner today, be prepared to rebase often.
 
 <img width="1500" height="250" alt="Banner from Figma" src="https://github.com/user-attachments/assets/f6ee93ad-53dc-45b9-8b90-b8737786cb08" />
 
 ## Overview
 
-**Skyliner** is a native iOS client for [Bluesky](https://blueskyweb.xyz), built with Swift and SwiftUI. It utilizes the [ATProtoKit](https://github.com/MasterJ93/ATProtoKit) framework to connect to Bluesky’s AT Protocol network. The app focuses on a refined user interface and smooth user experience, with an emphasis on minimalistic and maintainable code. Skyliner demonstrates a modern SwiftUI architecture and provides a solid foundation for further customization and new features.
+**Skyliner** is a native iOS client for [Bluesky](https://blueskyweb.xyz), built with Swift and SwiftUI. It utilizes the [ATProtoKit](https://github.com/MasterJ93/ATProtoKit) framework to connect to Bluesky’s AT Protocol. The app focuses on a refined user interface and smooth user experience, with an emphasis on minimalistic and maintainable code. This is done with an **MVVM‑C** (Model‑View‑ViewModel‑Coordinator) architecture with a centralized `AppState` for dependency injection and global state. The goal is a refined, elegant user experience built on a clean, maintainable codebase.
 
 <img width="1489" height="750" alt="Templify App Store Template" src="https://github.com/user-attachments/assets/2e7827f7-7bb9-4091-bc16-dfcef75c417d" />
 
+### Key Architectural Highlights
+
+- **Centralised state management** via `AppState`, which instantiates managers on demand and coordinates authentication and data loading
+- **Protocol‑oriented design** for post interactions and view models; shared behaviours such as liking or reposting are defined once and reused across managers
+- **Reactive authentication flow** using `AsyncStream` to propagate a new `ClientManager` to all managers when a session is restored or a user logs in
+- **Feature‑first modularity** – features like Post, Weather, Notification, Banner, Header and TabBar live in their own folders under `4 Features` with their own views and managers, making it easy to reason about and extend individual areas of the app
+- **Modern iOS UI elements** such as SwiftUI's glass effect, backport helpers for iOS 18+ and asynchronous image loading with NukeUI
+
+> 📖 A more detailed description of the architecture can be found in `2 Managers/1 ARCHITECTURE.md`. That document explains the MVVM‑C approach, the manager patterns and how post interactions are handled uniformly across the app.
+
 ## Features
 
-* **Native SwiftUI App:** Written entirely in Swift and SwiftUI for a fully native iOS experience.
-* **Bluesky Integration:** Connects to the decentralized Bluesky social network via ATProtoKit, handling authentication and feed data through the AT Protocol.
-* **UI/UX Focus:** Polished interface elements and animations (custom components, icons, and backgrounds) for an engaging user experience.
-* **Extensible Foundation:** The codebase is organized for easy refactoring and addition of new features without breaking existing functionality.
+Current functionality includes:
 
-## Setup Instructions
+- **Home feed and timeline** – display posts from your followed accounts with pagination and offline caching. Interaction support includes liking, reposting, replying and sharing
+- **Explore** – search for people or posts with debounced queries and scrolling results. Top trends and hashtags are also available
+- **Notifications** – view recent mentions, replies and other alerts in a dedicated tab. Tapping a notification navigates to the relevant post or profile
+- **Profile management** – display and edit your own profile and view other users' profiles. A banner feature allows custom header images with a parallax scroll effect
+- **Composer** – create a new post or reply via a modal sheet. Compose views present as sheets with rounded corners and respect keyboard safe areas
+- **Weather card** *(experimental)* – show a simple weather readout within the app; this demonstrates modular features and data managers
+- **Analytics** – page and interaction events are tracked via PostHog for user‑behaviour insight (requires a valid API key; see configuration below)
 
-### Prerequisites
+Additional features such as threaded conversations, banner effects and reply flows are implemented as dedicated modules in the Features directory. Because of the modular structure, adding a new feature typically involves adding a new manager and a SwiftUI view without touching other parts of the codebase.
 
-* **Xcode 26.0 or later** – Required to build and run the app.
-* **iOS 26.0 or later** – Deployment target for the Skyliner app.
-* **Swift 6.0 or later** – The project is written in Swift 6.
+## Prerequisites
 
-### Building and Running
+This project targets cutting‑edge Apple platforms and requires recent tooling:
 
-1. **Clone the Repository:** Download or clone the Skyliner project source to your local machine.
-2. **Open in Xcode:** Double-click `Skyliner.xcodeproj` to open the project in Xcode.
-3. **Fetch Dependencies:** Xcode will automatically retrieve Swift Package Manager dependencies (ATProtoKit, KeychainSwift, etc.) as defined in the project. Ensure you have an internet connection on first build so packages can resolve.
-4. **Select a Target:** Choose the *Skyliner* app scheme and an iOS Simulator (or physical device) running iOS 26.0+.
-5. **Build & Run:** Press **Run** (⌘R) in Xcode. The app should build and launch in the simulator, showing the Skyliner splash screen and then the app interface.
+- **Xcode 26.0 or later** – the project uses SwiftUI features only available in Xcode 26
+- **iOS 26.0 or later** – while backports exist for some APIs, many views depend on iOS 26 glass effects and tab bar behaviours
+- **Swift 6.0 or later** – asynchronous functions, `@Observable` and other Swift 6 features are heavily used
+
+> ⚠️ Earlier versions of Xcode or iOS might compile parts of the code, but you will lose animations, glass effects and other modern UI elements. Be aware that running on older devices is not a project goal at this time.
+
+## Setup & Running
+
+1. **Clone this repository:**
+   ```bash
+   git clone https://github.com/yourusername/Skyliner.git
+   ```
+
+2. **Open the project:** double‑click `Skyliner.xcodeproj` or open the `.xcworkspace` if you prefer to manage packages through Xcode's workspace
+
+3. **Fetch dependencies:** on first build Xcode will automatically resolve Swift Package Manager dependencies. Ensure you have an active internet connection
+
+4. **Provide configuration keys:** the app relies on a PostHog API key for analytics. The development key is stored in `1 Resources/Keys.xcconfig`, but for production you should replace the `POSTHOG_API_KEY` environment variable with your own. Without a valid key the app will still run, but analytics will be disabled
+
+5. **Select a run target:** choose the Skyliner scheme and select an iOS 26 simulator or an iPhone/iPad device running iOS 26.0 or later
+
+6. **Run:** press Run (⌘R) in Xcode. The app will launch and show the authentication screens. After signing in, you will see the home feed
+
+> 💡 If you run into build issues due to package resolution, try **File → Packages → Resolve Package Versions** in Xcode. On machines with older Xcode versions you may need to manually update Swift toolchains.
 
 ## Dependencies
 
-Skyliner uses Swift Package Manager (SPM) to manage its external libraries. Key dependencies include:
+Skyliner uses Swift Package Manager (SPM) to pull in external libraries. These packages and their versions are pinned in `Package.resolved` (generated by Xcode). Notable dependencies include:
 
-* **ATProtoKit (v0.30.0):** A Swift client library for Bluesky’s AT Protocol – handles networking and data models for Bluesky integration.
-* **KeychainSwift (v24.0.0):** Used for securely storing sensitive data (e.g. authentication tokens) in the iOS Keychain.
-* **SwiftLog (Apple Swift Logging API v1.6.3):** Provides a flexible logging mechanism used by the app for debug and error logging.
-* **SwiftSyntax (v600.0.1):** Swift syntax parsing library (included as a dependency, potentially for future development needs or as a transient dependency of other packages).
+| Package | Purpose |
+|---------|---------|
+| **ATProtoKit** | Networking and models for the Bluesky AT protocol. All API calls go through a `ClientManager` wrapper |
+| **KeychainSwift** | Lightweight wrapper for storing credentials securely in the iOS keychain |
+| **NukeUI** | Asynchronous image loading for SwiftUI with `LazyImage` |
+| **BezelKit** | Device bezel measurements for consistent radii in glass effects |
+| **Glur** | GPU‑efficient blur effects with configurable radius and direction |
+| **ImagePlayground** | Sheet for image editing on iOS 18.1+ (with backport fallback) |
+| **PostHog** | Analytics library for event metrics capture |
+| **Combine** | Apple's reactive framework for authentication and data streams |
 
-These packages are defined in the project’s SwiftPM configuration. The exact versions are pinned in **`Skyliner.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved`**, and they will be auto-fetched on project build.
+All dependencies are resolved automatically by SPM. If you wish to upgrade or pin different versions, edit the `Package.swift` manifest or the project's package configuration in Xcode.
 
 ## Project Structure
 
-The project is organized into logical groups, with each top-level folder numbered (`1` through `5`) followed by a space and the folder name. This naming convention enforces a linear, intentional order in Xcode’s project navigator (making the flow of the app easier to follow). For example, **`1 Documents`** contains documentation, **`2 Resources`** contains app assets, **`3 Managers`** contains the data/business logic layer, and so on. This structure improves searchability and logical flow at the expense of some rigidity (renaming these folders would require updating references in Xcode settings, e.g. if the Resources folder name changes, it must be updated in build settings).
+Skyliner uses a **numbered directory scheme** to convey logical and chronological order. Each top‑level folder begins with a numeral followed by its name:
 
-All SwiftUI view files (in **Components** and **Views**) include live Preview providers to allow interface testing and iteration in Xcode’s canvas. The codebase is intended to be clean and straightforward – refactoring a component should be localized (avoiding cascade changes across many files).
+### 📁 1 Resources
+Static assets and support files:
+- **Designs:** reusable layout styles and backgrounds
+- **Assets.xcassets:** images, icons and colours
+- **Standards:** constants, helpers, modifiers and backport wrappers
+- **Backports.swift:** compatibility helpers for older OS versions
+- **Keys.xcconfig:** environment variables such as your PostHog key
+
+### 📁 2 Managers
+The business logic layer. Managers encapsulate networking, data caching and state handling:
+
+- **AuthManager:** handles login, logout and session restoration
+- **ClientManager:** wrapper around ATProtoKit
+- **UserManager, PostManager, SearchManager, ProfileManager, etc.:** domain-specific data management
+- **DataCoordinator:** orchestrates data loading across managers at app start
+
+> 📖 The `1 ARCHITECTURE.md` file in this folder contains an in‑depth explanation of the MVVM‑C approach and design patterns.
+
+### 📁 3 Components
+Reusable SwiftUI building blocks such as buttons, input fields, profile pictures and web views. These encapsulate styling and behaviour for composition in multiple contexts.
+
+### 📁 4 Features
+Self‑contained feature modules. Each feature exposes a SwiftUI view and, if necessary, its own manager(s):
+
+- **Post:** renders individual posts, embed previews and actions
+- **Thread:** displays conversation threads
+- **Reply:** provides compose sheets for replies
+- **Banner and Header:** profile header images with blur and parallax effects
+- **Notification:** lists user notifications
+- **Weather:** simple weather card demonstration
+- **TabBar:** bottom navigation and sheet presentation
+
+### 📁 5 Views
+Top‑level screens composed from components and features:
+
+- **1 Tabs:** home, explore, notifications and user profile tabs
+- **2 Sheets:** modals such as compose, profile and settings
+- **3 Screens:** navigation flows for authentication and onboarding
+- **RouterView.swift:** central router for screen selection based on app state
+
+> 💡 The numbering convention ensures foundational files appear first in Xcode's navigator. While renaming is possible, it requires adjusting target settings in Xcode.
 
 ## Development Notes
 
-### SwiftUI Previews and UI Development
+- **SwiftUI previews:** every view includes `#Preview` with representative dummy data
+- **Clean, modular files:** each Swift file defines a single type or cohesive extensions. Use `// MARK:` comments for section separation
+- **Asynchronous patterns:** managers use `async/await`, `Task` and `AsyncStream` without blocking the main thread
+- **Error handling:** API calls use `do/catch` with user feedback and haptic signals, degrading gracefully
+- **Analytics opt‑in:** PostHog tracking enabled by default if key is provided. Ensure privacy policy compliance
 
-All custom views and components in Skyliner are expected to have working **SwiftUI previews**. This means files in **Components** and **Views** include a `PreviewProvider` struct (usually at the bottom of the file) that renders the view with sample data. This allows developers to open the file and get an immediate live preview of the UI component in Xcode’s canvas. It’s a helpful practice for UI development: you can tweak the view’s code and see updates in real time, and ensure that each component can be instantiated in isolation.
+## Roadmap and Known Issues
 
-When adding new Views or Components, developers should follow this convention (add a preview), as it was a noted project standard. The preview should provide any required dummy data or use `.environmentObject` with test instances of managers as needed, so that it builds in canvas without the full app running.
+Skyliner is under active development. Planned improvements include:
 
-### Code Style and Maintenance
+- **Improved thread rendering** – performance and UX improvements for conversation threads
+- **Offline support** – full offline reading and posting capabilities
+- **Accessibility** – enhanced dynamic type and VoiceOver support
+- **Cross‑platform support** – macOS and iPad‑optimised layouts
 
-The Skyliner codebase is kept intentionally **minimalistic and modular**:
+> 🐛 Track issues and contribute via the project's issue tracker. The API surface is unstable and may change.
 
-* Each Swift file typically has a single primary struct/class or a focused set of extensions, to keep things easy to find.
-* The folder structure (with numeric prefixes) reflects an ordered thought process – for instance, **Documents (1)** and **Resources (2)** are high-level and mostly static, while **Managers (3)** handle dynamic data, **Components (4)** build UI pieces, and **Views (5)** assemble the UI for display.
-* This linear structure also mirrors the app’s flow: e.g., Managers prepare data, Components render pieces of UI, and Views bring it all together for the user.
-* Comments and MARKs (sections within files) are used to denote important parts of the code (such as `// MARK: - Imports` or `// MARK: - Authentication Functions` in the managers).
+## License
 
-The combination of clear structure, logging conventions, and SwiftUI previews makes it easier for any developer to onboard onto the project or navigate the code. The emphasis is on **clarity** – so if a change needs to be made (say, altering how a post is displayed), the developer can find `PostComponent.swift` quickly and modify it, without unexpected side-effects in unrelated parts of the app.
-
-### License
-
-The legalities pertaining to this repository and whatever it may contain are detailed in LICENSE.MD.
+This project is released under a dual license-policy framework. See `LICENSE.md` and `POLICY.md` for full details.
 
 ---
 
-*Skyliner’s README is intended to provide both high-level guidance and low-level detail. By following this documentation, developers should be able to understand the project layout, set up the development environment, and adhere to the established patterns when contributing to Skyliner.*
+Skyliner aims to be a polished, native client for the Bluesky social network. Its modular architecture, modern SwiftUI patterns and strong emphasis on maintainability make it a solid foundation for future growth. However, it is still very early in its life cycle – expect things to break and evolve. If you decide to explore the project or contribute, tread carefully and be prepared for changes.
