@@ -1,10 +1,10 @@
 <p align="center">
   <a href="https://ibb.co/MkmNV8cm">
-    <img src="https://i.ibb.co/zVzfR8Xz/Skyliner-Light.png" alt="Skyliner-Light" width="150" />
+    <img src="https://i.ibb.co/zVzfR8Xz/Skyliner-Light.png" alt="Skyliner-Light" width="125" />
   </a>
 </p>
 
-<h1 align="center"><strong>Skyliner</strong></h1>
+<h2 align="center"><strong>Skyliner</strong></h2>
 
 <div align="center">
 
