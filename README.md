@@ -19,8 +19,9 @@
 > ⚠️ **Caution**
 > 
 > This repository represents an early‑stage project. The codebase is evolving rapidly and major refactors are expected. APIs, folder names and internal structures may change without notice. If you build on top of Skyliner today, be prepared to rebase often.
+> 
+<img width="1500" height="250" alt="1" src="https://github.com/user-attachments/assets/89cedce6-e967-4d01-b586-0169b8dd4329" />
 
-<img width="1500" height="250" alt="Skyliner Resources Banner (1)" src="https://github.com/user-attachments/assets/99d8fb5f-b7f5-4cf1-ac40-289c5c80953f" />
 
 ## Overview
 
@@ -83,7 +84,7 @@ This project targets cutting‑edge Apple platforms and requires recent tooling:
 
 > 💡 If you run into build issues due to package resolution, try **File → Packages → Resolve Package Versions** in Xcode. On machines with older Xcode versions you may need to manually update Swift toolchains.
 
-<img width="5550" height="1338" alt="Skyliner Resources Banner (2)" src="https://github.com/user-attachments/assets/74c7d41a-ac1b-44f4-a1ec-1da9b212eea7" />
+<img width="5550" height="1338" alt="2" src="https://github.com/user-attachments/assets/ebc00d9d-03c2-4eff-b840-c33ae0985344" />
 
 ## Dependencies
 
@@ -105,7 +106,7 @@ All dependencies are resolved automatically by SPM. If you wish to upgrade or pi
 
 ## Project Structure
 
-<img width="4727" height="3138" alt="Aug 9 Screenshot from Skyliner Resources" src="https://github.com/user-attachments/assets/c21673e2-c334-4aeb-bb68-a60af5487519" />
+<img width="4727" height="3138" alt="3" src="https://github.com/user-attachments/assets/95bd3a89-6c7b-4e93-a7e2-8adcb530a421" />
 
 Skyliner uses a **numbered directory scheme** to convey logical and chronological order. Each top‑level folder begins with a numeral followed by its name:
 
