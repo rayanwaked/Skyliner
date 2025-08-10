@@ -1,6 +1,6 @@
 <p align="center">
   <a href="https://ibb.co/MkmNV8cm">
-    <img src="https://i.ibb.co/zVzfR8Xz/Skyliner-Light.png" alt="Skyliner-Light" width="125" />
+    <img src="https://i.ibb.co/zVzfR8Xz/Skyliner-Light.png" alt="Skyliner Light Icon" width="125" />
   </a>
 </p>
 
@@ -20,7 +20,7 @@
 > 
 > This repository represents an early‑stage project. The codebase is evolving rapidly and major refactors are expected. APIs, folder names and internal structures may change without notice. If you build on top of Skyliner today, be prepared to rebase often.
 > 
-<img width="1500" height="250" alt="1" src="https://github.com/user-attachments/assets/89cedce6-e967-4d01-b586-0169b8dd4329" />
+<img width="1500" height="250" alt="Skyliner Blue Sky with Clouds Banner" src="https://github.com/user-attachments/assets/89cedce6-e967-4d01-b586-0169b8dd4329" />
 
 
 ## Overview
@@ -29,7 +29,7 @@
 
 This is done with an **MVVM‑C** (Model‑View‑ViewModel‑Coordinator) architecture with a centralized `AppState` for dependency injection and global state. The goal is a refined, elegant user experience built on a clean, maintainable codebase. Development experience matters just as much as user experience.
 
-<img width="5550" height="2796" alt="Skyliner Resources Group 104" src="https://github.com/user-attachments/assets/562ed463-cda8-430a-b01d-3f079c7a1ce2" />
+<img width="5550" height="2796" alt="Skyliner iOS App Store Images" src="https://github.com/user-attachments/assets/562ed463-cda8-430a-b01d-3f079c7a1ce2" />
 
 ### Key Architectural Highlights
 
@@ -84,7 +84,7 @@ This project targets cutting‑edge Apple platforms and requires recent tooling:
 
 > 💡 If you run into build issues due to package resolution, try **File → Packages → Resolve Package Versions** in Xcode. On machines with older Xcode versions you may need to manually update Swift toolchains.
 
-<img width="5550" height="1338" alt="2" src="https://github.com/user-attachments/assets/ebc00d9d-03c2-4eff-b840-c33ae0985344" />
+<img width="5550" height="1338" alt="Skyliner Sunrise Sky with Clouds Banner" src="https://github.com/user-attachments/assets/ebc00d9d-03c2-4eff-b840-c33ae0985344" />
 
 ## Dependencies
 
@@ -106,7 +106,7 @@ All dependencies are resolved automatically by SPM. If you wish to upgrade or pi
 
 ## Project Structure
 
-<img width="4727" height="3138" alt="3" src="https://github.com/user-attachments/assets/95bd3a89-6c7b-4e93-a7e2-8adcb530a421" />
+<img width="4727" height="3138" alt="Skyliner Xcode Project Screeenshot" src="https://github.com/user-attachments/assets/95bd3a89-6c7b-4e93-a7e2-8adcb530a421" />
 
 Skyliner uses a **numbered directory scheme** to convey logical and chronological order. Each top‑level folder begins with a numeral followed by its name:
 
@@ -178,4 +178,4 @@ This project is released under a dual license-policy framework. See `LICENSE.md`
 
 Skyliner aims to be a polished, native client for the Bluesky social network. Its modular architecture, modern SwiftUI patterns and strong emphasis on maintainability make it a solid foundation for future growth. However, it is still very early in its life cycle – expect things to break and evolve. If you decide to explore the project or contribute, tread carefully and be prepared for changes.
 
-<img width="5550" height="1500" alt="Skyliner Resources Banner" src="https://github.com/user-attachments/assets/bf62f722-be87-49d2-9495-cc35af3789ee" />
+<img width="5550" height="1500" alt="Skyliner Starry Night Sky with Clouds Banner" src="https://github.com/user-attachments/assets/bf62f722-be87-49d2-9495-cc35af3789ee" />
