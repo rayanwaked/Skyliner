@@ -69,7 +69,7 @@ This project targets cutting‑edge Apple platforms and requires recent tooling:
 
 1. **Clone this repository:**
    ```bash
-   git clone https://github.com/yourusername/Skyliner.git
+   git clone https://github.com/rayanwaked/Skyliner.git
    ```
 
 2. **Open the project:** double‑click `Skyliner.xcodeproj` or open the `.xcworkspace` if you prefer to manage packages through Xcode's workspace
