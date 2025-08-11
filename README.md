@@ -84,7 +84,7 @@ This project targets cutting‑edge Apple platforms and requires recent tooling:
 
 > 💡 If you run into build issues due to package resolution, try **File → Packages → Resolve Package Versions** in Xcode. On machines with older Xcode versions you may need to manually update Swift toolchains.
 
-<img width="5550" height="1338" alt="Skyliner Sunrise Sky with Clouds Banner" src="https://github.com/user-attachments/assets/ebc00d9d-03c2-4eff-b840-c33ae0985344" />
+<img width="5550" height="1338" alt="Skyliner Sunrise Sky with Clouds Banner" src="https://github.com/user-attachments/assets/d4d4ba05-5766-46db-99de-81edeeb42a91" />
 
 ## Dependencies
 
