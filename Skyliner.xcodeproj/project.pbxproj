@@ -398,7 +398,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.55.0;
+				MARKETING_VERSION = 0.60.0;
 				PRODUCT_BUNDLE_IDENTIFIER = waked.Skyliner;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
@@ -443,7 +443,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.55.0;
+				MARKETING_VERSION = 0.60.0;
 				PRODUCT_BUNDLE_IDENTIFIER = waked.Skyliner;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;

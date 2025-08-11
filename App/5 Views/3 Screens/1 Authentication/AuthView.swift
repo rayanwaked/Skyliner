@@ -25,6 +25,7 @@ extension AuthenticationView {
         var signinPassword: String = ""
         var signinError: String = ""
         var authenticationCode: String = ""
+        var authenticationError: String = ""
     }
 }
 
@@ -72,13 +73,29 @@ struct AuthenticationView: View {
                             reenteredPassword: $viewModel.createReenteredPassword,
                             error: viewModel.createError,
                             onCreateAccount: {
-                                
+                                Task {
+                                    do {
+                                        let requires2FA = try await appState.authManager.createAccount(
+                                            handle: viewModel.createHandle,
+                                            password: viewModel.createPassword
+                                        )
+                                        
+                                        if requires2FA {
+                                            viewModel.selectedSection = .authenticationSection
+                                        }
+                                        dismissKeyboard()
+                                    } catch {
+                                        viewModel.createError = error.localizedDescription
+                                        dismissKeyboard()
+                                    }
+                                }
                             },
                             onGoBack: {
                                 viewModel.selectedSection = .welcomeSection
                                 viewModel.createHandle = ""
                                 viewModel.createPassword = ""
                                 viewModel.createReenteredPassword = ""
+                                viewModel.createError = ""
                             }
                         )
                         .onAppear {
@@ -95,12 +112,18 @@ struct AuthenticationView: View {
                             onSignIn: {
                                 Task {
                                     do {
-                                        try await appState.authManager.authenticate(
+                                        try await appState.authManager.startSignIn(
                                             handle: viewModel.signinHandle,
                                             password: viewModel.signinPassword
                                         )
+                                        // Move to the 2FA screen; if 2FA isn’t needed, the background task
+                                        // will complete and the app will proceed.
+                                        viewModel.selectedSection = .authenticationSection
+                                        viewModel.authenticationCode = ""
+                                        viewModel.authenticationError = ""
                                         dismissKeyboard()
                                     } catch {
+                                        // Only show real errors (network, bad creds, etc.)
                                         viewModel.signinError = error.localizedDescription
                                         dismissKeyboard()
                                     }
@@ -110,6 +133,7 @@ struct AuthenticationView: View {
                                 viewModel.selectedSection = .welcomeSection
                                 viewModel.signinHandle = ""
                                 viewModel.signinPassword = ""
+                                viewModel.signinError = ""
                             }
                         )
                         .onAppear {
@@ -122,7 +146,23 @@ struct AuthenticationView: View {
                         authenticationSection(
                             code: $viewModel.authenticationCode,
                             onSubmit: {
-                                
+                                Task {
+                                    do {
+                                        appState.authManager.submitTwoFactorCode(viewModel.authenticationCode)
+                                        
+                                        viewModel.authenticationCode = ""
+                                        viewModel.signinHandle = ""
+                                        viewModel.signinPassword = ""
+                                        viewModel.createHandle = ""
+                                        viewModel.createPassword = ""
+                                        viewModel.createReenteredPassword = ""
+                                        dismissKeyboard()
+                                    } catch {
+                                        // Handle 2FA verification error
+                                        viewModel.authenticationError = error.localizedDescription
+                                        dismissKeyboard()
+                                    }
+                                }
                             }
                         )
                         .onAppear {
