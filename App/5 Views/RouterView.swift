@@ -87,7 +87,7 @@ extension RouterView {
 extension RouterView {
     var appView: some View {
         ZStack {
-            // Background workaround due to the iOS 26 rounded keyboard and transparency exposing default background colors
+            // Background workaround due to the iOS 26 rounded keyboard and transparency exposing system background colors
             Rectangle()
                 .foregroundStyle(.standardBackground)
                 .frame(maxWidth: .infinity, maxHeight: .infinity)

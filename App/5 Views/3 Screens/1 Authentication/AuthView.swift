@@ -74,20 +74,20 @@ struct AuthenticationView: View {
                             error: viewModel.createError,
                             onCreateAccount: {
                                 Task {
-                                    do {
-                                        let requires2FA = try await appState.authManager.createAccount(
-                                            handle: viewModel.createHandle,
-                                            password: viewModel.createPassword
-                                        )
-                                        
-                                        if requires2FA {
-                                            viewModel.selectedSection = .authenticationSection
-                                        }
-                                        dismissKeyboard()
-                                    } catch {
-                                        viewModel.createError = error.localizedDescription
-                                        dismissKeyboard()
-                                    }
+//                                    do {
+//                                        let requires2FA = try await appState.authManager.createAccount(
+//                                            handle: viewModel.createHandle,
+//                                            password: viewModel.createPassword
+//                                        )
+//                                        
+//                                        if requires2FA {
+//                                            viewModel.selectedSection = .authenticationSection
+//                                        }
+//                                        dismissKeyboard()
+//                                    } catch {
+//                                        viewModel.createError = error.localizedDescription
+//                                        dismissKeyboard()
+//                                    }
                                 }
                             },
                             onGoBack: {
@@ -156,10 +156,6 @@ struct AuthenticationView: View {
                                         viewModel.createHandle = ""
                                         viewModel.createPassword = ""
                                         viewModel.createReenteredPassword = ""
-                                        dismissKeyboard()
-                                    } catch {
-                                        // Handle 2FA verification error
-                                        viewModel.authenticationError = error.localizedDescription
                                         dismissKeyboard()
                                     }
                                 }

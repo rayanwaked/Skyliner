@@ -29,7 +29,7 @@ extension AuthenticationView {
                     
                     ButtonComponent(
                         "Sign in",
-                        variation: .secondary,
+                        variation: .primary,
                         haptic: .soft
                     ) {
                         onGoSignIn()

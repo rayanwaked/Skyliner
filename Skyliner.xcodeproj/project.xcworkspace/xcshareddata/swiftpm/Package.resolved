@@ -1,13 +1,13 @@
 {
-  "originHash" : "f1dae66d46109809b8c4c571bf50e91519c4f80b6bc70737c5df1c033197454b",
+  "originHash" : "ed146ab22370e4392e32d21316dbd6b8b4d5568417fdbd85e7df05e6f98bb38c",
   "pins" : [
     {
       "identity" : "atprotokit",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/MasterJ93/ATProtoKit",
+      "location" : "https://github.com/rayanwaked/ATProtoKit.git",
       "state" : {
-        "revision" : "20c9de2d211a8acc8640c3da61e20d0795891116",
-        "version" : "0.30.4"
+        "branch" : "main",
+        "revision" : "ff4234921197209d1481ff75dd990c488a07603e"
       }
     },
     {
@@ -60,8 +60,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/apple/swift-log.git",
       "state" : {
-        "revision" : "3d8596ed08bd13520157f0355e35caed215ffbfa",
-        "version" : "1.6.3"
+        "revision" : "ce592ae52f982c847a4efc0dd881cc9eb32d29f2",
+        "version" : "1.6.4"
       }
     },
     {

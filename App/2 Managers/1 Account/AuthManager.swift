@@ -27,37 +27,33 @@ public final class AuthManager: @unchecked Sendable {
     private var pendingConfig: ATProtocolConfiguration?
     private var signInTask: Task<Void, Never>?
     
-    public enum ConfigState {
-        case restored, failed, empty
-    }
+    public enum ConfigState { case restored, failed, empty }
     
-    // MARK: - INITIALIZER
     public init() {
-        // 1. Set up secure keychain
+        var initConfigState: ConfigState = .empty
+        
         if let uuid = keychain.get("session_uuid"), let realUUID = UUID(uuidString: uuid) {
             self.ATProtoKeychain = AppleSecureKeychain(identifier: realUUID)
-            self.configState = .restored
         } else {
             let newUUID = UUID().uuidString
             guard keychain.set(newUUID, forKey: "session_uuid"),
                   let realUUID = UUID(uuidString: newUUID) else {
                 hapticFeedback(.error)
-                self.configState = .failed
+                initConfigState = .failed
                 fatalError("Authentication Manager: Failed to create or store session_uuid.")
             }
             self.ATProtoKeychain = AppleSecureKeychain(identifier: realUUID)
         }
         
-        // 2. Setup async stream for ClientManager
         let (stream, continuation) = AsyncStream<ClientManager?>.makeStream(bufferingPolicy: .bufferingNewest(1))
         self.clientManagerUpdates = stream
         self.clientManagerContinuation = continuation
         
-        // 3. Try session restore
-        Task {
-            await restoreSession()
-        }
+        self.configState = initConfigState
+        
+        Task { await restoreSession() }
     }
+
     
     /// Start sign-in and let ATProtoKit block internally waiting for code via codeStream.
     public func startSignIn(handle: String, password: String) async throws {
@@ -81,6 +77,12 @@ public final class AuthManager: @unchecked Sendable {
                 }
             } catch {
                 // Failure: clean up so a fresh attempt can start
+                if let err = error as? APIClientService.ATHTTPResponseError, err.error == "InvalidToken" {
+                    // Let UI re-prompt for code without killing pendingConfig
+                    print("⚠️ Invalid 2FA code, retrying")
+                    return
+                }
+                
                 await MainActor.run {
                     self?.pendingConfig = nil
                     self?.signInTask = nil
@@ -162,21 +164,18 @@ extension AuthManager {
         do {
             let config = try await refreshSession()
             await setClientManager(with: config)
-            await MainActor.run {
-                self.configState = .restored
-                print("🍄✅ Authentication Manager: Session restored")
-                hapticFeedback(.success)
-            }
+            await MainActor.run { self.configState = .restored }
         } catch {
-            print("🍄⛔️ Authentication Manager: Session restoration failed: \(error)")
+            // Optionally purge invalid tokens
+            try? await clientManager?.credentials.deleteSession()
             await MainActor.run {
-                self.configState = .failed
                 self.clientManager = nil
-                self.clientManagerContinuation.yield(nil)
-                hapticFeedback(.error)
+                clientManagerContinuation.yield(nil)
+                self.configState = .failed
             }
         }
     }
+
     
     // MARK: - HELPER METHODS
     private func setClientManager(with config: ATProtocolConfiguration) async {
@@ -195,3 +194,4 @@ extension AuthManager {
         try await config?.deleteSession()
     }
 }
+
