@@ -27,7 +27,7 @@ public final class AuthManager: @unchecked Sendable {
     private var pendingConfig: ATProtocolConfiguration?
     private var signInTask: Task<Void, Never>?
     
-    public enum ConfigState { case restored, failed, empty }
+    public enum ConfigState { case restored, unauthorized, failed, empty }
     
     public init() {
         var initConfigState: ConfigState = .empty
@@ -39,7 +39,7 @@ public final class AuthManager: @unchecked Sendable {
             guard keychain.set(newUUID, forKey: "session_uuid"),
                   let realUUID = UUID(uuidString: newUUID) else {
                 hapticFeedback(.error)
-                initConfigState = .failed
+                initConfigState = .empty
                 fatalError("Authentication Manager: Failed to create or store session_uuid.")
             }
             self.ATProtoKeychain = AppleSecureKeychain(identifier: realUUID)
@@ -53,22 +53,23 @@ public final class AuthManager: @unchecked Sendable {
         
         Task { await restoreSession() }
     }
-
+    
     
     /// Start sign-in and let ATProtoKit block internally waiting for code via codeStream.
     public func startSignIn(handle: String, password: String) async throws {
-        // Don’t kick off another attempt if one is already running.
+        // Don't kick off another attempt if one is already running.
         guard signInTask == nil else { return }
-
+        
         let config = ATProtocolConfiguration(keychainProtocol: ATProtoKeychain)
         self.pendingConfig = config
-
+        
+        // Set state to unauthorized immediately when 2FA is expected
+        configState = .unauthorized
+        
         // Run authenticate in the background; it will suspend on 2FA until we yield a code.
         signInTask = Task { [weak self] in
             do {
                 try await config.authenticate(with: handle, password: password)
-
-                // Success: promote to active session using the SAME config
                 await self?.setClientManager(with: config)
                 await MainActor.run {
                     self?.configState = .restored
@@ -76,25 +77,17 @@ public final class AuthManager: @unchecked Sendable {
                     self?.signInTask = nil
                 }
             } catch {
-                // Failure: clean up so a fresh attempt can start
-                if let err = error as? APIClientService.ATHTTPResponseError, err.error == "InvalidToken" {
-                    // Let UI re-prompt for code without killing pendingConfig
-                    print("⚠️ Invalid 2FA code, retrying")
-                    return
-                }
-                
                 await MainActor.run {
+                    self?.configState = .failed
                     self?.pendingConfig = nil
                     self?.signInTask = nil
-                    self?.clientManagerContinuation.yield(nil)
-                    self?.configState = .failed
-                    print("🍄⛔️ Sign-in failed: \(error)")
                 }
+                self?.clientManagerContinuation.yield(nil)
             }
         }
     }
     
-    /// Feed the user’s 2FA code into the SAME config that started authenticate()
+    /// Feed the user's 2FA code into the SAME config that started authenticate()
     public func submitTwoFactorCode(_ code: String) {
         guard let config = pendingConfig else {
             print("⚠️ submitTwoFactorCode called with no pending config; ignoring.")
@@ -175,7 +168,7 @@ extension AuthManager {
             }
         }
     }
-
+    
     
     // MARK: - HELPER METHODS
     private func setClientManager(with config: ATProtocolConfiguration) async {
@@ -194,4 +187,3 @@ extension AuthManager {
         try await config?.deleteSession()
     }
 }
-

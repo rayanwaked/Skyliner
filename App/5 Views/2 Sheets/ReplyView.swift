@@ -85,24 +85,25 @@ extension ReplyView {
                 VStack(alignment: .leading, spacing: 2) {
                     HStack {
                         Text(parentPost.name)
-                            .font(.caption)
+                            .font(.callout)
                             .fontWeight(.medium)
                             .lineLimit(1)
                         
                         Text("@\(parentPost.handle)")
-                            .font(.caption2)
+                            .font(.smaller(.callout))
                             .foregroundStyle(.gray)
                             .lineLimit(1)
                         
                         Text("· \(parentPost.time)")
-                            .font(.caption2)
+                            .font(.smaller(.callout))
                             .foregroundStyle(.gray)
                     }
                     
                     Text(parentPost.message)
-                        .font(.caption)
+                        .font(.smaller(.body))
                         .lineLimit(3)
                         .multilineTextAlignment(.leading)
+                        .padding(.top, Padding.tiny)
                 }
                 
                 Spacer()
@@ -110,13 +111,14 @@ extension ReplyView {
             
             HStack(spacing: Padding.tiny) {
                 Image(systemName: "arrow.turn.down.right")
-                    .font(.caption)
+                    .font(.smaller(.callout))
                     .foregroundStyle(.gray)
                 
                 Text("Replying to @\(parentPost.handle)")
-                    .font(.caption)
+                    .font(.smaller(.callout))
                     .foregroundStyle(.gray)
             }
+            .padding(.top, Padding.small)
         }
         .padding(Padding.small)
         .background(.gray.opacity(Opacity.soft))
@@ -201,47 +203,3 @@ extension ReplyView {
         }
     }
 }
-
-//// MARK: - PREVIEW
-//#Preview {
-//    @Previewable @State var appState: AppState = .init()
-//    
-//    let samplePost = PostItem(
-//        authorDID: "did:plc:sample",
-//        postID: "at://sample/post",
-//        imageURL: nil,
-//        name: "Sample User",
-//        handle: "sampleuser.bsky.social",
-//        time: "2m",
-//        message: "This is a sample post that we're replying to.",
-//        embed: nil,
-//        rawPost: AppBskyLexicon.Feed.PostViewDefinition(
-//            uri: "at://sample/post",
-//            cid: "samplecid",
-//            author: AppBskyLexicon.Actor.ProfileViewBasicDefinition(
-//                actorDID: "did:plc:sample",
-//                actorHandle: "sampleuser.bsky.social",
-//                displayName: "Sample User",
-//                avatarImageURL: nil,
-//                associated: nil,
-//                viewer: nil,
-//                labels: nil,
-//                createdAt: nil
-//            ),
-//            record: UnknownType(type: "app.bsky.feed.post"),
-//            embed: nil,
-//            replyCount: 0,
-//            repostCount: 0,
-//            likeCount: 0,
-//            quoteCount: 0,
-//            indexedAt: Date(),
-//            viewer: nil,
-//            labels: nil,
-//            threadgate: nil
-//        )
-//    )
-//    
-//    ReplyView(parentPost: samplePost)
-//        .environment(appState)
-//}
-

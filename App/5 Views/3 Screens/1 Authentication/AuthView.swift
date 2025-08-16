@@ -115,15 +115,17 @@ struct AuthenticationView: View {
                                         try await appState.authManager.startSignIn(
                                             handle: viewModel.signinHandle,
                                             password: viewModel.signinPassword
+                                        
                                         )
-                                        // Move to the 2FA screen; if 2FA isn’t needed, the background task
-                                        // will complete and the app will proceed.
-                                        viewModel.selectedSection = .authenticationSection
+                                        
+                                        if appState.authManager.configState == .unauthorized {
+                                            viewModel.selectedSection = .authenticationSection
+                                        }
+                                        
                                         viewModel.authenticationCode = ""
                                         viewModel.authenticationError = ""
                                         dismissKeyboard()
                                     } catch {
-                                        // Only show real errors (network, bad creds, etc.)
                                         viewModel.signinError = error.localizedDescription
                                         dismissKeyboard()
                                     }
@@ -136,9 +138,7 @@ struct AuthenticationView: View {
                                 viewModel.signinError = ""
                             }
                         )
-                        .onAppear {
-                            PostHogSDK.shared.capture("Sign In View")
-                        }
+                        .onAppear { PostHogSDK.shared.capture("Sign In View") }
                         
                     // MARK: - TWO FACTOR AUTHENTICATION
                     case .authenticationSection:

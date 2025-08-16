@@ -7,6 +7,12 @@
 
 import SwiftUI
 
+enum Gate {
+    case splash
+    case unauthenticated
+    case authenticated
+}
+
 // MARK: - COORDINATOR
 @Observable
 final class RouterCoordinator {
@@ -53,18 +59,28 @@ final class RouterCoordinator {
 
 
 // MARK: - VIEW
+
 struct RouterView: View {
-    // MARK: - PROPERTIES
     @Environment(AppState.self) private var appState
     @Environment(RouterCoordinator.self) private var routerCoordinator
     
-    // MARK: - BODY
+    private var gate: Gate {
+        if !routerCoordinator.splashCompleted { return .splash }
+        switch appState.authManager.configState {
+        case .restored: return .authenticated
+        case .failed, .unauthorized: return .unauthenticated
+        case .empty: return .splash
+        }
+    }
+    
     var body: some View {
-        switch (routerCoordinator.splashCompleted, appState.authManager.configState) {
-        case (false, _): splashView.id("splash")
-        case (true, .empty): splashView.id("splash")
-        case (true, .failed): AuthenticationView().id("auth")
-        case (true, .restored): appView
+        switch gate {
+        case .splash:
+            splashView.id("splash")
+        case .unauthenticated:
+            AuthenticationView().id("auth")
+        case .authenticated:
+            appView.id("app")
         }
     }
 }
