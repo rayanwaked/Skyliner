@@ -39,141 +39,195 @@ struct AuthenticationView: View {
     // MARK: - BODY
     public var body: some View {
         ZStack(alignment: .bottomLeading) {
-            // MARK: - BACKGROUND
-            BackgroundDesign(isAnimated: true)
-                .ignoresSafeArea(.keyboard)
-                .backport.glassEffect(in: RoundedRectangle(
-                    cornerRadius: Radius.glass
-                ))
-                .ignoresSafeArea()
+            backgroundView
+            contentView
+        }
+    }
+}
 
-            // MARK: - CONTENT
+// MARK: - BACKGROUND
+private extension AuthenticationView {
+    var backgroundView: some View {
+        BackgroundDesign(isAnimated: true)
+            .ignoresSafeArea(.keyboard)
+            .backport.glassEffect(in: RoundedRectangle(
+                cornerRadius: Radius.glass
+            ))
+            .ignoresSafeArea()
+    }
+}
+
+// MARK: - CONTENT
+private extension AuthenticationView {
+    var contentView: some View {
+        VStack {
             VStack {
-                VStack {
-                    switch viewModel.selectedSection {
-                    // MARK: - WELCOME
-                    case .welcomeSection:
-                        Spacer()
-                        welcomeSection(
-                            onGoSignIn:
-                                { viewModel.selectedSection = .signinSection },
-                            onGoCreateAccount:
-                                { viewModel.selectedSection = .createAccountSection }
-                        )
-                        .onAppear {
-                            PostHogSDK.shared.capture("Welcome View")
-                        }
+                currentSectionView
+            }
+            .padding(.bottom, -Padding.standard)
+            .animation(.easeInOut(duration: 0.25), value: viewModel.selectedSection)
+            
+            documentSection
+                .standardCardStyle()
+                .ignoresSafeArea(.keyboard)
+        }
+    }
+    
+    @ViewBuilder
+    var currentSectionView: some View {
+        switch viewModel.selectedSection {
+        case .welcomeSection:
+            Spacer()
+            welcomeSectionView
+        case .createAccountSection:
+            Spacer()
+            createAccountSectionView
+        case .signinSection:
+            Spacer()
+            signinSectionView
+        case .authenticationSection:
+            Spacer()
+            authenticationSectionView
+        }
+    }
+}
 
-                    // MARK: - CREATE ACOUNT
-                    case .createAccountSection:
-                        Spacer()
-                        createAccountSection(
-                            handle: $viewModel.createHandle,
-                            password: $viewModel.createPassword,
-                            reenteredPassword: $viewModel.createReenteredPassword,
-                            error: viewModel.createError,
-                            onCreateAccount: {
-                                Task {
-//                                    do {
-//                                        let requires2FA = try await appState.authManager.createAccount(
-//                                            handle: viewModel.createHandle,
-//                                            password: viewModel.createPassword
-//                                        )
-//                                        
-//                                        if requires2FA {
-//                                            viewModel.selectedSection = .authenticationSection
-//                                        }
-//                                        dismissKeyboard()
-//                                    } catch {
-//                                        viewModel.createError = error.localizedDescription
-//                                        dismissKeyboard()
-//                                    }
-                                }
-                            },
-                            onGoBack: {
-                                viewModel.selectedSection = .welcomeSection
-                                viewModel.createHandle = ""
-                                viewModel.createPassword = ""
-                                viewModel.createReenteredPassword = ""
-                                viewModel.createError = ""
-                            }
-                        )
-                        .onAppear {
-                            PostHogSDK.shared.capture("Create Account View")
-                        }
+// MARK: - WELCOME SECTION
+private extension AuthenticationView {
+    var welcomeSectionView: some View {
+        welcomeSection(
+            onGoSignIn: { viewModel.selectedSection = .signinSection },
+            onGoCreateAccount: { viewModel.selectedSection = .createAccountSection }
+        )
+        .onAppear {
+            PostHogSDK.shared.capture("Welcome View")
+        }
+    }
+}
 
-                        // MARK: - SIGN IN
-                    case .signinSection:
-                        Spacer()
-                        signinSection(
-                            handle: $viewModel.signinHandle,
-                            password: $viewModel.signinPassword,
-                            error: viewModel.signinError,
-                            onSignIn: {
-                                Task {
-                                    do {
-                                        try await appState.authManager.startSignIn(
-                                            handle: viewModel.signinHandle,
-                                            password: viewModel.signinPassword
-                                        
-                                        )
-                                        
-                                        if appState.authManager.configState == .unauthorized {
-                                            viewModel.selectedSection = .authenticationSection
-                                        }
-                                        
-                                        viewModel.authenticationCode = ""
-                                        viewModel.authenticationError = ""
-                                        dismissKeyboard()
-                                    } catch {
-                                        viewModel.signinError = error.localizedDescription
-                                        dismissKeyboard()
-                                    }
-                                }
-                            },
-                            onGoBack: {
-                                viewModel.selectedSection = .welcomeSection
-                                viewModel.signinHandle = ""
-                                viewModel.signinPassword = ""
-                                viewModel.signinError = ""
-                            }
-                        )
-                        .onAppear { PostHogSDK.shared.capture("Sign In View") }
-                        
-                    // MARK: - TWO FACTOR AUTHENTICATION
-                    case .authenticationSection:
-                        Spacer()
-                        authenticationSection(
-                            code: $viewModel.authenticationCode,
-                            onSubmit: {
-                                Task {
-                                    do {
-                                        appState.authManager.submitTwoFactorCode(viewModel.authenticationCode)
-                                        
-                                        viewModel.authenticationCode = ""
-                                        viewModel.signinHandle = ""
-                                        viewModel.signinPassword = ""
-                                        viewModel.createHandle = ""
-                                        viewModel.createPassword = ""
-                                        viewModel.createReenteredPassword = ""
-                                        dismissKeyboard()
-                                    }
-                                }
-                            }
-                        )
-                        .onAppear {
-                            PostHogSDK.shared.capture("Authentication View")
-                        }
+// MARK: - CREATE ACCOUNT SECTION
+private extension AuthenticationView {
+    var createAccountSectionView: some View {
+        createAccountSection(
+            handle: $viewModel.createHandle,
+            password: $viewModel.createPassword,
+            reenteredPassword: $viewModel.createReenteredPassword,
+            error: viewModel.createError,
+            onCreateAccount: createAccountAction,
+            onGoBack: resetCreateAccountSection
+        )
+        .onAppear {
+            PostHogSDK.shared.capture("Create Account View")
+        }
+    }
+    
+    var createAccountAction: () -> Void {
+        {
+            Task {
+                //                do {
+                //                    let requires2FA = try await appState.authManager.createAccount(
+                //                        handle: viewModel.createHandle,
+                //                        password: viewModel.createPassword
+                //                    )
+                //
+                //                    if requires2FA {
+                //                        viewModel.selectedSection = .authenticationSection
+                //                    }
+                //                    dismissKeyboard()
+                //                } catch {
+                //                    viewModel.createError = error.localizedDescription
+                //                    dismissKeyboard()
+                //                }
+            }
+        }
+    }
+    
+    var resetCreateAccountSection: () -> Void {
+        {
+            viewModel.selectedSection = .welcomeSection
+            viewModel.createHandle = ""
+            viewModel.createPassword = ""
+            viewModel.createReenteredPassword = ""
+            viewModel.createError = ""
+        }
+    }
+}
+
+// MARK: - SIGN IN SECTION
+private extension AuthenticationView {
+    var signinSectionView: some View {
+        signinSection(
+            handle: $viewModel.signinHandle,
+            password: $viewModel.signinPassword,
+            error: viewModel.signinError,
+            onSignIn: signinAction,
+            onGoBack: resetSigninSection
+        )
+        .onAppear {
+            PostHogSDK.shared.capture("Sign In View")
+        }
+    }
+    
+    var signinAction: () -> Void {
+        {
+            Task {
+                do {
+                    try await appState.authManager.startSignIn(
+                        handle: viewModel.signinHandle,
+                        password: viewModel.signinPassword
+                    )
+                    
+                    if appState.authManager.configState == .unauthorized {
+                        viewModel.selectedSection = .authenticationSection
                     }
+                    
+                    viewModel.authenticationCode = ""
+                    viewModel.authenticationError = ""
+                    dismissKeyboard()
+                } catch {
+                    viewModel.signinError = error.localizedDescription
+                    dismissKeyboard()
                 }
-                .padding(.bottom, -Padding.standard)
-                .animation(.easeInOut(duration: 0.25), value: viewModel.selectedSection)
+            }
+        }
+    }
+    
+    var resetSigninSection: () -> Void {
+        {
+            viewModel.selectedSection = .welcomeSection
+            viewModel.signinHandle = ""
+            viewModel.signinPassword = ""
+            viewModel.signinError = ""
+        }
+    }
+}
 
-                // MARK: - DOCUMENT
-                documentSection
-                    .standardCardStyle()
-                    .ignoresSafeArea(.keyboard)
-
+// MARK: - AUTHENTICATION SECTION
+private extension AuthenticationView {
+    var authenticationSectionView: some View {
+        authenticationSection(
+            code: $viewModel.authenticationCode,
+            onSubmit: authenticationSubmitAction
+        )
+        .onAppear {
+            PostHogSDK.shared.capture("Authentication View")
+        }
+    }
+    
+    var authenticationSubmitAction: () -> Void {
+        {
+            Task {
+                do {
+                    appState.authManager.submitTwoFactorCode(viewModel.authenticationCode)
+                    
+                    viewModel.authenticationCode = ""
+                    viewModel.signinHandle = ""
+                    viewModel.signinPassword = ""
+                    viewModel.createHandle = ""
+                    viewModel.createPassword = ""
+                    viewModel.createReenteredPassword = ""
+                    dismissKeyboard()
+                }
             }
         }
     }
@@ -186,4 +240,3 @@ struct AuthenticationView: View {
     AuthenticationView()
         .environment(appState)
 }
-

@@ -51,7 +51,7 @@ private struct NotificationRow: View {
     
     var body: some View {
         VStack(alignment: .leading, spacing: Padding.tiny) {
-            HStack(alignment: .top, spacing: 0) {
+            HStack(alignment: .top) {
                 ProfilePictureComponent(
                     isUser: false,
                     profilePictureURL: notification.authorPictureURL,
@@ -65,11 +65,10 @@ private struct NotificationRow: View {
             .frame(maxWidth: .infinity, alignment: .leading)
             
             Divider()
-                .padding(.top, Padding.tiny)
                 .padding(.horizontal, -Padding.standard)
+                .padding(.top, Padding.small)
         }
         .padding(.horizontal, Padding.standard)
-        .padding(.vertical, Padding.tiny)
         .padding(.bottom, Padding.tiny)
     }
 }
@@ -95,7 +94,8 @@ private struct NotificationContent: View {
                 Text(subjectContent)
                     .font(.smaller(.body))
                     .foregroundStyle(.secondary)
-                    .lineLimit(3)
+                    .fixedSize(horizontal: false, vertical: true)
+                    .multilineTextAlignment(.leading)
             }
         }
     }
