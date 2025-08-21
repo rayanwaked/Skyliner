@@ -56,11 +56,11 @@ public final class AuthManager: @unchecked Sendable {
     
     
     /// Start sign-in and let ATProtoKit block internally waiting for code via codeStream.
-    public func startSignIn(handle: String, password: String) async throws {
+    public func startSignIn(pdsURL: String, handle: String, password: String) async throws {
         // Don't kick off another attempt if one is already running.
         guard signInTask == nil else { return }
         
-        let config = ATProtocolConfiguration(keychainProtocol: ATProtoKeychain)
+        let config = ATProtocolConfiguration(pdsURL: pdsURL, keychainProtocol: ATProtoKeychain)
         self.pendingConfig = config
         
         // Set state to unauthorized immediately when 2FA is expected

@@ -17,13 +17,17 @@ extension AuthenticationView {
         }
         
         var selectedSection: AuthenticationSections = .welcomeSection
+        
         var createHandle: String = ""
         var createPassword: String = ""
         var createReenteredPassword: String = ""
         var createError: String = ""
+        
+        var signinPDSUrl: String = "https://bsky.social"
         var signinHandle: String = ""
         var signinPassword: String = ""
         var signinError: String = ""
+        
         var authenticationCode: String = ""
         var authenticationError: String = ""
     }
@@ -157,6 +161,7 @@ private extension AuthenticationView {
 private extension AuthenticationView {
     var signinSectionView: some View {
         signinSection(
+            pdsURL: $viewModel.signinPDSUrl,
             handle: $viewModel.signinHandle,
             password: $viewModel.signinPassword,
             error: viewModel.signinError,
@@ -173,6 +178,7 @@ private extension AuthenticationView {
             Task {
                 do {
                     try await appState.authManager.startSignIn(
+                        pdsURL: viewModel.signinPDSUrl,
                         handle: viewModel.signinHandle,
                         password: viewModel.signinPassword
                     )

@@ -14,11 +14,11 @@ import SwiftUI
 public final class ClientManager: Sendable {
     // MARK: - PROPERTIES
     /// Holds all necessary connection and authentication settings for the AT Protocol.
-    /// Typically, you provide an instance of `ATProtocolConfiguration` with information such as server URL, credentialss, and custom config options.
+    /// Typically, you provide an instance of `ATProtocolConfiguration` with information such as server URL, credentials, and custom config options.
     ///
     /// Example:
     /// ```swift
-    /// let creds = ATProtocolConfiguration(serverURL: "https://bsky.social", credentialss: mycredentialss)
+    /// let creds = ATProtocolConfiguration(serverURL: "https://bsky.social", credentials: mycredentials)
     /// let manager = await ClientManager(credentials: config)
     /// ```
     public let credentials: ATProtocolConfiguration

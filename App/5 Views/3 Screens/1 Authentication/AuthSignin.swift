@@ -10,6 +10,7 @@ import SwiftUI
 // MARK: - SIGN IN SECTION
 extension AuthenticationView {
     func signinSection(
+        pdsURL: Binding<String>,
         handle: Binding<String>,
         password: Binding<String>,
         error: String,
@@ -18,6 +19,15 @@ extension AuthenticationView {
             VStack(alignment: .leading) {
                 // MARK: HEADER
                 headerSection
+                
+                // MARK: INPUT
+                InputFieldComponent(
+                    icon: Image(systemName: "globe"),
+                    title: "PDS url",
+                    text: pdsURL
+                )
+                .keyboardType(.webSearch)
+                .autocapitalization(.none)
                 
                 // MARK: INPUT
                 InputFieldComponent(
