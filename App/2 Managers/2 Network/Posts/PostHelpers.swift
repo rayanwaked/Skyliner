@@ -8,26 +8,6 @@
 import SwiftUI
 import ATProtoKit
 
-// MARK: - ERROR HANDLING & LOGGING
-extension PostManager {
-    func execute(_ operationName: String, operation: () async throws -> Void) async {
-        do {
-            try await operation()
-            logSuccess("\(operationName) completed successfully")
-        } catch {
-            logError("Failed to \(operationName.lowercased()): \(error.localizedDescription)")
-        }
-    }
-    
-    func logSuccess(_ message: String) {
-        print("✅ \(message)")
-    }
-    
-    func logError(_ message: String) {
-        print("❌ \(message)")
-    }
-}
-
 // MARK: - EXTRACT MESSAGE
 extension PostManager {
     func extractMessage(from record: UnknownType) -> String {
@@ -57,3 +37,4 @@ extension PostManager {
         window.rootViewController?.present(vc, animated: true)
     }
 }
+

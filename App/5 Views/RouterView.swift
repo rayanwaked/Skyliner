@@ -7,65 +7,31 @@
 
 import SwiftUI
 
-enum Gate {
-    case splash
-    case unauthenticated
-    case authenticated
-}
-
-// MARK: - COORDINATOR
+// MARK: - CONTROLLER
 @Observable
-final class RouterCoordinator {
-    // MARK: - PROPERTIES
-    var splashCompleted: Bool = false
-    var selectedTab: Tabs = .home
-    var showingCreate: Bool = false
-    var showingProfile: Bool = false
-    var showingSettings: Bool = false
-    var showingThread: Bool = false
-    var threadPostURI: String = ""
-    var exploreSearch: String = ""
-    var showingReply: Bool = false
-    var replyPost: PostItem?
-    
-    // MARK: - METHODS
-    func selectTab(_ tab: Tabs) {
-        selectedTab = tab
+class Coordinator {
+    enum Views {
+        case home, profile
     }
     
-    func toggleCreate() {
-        showingCreate.toggle()
-    }
-    
-    func clearExploreSearch() {
-        exploreSearch = ""
-    }
-    
-    func showThread(uri: String) {
-        threadPostURI = uri
-        showingThread = true
-    }
-    
-    func showReply(for post: PostItem) {
-        replyPost = post
-        showingReply = true
-    }
-    
-    func hideReply() {
-        showingReply = false
-        replyPost = nil
-    }
+    var currentView: Views = .home
 }
-
 
 // MARK: - VIEW
-
 struct RouterView: View {
+    // MARK: - PROPERTIES
     @Environment(AppState.self) private var appState
-    @Environment(RouterCoordinator.self) private var routerCoordinator
+    @Environment(Coordinator.self) private var coordinator
+    @State var splashCompleted: Bool = false
     
+    // GATE
+    enum Gate {
+        case splash
+        case unauthenticated
+        case authenticated
+    }
     private var gate: Gate {
-        if !routerCoordinator.splashCompleted { return .splash }
+        if !splashCompleted { return .splash }
         switch appState.authManager.configState {
         case .restored: return .authenticated
         case .failed, .unauthorized: return .unauthenticated
@@ -73,12 +39,13 @@ struct RouterView: View {
         }
     }
     
+    // MARK: - BODY
     var body: some View {
         switch gate {
         case .splash:
             splashView.id("splash")
         case .unauthenticated:
-            AuthenticationView().id("auth")
+            AuthenticationView()
         case .authenticated:
             appView.id("app")
         }
@@ -90,9 +57,9 @@ extension RouterView {
     var splashView: some View {
         SplashDesign()
             .onAppear {
-                DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
-                    withAnimation(.easeInOut(duration: 0.5)) {
-                        routerCoordinator.splashCompleted = true
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                    withAnimation(.easeInOut(duration: 0.4)) {
+                        splashCompleted = true
                     }
                 }
             }
@@ -109,22 +76,10 @@ extension RouterView {
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
                 .ignoresSafeArea(.all)
             
-            switch routerCoordinator.selectedTab {
-            case .home:
-                HomeView()
-                    .transition(.move(edge: .bottom))
-            case .explore:
-                ExploreView()
-                    .transition(.move(edge: .top))
-            case .notifications:
-                NotificationsView()
-                    .transition(.move(edge: .bottom))
-            case .user:
-                UserView()
-                    .transition(.move(edge: .bottom))
+            switch coordinator.currentView {
+            case .home: HomeView()
+            case .profile: Text("HI2")
             }
-            
-            TabBarFeature()
         }
         .transition(.move(edge: .bottom))
         .zIndex(-1)
@@ -133,13 +88,11 @@ extension RouterView {
 
 // MARK: - PREVIEW
 #Preview {
-    @Previewable @State var appState: AppState = .init()
-    @Previewable @State var routerCoordinator: RouterCoordinator = .init()
-    @Previewable @State var headerCoordinator: HeaderCoordinator = .init()
+    @Previewable @State var appState = AppState()
+    @Previewable @State var coordinator = Coordinator()
     
     RouterView()
         .environment(appState)
-        .environment(routerCoordinator)
-        .environment(headerCoordinator)
+        .environment(coordinator)
 }
 

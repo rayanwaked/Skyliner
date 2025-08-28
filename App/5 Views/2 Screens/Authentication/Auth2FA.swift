@@ -7,26 +7,25 @@
 
 import SwiftUI
 
+// MARK: - 2FA SECTION
 extension AuthenticationView {
     func authenticationSection(
         code: Binding<String>,
-        onSubmit: @escaping () -> Void
-    ) -> some View {
+        onSubmit: @escaping () -> Void) -> some View {
         VStack(alignment: .leading) {
-            // MARK: HEADER
+            // MARK: - HEADER
             headerSection
             
-            // MARK: INPUT
+            // MARK: - INPUT
             InputFieldComponent(
                 icon: Image(systemName: "key.horizontal"),
                 title: "Secure code",
                 text: code
             )
-            
             .padding(.bottom, Screen.height * 0.02)
             
             HStack {
-                // MARK: SIGN IN
+                // MARK: - SIGN IN
                 ButtonComponent(
                     "Submit code",
                     variation: .primary,

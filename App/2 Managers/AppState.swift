@@ -8,9 +8,10 @@
 import SwiftUI
 import ATProtoKit
 
+// MARK: - APP STATE
 @MainActor
 @Observable
-class AppState {
+public class AppState {
     // MARK: - PROPERTIES
     var clientManager: ClientManager?
     var config: ATProtocolConfiguration?
@@ -22,10 +23,6 @@ class AppState {
     let searchManager = SearchManager()
     let notificationsManager = NotificationsManager()
     let threadManager = ThreadManager()
-
-    var dataCoordinator: DataCoordinator {
-        DataCoordinator(appState: self)
-    }
 
     private var storedUserDID: String {
         get { UserDefaults.standard.string(forKey: "userDID") ?? "" }
@@ -55,7 +52,7 @@ class AppState {
 
                 // MARK: - FETCH ON LAUNCH
                 if clientManager != nil {
-                    await dataCoordinator.loadAllData()
+                    await loadAllData()
                 }
             }
         }
@@ -72,6 +69,14 @@ class AppState {
         threadManager.appState = self
     }
 
+    func loadAllData() async {
+        await updateUserDID()
+        await userManager.loadProfile()
+        await trendsManager.loadTrends()
+        await postManager.loadPosts()
+        await notificationsManager.loadNotifications()
+    }
+    
     func updateUserDID() async {
         guard let storedUserDID = try? await clientManager?.account.getUserSession()?.sessionDID else {
             return

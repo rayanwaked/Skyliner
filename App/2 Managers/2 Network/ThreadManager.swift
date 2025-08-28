@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import SwiftyBeaver
 import ATProtoKit
 
 // MARK: - THREAD ITEM
@@ -130,7 +131,7 @@ public final class ThreadManager {
     // MARK: - METHODS
     func loadThread(uri: String, depth: Int? = nil, parentHeight: Int? = nil) async {
         guard let clientManager else {
-            print("❌ No valid client manager available for thread loading")
+            log.error("No valid client manager available for thread loading")
             return
         }
         
@@ -147,10 +148,10 @@ public final class ThreadManager {
             case .threadViewPost(let threadView):
                 self.threadModel.updateThread(from: threadView)
             case .notFoundPost:
-                print("❌ Thread post not found")
+                log.error("Thread post not found")
                 self.threadModel.clear()
             case .blockedPost:
-                print("❌ Thread post is blocked")
+                log.error("Thread post is blocked")
                 self.threadModel.clear()
             case .unknown(_, _):
                 break
@@ -167,9 +168,9 @@ public final class ThreadManager {
     private func execute(_ operationName: String, operation: () async throws -> Void) async {
         do {
             try await operation()
-            print("✅ \(operationName) completed successfully")
+            log.info("\(operationName) completed successfully")
         } catch {
-            print("❌ Failed to \(operationName.lowercased()): \(error.localizedDescription)")
+            log.error("Failed to \(operationName.lowercased()): \(error.localizedDescription)")
         }
     }
 }
@@ -186,3 +187,4 @@ extension ThreadManager: PostInteractionCapable, PostFinder {
         return threads.first(where: { $0.post.postID == postID })?.post.rawPost
     }
 }
+

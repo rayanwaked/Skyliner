@@ -7,6 +7,7 @@
 
 import SwiftUI
 import ATProtoKit
+import SwiftyBeaver
 
 // MARK: - REPLY EXTENSION
 extension PostManager {
@@ -60,7 +61,7 @@ extension PostManager {
             replyTo: replyReference
         )
         
-        logSuccess("Reply posted successfully")
+        log.verbose("Reply posted successfully")
     }
 }
 

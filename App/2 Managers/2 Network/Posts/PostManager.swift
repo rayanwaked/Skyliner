@@ -7,6 +7,7 @@
 
 import SwiftUI
 import ATProtoKit
+import SwiftyBeaver
 
 @MainActor
 @Observable
@@ -34,11 +35,11 @@ extension PostManager {
     // MARK: - LOAD POSTS
     func loadPosts() async {
         guard let userDID, !userDID.isEmpty else {
-            logError("No valid userDID available")
+            log.error("No valid userDID available")
             return
         }
         guard let clientManager else {
-            logError("No valid client manager available")
+            log.error("No valid client manager available")
             return
         }
         
@@ -60,7 +61,7 @@ extension PostManager {
     // MARK: - GET AUTHOR POSTS
     public func loadAuthorPosts(shouldIncludePins: Bool) async {
         guard let clientManager else {
-            logError("No valid client manager available")
+            log.error("No valid client manager available")
             return
         }
         
@@ -101,5 +102,14 @@ extension PostManager {
         authorFeed.clear()
         
         await loadAuthorPosts(shouldIncludePins: shouldIncludePins)
+    }
+    
+    private func execute(_ operationName: String, operation: () async throws -> Void) async {
+        do {
+            try await operation()
+            log.info("\(operationName) completed successfully")
+        } catch {
+            log.error("Failed to \(operationName.lowercased()): \(error.localizedDescription)")
+        }
     }
 }

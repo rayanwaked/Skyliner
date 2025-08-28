@@ -6,20 +6,29 @@
 //
 
 import SwiftUI
+import SwiftyBeaver
 import PostHog
+
+// MARK: - LOG
+let log = SwiftyBeaver.self
 
 // MARK: - APP
 @main
 struct SkylinerApp: App {
+    // MARK: - PROPERTIES
     @State private var appState = AppState()
-    @State private var routerCoordinator = RouterCoordinator()
-    @State private var headerCoordinator = HeaderCoordinator()
+    @State private var coordinator = Coordinator()
     
-    // MARK: - POSTHOG
+    // MARK: - INITALIZATION
     init() {
-        let posthogKey = (Bundle.main.object(forInfoDictionaryKey: "posthogKey") as? String ?? "")
-        let posthogHost = "https://us.i.posthog.com"
-        let config = PostHogConfig(apiKey: posthogKey, host: posthogHost)
+        // LOGGER
+        let console = ConsoleDestination()
+        log.addDestination(console)
+        
+        // POSTHOG
+        let key = (Bundle.main.object(forInfoDictionaryKey: "posthogKey") as? String ?? "")
+        let host = "https://us.i.posthog.com"
+        let config = PostHogConfig(apiKey: key, host: host)
         
         PostHogSDK.shared.setup(config)
     }
@@ -29,8 +38,7 @@ struct SkylinerApp: App {
         WindowGroup {
             RouterView()
                 .environment(appState)
-                .environment(routerCoordinator)
-                .environment(headerCoordinator)
+                .environment(coordinator)
         }
     }
 }

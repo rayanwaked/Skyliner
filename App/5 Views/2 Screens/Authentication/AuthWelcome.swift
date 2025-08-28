@@ -10,23 +10,13 @@ import PostHog
 
 // MARK: - WELCOME SECTION
 extension AuthenticationView {
-    func welcomeSection(
-        onGoSignIn: @escaping () -> Void,
-        onGoCreateAccount: @escaping () -> Void) -> some View {
+    func welcomeSection(onGoSignIn: @escaping () -> Void) -> some View {
             VStack(alignment: .leading) {
                 // MARK: HEADER
                 headerSection
                 
                 // MARK: ACTION
                 HStack {
-//                    ButtonComponent(
-//                        "Create account",
-//                        variation: .primary,
-//                        haptic: .soft
-//                    ) {
-//                        onGoCreateAccount()
-//                    }
-                    
                     ButtonComponent(
                         "Sign in",
                         variation: .primary,
@@ -46,8 +36,8 @@ extension AuthenticationView {
 extension AuthenticationView {
     var headerSection: some View {
         VStack(alignment: .leading) {
-            switch viewModel.selectedSection {
-                // MARK: WELCOME
+            switch selectedSection {
+            // MARK: WELCOME
             case .welcomeSection:
                 VStack(alignment: .leading) {
                     Text("Skyliner")
@@ -60,20 +50,7 @@ extension AuthenticationView {
                         .padding(.bottom, Padding.standard * 1.5)
                 }
                 
-                // MARK: CREATE ACCOUNT
-            case .createAccountSection:
-                VStack(alignment: .leading) {
-                    Text("Welcome")
-                        .font(.smaller(.title))
-                        .fontWeight(.bold)
-                    Text("let's get you started")
-                        .font(.smaller(.headline))
-                        .padding(.bottom, Padding.standard / 2)
-                    Text("You'll first need to create an account on Bluesky")
-                        .padding(.bottom, Padding.standard * 1.5)
-                }
-                
-                // MARK: SIGN IN
+            // MARK: SIGN IN
             case .signinSection:
                 VStack(alignment: .leading) {
                     Text("Hey")

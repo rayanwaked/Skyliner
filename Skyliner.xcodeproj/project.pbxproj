@@ -10,6 +10,7 @@
 		B90AACD42E4E586600C02A4B /* ATMacro in Frameworks */ = {isa = PBXBuildFile; productRef = B90AACD32E4E586600C02A4B /* ATMacro */; };
 		B90AACD62E4E586600C02A4B /* ATProtoKit in Frameworks */ = {isa = PBXBuildFile; productRef = B90AACD52E4E586600C02A4B /* ATProtoKit */; };
 		B916FBDE2E2BCE2600412076 /* BezelKit in Frameworks */ = {isa = PBXBuildFile; productRef = B916FBDD2E2BCE2600412076 /* BezelKit */; };
+		B929236A2E5E65C200E6A106 /* SwiftyBeaver in Frameworks */ = {isa = PBXBuildFile; productRef = B92923692E5E65C200E6A106 /* SwiftyBeaver */; };
 		B9AB600E2E2895F900C6179D /* Glur in Frameworks */ = {isa = PBXBuildFile; productRef = B9AB600D2E2895F900C6179D /* Glur */; };
 		B9C03DD92E248D6400D98A25 /* PostHog in Frameworks */ = {isa = PBXBuildFile; productRef = B9C03DD82E248D6400D98A25 /* PostHog */; };
 		B9C03E102E2496A900D98A25 /* KeychainSwift in Frameworks */ = {isa = PBXBuildFile; productRef = B9C03E0F2E2496A900D98A25 /* KeychainSwift */; };
@@ -69,6 +70,7 @@
 				B9AB600E2E2895F900C6179D /* Glur in Frameworks */,
 				B90AACD62E4E586600C02A4B /* ATProtoKit in Frameworks */,
 				B9C03E9E2E2499C500D98A25 /* NukeUI in Frameworks */,
+				B929236A2E5E65C200E6A106 /* SwiftyBeaver in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -127,6 +129,7 @@
 				B916FBDD2E2BCE2600412076 /* BezelKit */,
 				B90AACD32E4E586600C02A4B /* ATMacro */,
 				B90AACD52E4E586600C02A4B /* ATProtoKit */,
+				B92923692E5E65C200E6A106 /* SwiftyBeaver */,
 			);
 			productName = Skyliner;
 			productReference = B9C03D2A2E24850D00D98A25 /* Skyliner.app */;
@@ -190,6 +193,7 @@
 				B9AB600C2E2895F900C6179D /* XCRemoteSwiftPackageReference "Glur" */,
 				B916FBDC2E2BCE2600412076 /* XCRemoteSwiftPackageReference "BezelKit" */,
 				B90AACD22E4E586600C02A4B /* XCRemoteSwiftPackageReference "ATProtoKit" */,
+				B92923682E5E65C200E6A106 /* XCRemoteSwiftPackageReference "SwiftyBeaver" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = B9C03D2B2E24850D00D98A25 /* Products */;
@@ -465,7 +469,7 @@
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 3;
+				CURRENT_PROJECT_VERSION = 4;
 				DEVELOPMENT_TEAM = 6R2E9P9EPV;
 				GENERATE_INFOPLIST_FILE = YES;
 				MARKETING_VERSION = 1.0;
@@ -490,7 +494,7 @@
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 3;
+				CURRENT_PROJECT_VERSION = 4;
 				DEVELOPMENT_TEAM = 6R2E9P9EPV;
 				GENERATE_INFOPLIST_FILE = YES;
 				MARKETING_VERSION = 1.0;
@@ -559,6 +563,14 @@
 				minimumVersion = 4.0.0;
 			};
 		};
+		B92923682E5E65C200E6A106 /* XCRemoteSwiftPackageReference "SwiftyBeaver" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SwiftyBeaver/SwiftyBeaver.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.1.1;
+			};
+		};
 		B9AB600C2E2895F900C6179D /* XCRemoteSwiftPackageReference "Glur" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/joogps/Glur";
@@ -608,6 +620,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = B916FBDC2E2BCE2600412076 /* XCRemoteSwiftPackageReference "BezelKit" */;
 			productName = BezelKit;
+		};
+		B92923692E5E65C200E6A106 /* SwiftyBeaver */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = B92923682E5E65C200E6A106 /* XCRemoteSwiftPackageReference "SwiftyBeaver" */;
+			productName = SwiftyBeaver;
 		};
 		B9AB600D2E2895F900C6179D /* Glur */ = {
 			isa = XCSwiftPackageProductDependency;

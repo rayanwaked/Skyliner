@@ -7,6 +7,7 @@
 
 import SwiftUI
 import ATProtoKit
+import SwiftyBeaver
 
 // MARK: - PROTOCOL
 protocol PostInteractionCapable: AnyObject {
@@ -65,9 +66,9 @@ extension PostInteractionCapable {
     private func run(_ title: String, _ operation: () async throws -> Void) async {
         do {
             try await operation()
-            print("✅ \(title) completed successfully")
+            log.info("\(title) completed successfully")
         } catch {
-            print("❌ Failed to \(title.lowercased()): \(error.localizedDescription)")
+            log.error("Failed to \(title.lowercased()): \(error.localizedDescription)")
         }
     }
     
@@ -116,7 +117,7 @@ extension PostInteractionCapable where Self: PostFinder {
     
     func toggleLike(postID: String) async {
         guard let post = findPost(by: postID) else {
-            print("❌ Post not found for toggle like")
+            log.error("Post not found for toggle like")
             return
         }
         await toggleInteraction(.like, uri: post.uri, cid: post.cid, existingURI: post.viewer?.likeURI)
@@ -124,7 +125,7 @@ extension PostInteractionCapable where Self: PostFinder {
     
     func toggleRepost(postID: String) async {
         guard let post = findPost(by: postID) else {
-            print("❌ Post not found for toggle repost")
+            log.error("Post not found for toggle repost")
             return
         }
         await toggleInteraction(.repost, uri: post.uri, cid: post.cid, existingURI: post.viewer?.repostURI)
@@ -132,7 +133,7 @@ extension PostInteractionCapable where Self: PostFinder {
     
     func sharePost(postID: String) {
         guard let post = findPost(by: postID) else {
-            print("❌ Post not found for sharing")
+            log.error("Post not found for sharing")
             return
         }
         sharePost(authorName: post.author.displayName, handle: post.author.actorHandle, content: extractMessage(from: post.record))
@@ -140,7 +141,7 @@ extension PostInteractionCapable where Self: PostFinder {
     
     func copyPostLink(postID: String) {
         guard let post = findPost(by: postID) else {
-            print("❌ Post not found for copying link")
+            log.error("Post not found for copying link")
             return
         }
         copyPostLink(uri: post.uri)
