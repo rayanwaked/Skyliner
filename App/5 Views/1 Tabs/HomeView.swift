@@ -7,21 +7,21 @@
 
 import SwiftUI
 
+// MARK: - VIEW
 struct HomeView: View {
+    // MARK: - PROPERTIES
     @Environment(AppState.self) private var appState
     @Environment(Coordinator.self) private var coordinator
     
+    var homeFeed: [PostItem] { appState.postManager.homePosts }
+    
+    // MARK: - BODY
     var body: some View {
-        let posts = appState.postManager.homePosts
-        
-        ScrollView {
-            ForEach(posts, id: \.postID) { post in
-                Text(post.message)
-            }
-        }
+        PostsFeature(feed: homeFeed)
     }
 }
 
+// MARK: - PREVIEW
 #Preview {
     @Previewable @State var appState = AppState()
     @Previewable @State var coordinator = Coordinator()

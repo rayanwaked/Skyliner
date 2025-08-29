@@ -98,7 +98,7 @@ final class NotificationsManager {
     var isLoading: Bool { state.isLoading }
     var error: NotificationError? { state.error }
     
-    // MARK: - INIT
+    // MARK: - INITALIZATION
     init(
         reasons: [AppBskyLexicon.Notification.Notification.Reason]? = nil,
         isPriority: Bool? = nil,

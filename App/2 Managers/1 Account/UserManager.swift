@@ -61,7 +61,7 @@ public final class UserManager {
     var name: String? { state.profile.name }
     var handle: String? { state.profile.handle }
     
-    // MARK: - INIT
+    // MARK: - INITALIZATION
     init(appState: AppState? = nil) {
         self.appState = appState
     }

@@ -61,7 +61,7 @@ public final class SearchManager {
     var currentQuery: String? { state.query }
     var error: SearchError? { state.error }
     
-    // MARK: - INIT
+    // MARK: - INITALIZATION
     init(
         configuration: SearchConfiguration = .default,
         appState: AppState? = nil

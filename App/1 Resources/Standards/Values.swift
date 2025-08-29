@@ -1,5 +1,5 @@
 //
-//  Constants.swift
+//  Values.swift
 //  Skyliner
 //
 //  Created by Rayan Waked on 6/30/25.
@@ -11,8 +11,35 @@ import BezelKit
 // MARK: - SCREEN
 @MainActor
 enum Screen {
-    static let width = UIScreen.main.bounds.width
-    static let height = UIScreen.main.bounds.height
+    static var width: CGFloat  { UIScreen.main.bounds.width }
+    static var height: CGFloat { UIScreen.main.bounds.height }
+}
+
+// MARK: - FRAME
+enum Frame {
+    struct FrameSize {
+        let width: CGFloat
+        let height: CGFloat
+    }
+    
+    static var small = {
+        FrameSize(width: Screen.width * 0.15,
+                  height: Screen.width * 0.15)
+    }
+    static var standard = {
+        FrameSize(width: Screen.width * 0.4,
+                  height: Screen.width * 0.4)
+    }
+    static var large = {
+        FrameSize(width: Screen.width * 0.8,
+                  height: Screen.width * 0.8)
+    }
+}
+
+extension View {
+    func frame(_ size: Frame.FrameSize) -> some View {
+        self.frame(width: size.width, height: size.height)
+    }
 }
 
 // MARK: - RADIUS

@@ -37,7 +37,7 @@ public final class ClientManager: Sendable {
     /// ```
     public let bluesky: ATProtoBluesky
     
-    // MARK: - INITIALIZATION
+    // MARK: - INITALIZATION
     public init(credentials: ATProtocolConfiguration) async {
         self.credentials = credentials
         self.account = await ATProtoKit(sessionConfiguration: credentials)

@@ -42,7 +42,7 @@ public class AppState {
         set { storedShowingTrends = newValue }
     }
 
-    // MARK: - INITIALIZATION
+    // MARK: - INITALIZATION
     init() {
         Task { @MainActor in
             for await clientManager in authManager.clientManagerUpdates {

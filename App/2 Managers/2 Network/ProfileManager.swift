@@ -44,7 +44,7 @@ public final class ProfileManager {
     var profilePosts: [PostItem] { profileFeed.posts }
     var isLoading: Bool { state.isLoading }
     
-    // MARK: - INIT
+    // MARK: - INITALIZATION
     init(userDID: String, appState: AppState? = nil) {
         self.userDID = userDID
         self.appState = appState

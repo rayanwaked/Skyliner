@@ -46,7 +46,7 @@ public final class TrendsManager {
     var isLoading: Bool { state.isLoading }
     var error: TrendError? { state.error }
     
-    // MARK: - INIT
+    // MARK: - INITALIZATION
     init(appState: AppState? = nil) {
         self.appState = appState
     }
