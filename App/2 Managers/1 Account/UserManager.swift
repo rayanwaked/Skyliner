@@ -12,14 +12,14 @@ import SwiftyBeaver
 
 // MARK: - USER PROFILE DATA
 struct UserProfileData {
-    var profilePictureURL: URL?
-    var bannerURL: URL?
-    var follows: Int?
-    var followers: Int?
-    var posts: Int?
-    var description: String?
-    var name: String?
-    var handle: String?
+    var profilePictureURL: URL? = URL(string: "")
+    var bannerURL: URL? = URL(string: "")
+    var follows: Int? = 0
+    var followers: Int? = 0
+    var posts: Int? = 0
+    var description: String? = ""
+    var name: String? = ""
+    var handle: String? = ""
 }
 
 // MARK: - USER STATE

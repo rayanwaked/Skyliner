@@ -23,8 +23,8 @@ enum Frame {
     }
     
     static var small = {
-        FrameSize(width: Screen.width * 0.15,
-                  height: Screen.width * 0.15)
+        FrameSize(width: Screen.width * 0.1,
+                  height: Screen.width * 0.1)
     }
     static var standard = {
         FrameSize(width: Screen.width * 0.4,
@@ -33,6 +33,10 @@ enum Frame {
     static var large = {
         FrameSize(width: Screen.width * 0.8,
                   height: Screen.width * 0.8)
+    }
+    static var screen = {
+        FrameSize(width: Screen.width,
+                  height: Screen.height)
     }
 }
 

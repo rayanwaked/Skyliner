@@ -62,6 +62,7 @@ public final class AuthManager: @unchecked Sendable {
         Task { await restoreSession() }
     }
     
+    // MARK: - SIGN IN WITH 2FA
     /// Start sign-in and let ATProtoKit block internally waiting for code via codeStream.
     /// Throws AuthError.operationInProgress if a sign-in is already running.
     /// Throws AuthError.authenticationFailed on failure.
@@ -79,8 +80,10 @@ public final class AuthManager: @unchecked Sendable {
         self.pendingConfig = config
         
         // Set state to unauthorized immediately when 2FA is expected
-        configState = .unauthorized
-        log.debug("Set config state to unauthorized, awaiting authentication")
+        if pdsURL != "https://bsky.social" {
+            configState = .unauthorized
+            log.debug("Set config state to unauthorized, awaiting authentication")
+        }
         
         // Run authenticate in the background; it will suspend on 2FA until we yield a code.
         signInTask = Task { [weak self] in
@@ -130,54 +133,6 @@ public final class AuthManager: @unchecked Sendable {
 
 // MARK: - METHODS
 extension AuthManager {
-    // MARK: - AUTHENTICATE
-    // Legacy or direct authentication without 2FA
-    private func authenticateWith(handle: String, password: String, authFactorToken: String? = nil) async throws -> ATProtocolConfiguration {
-        log.debug("Authenticating with handle: \(handle)")
-        let config = ATProtocolConfiguration(keychainProtocol: ATProtoKeychain)
-        do {
-            try await config.authenticate(with: handle, password: password)
-            log.info("Direct authentication successful")
-            return config
-        } catch {
-            log.error("Direct authentication failed: \(error.localizedDescription)")
-            throw AuthError.authenticationFailed(error)
-        }
-    }
-    
-    // MARK: - CREATE ACCOUNT
-    /// Updated: Fix for ATProtoKit registration. Use ATProtoKit's client to create account instead of non-existent config.register.
-    /// Throws AuthError.accountCreationFailed or AuthError.invalidCredentials if registration or authentication fails.
-    /// After registration, proceed to authenticate and set up session as normal.
-    public func createAccount(handle: String, password: String) async throws -> Bool {
-        log.info("Creating new account for handle: \(handle)")
-        
-        do {
-            let config = ATProtocolConfiguration(keychainProtocol: ATProtoKeychain)
-            let atproto = await ATProtoKit(sessionConfiguration: config)
-            _ = try await atproto.createAccount(handle: handle, password: password)
-            log.info("Account creation successful, proceeding to authenticate")
-            
-            let authenticatedConfig = try await authenticateWith(handle: handle, password: password)
-            await setClientManager(with: authenticatedConfig)
-            withAnimation(Animation.snappy(duration: 1.5)) {
-                self.configState = .restored
-            }
-            log.info("Account creation and authentication process completed successfully")
-            return false
-        } catch let error as AuthError {
-            // Re-throw AuthErrors as is
-            throw error
-        } catch {
-            log.error("Account creation failed: \(error.localizedDescription)")
-            if (error.localizedDescription.contains("invalid") || error.localizedDescription.contains("credential")) {
-                throw AuthError.invalidCredentials
-            } else {
-                throw AuthError.accountCreationFailed(error)
-            }
-        }
-    }
-    
     // MARK: - LOG OUT
     /// Throws AuthError.signOutFailed if logout fails.
     public func logout() async throws {

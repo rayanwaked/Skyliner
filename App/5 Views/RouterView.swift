@@ -11,7 +11,7 @@ import SwiftUI
 @Observable
 class Coordinator {
     enum Views {
-        case home, profile
+        case home, notifications, user, explore
     }
     
     var currentView: Views = .home
@@ -78,8 +78,12 @@ extension RouterView {
             
             switch coordinator.currentView {
             case .home: HomeView()
-            case .profile: Text("HI2")
+            case .user: UserView()
+            case .notifications: NotificationView()
+            default: Text("Hi")
             }
+            
+            TabBarFeature()
         }
         .transition(.move(edge: .bottom))
         .zIndex(-1)
