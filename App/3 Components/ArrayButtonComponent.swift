@@ -7,11 +7,6 @@
 
 import SwiftUI
 
-// MARK: - FEED ITEM
-struct FeedItem: Hashable {
-    let displayName: String
-}
-
 // MARK: - VIEW
 struct ArrayButtonComponent<T: Hashable, Content: View>: View {
     // MARK: - PROPERTIES

@@ -154,10 +154,3 @@ extension PostManager: PostInteractionCapable, PostFinder {
         homeFeed.findPost(by: postID) ?? authorFeed.findPost(by: postID)
     }
 }
-
-// MARK: - SEARCH MANAGER EXTENSION
-extension SearchManager: PostInteractionCapable, PostFinder {
-    func findPost(by postID: String) -> (any PostViewProtocol)? {
-        searchFeed.findPost(by: postID)
-    }
-}

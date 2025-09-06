@@ -13,7 +13,7 @@ import SwiftyBeaver
 @Observable
 // MARK: - MANAGER
 public final class PostManager {
-    // MARK: - PROPERTIES
+    // MARK: - PROP ERTIES
     @ObservationIgnored
     var appState: AppState?
     var clientManager: ClientManager? { appState?.clientManager }

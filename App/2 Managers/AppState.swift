@@ -18,9 +18,7 @@ public class AppState {
     let authManager = AuthManager()
     let userManager = UserManager()
     let profileManager = ProfileManager(userDID: "")
-    let trendsManager = TrendsManager()
     let postManager = PostManager()
-    let searchManager = SearchManager()
     let notificationsManager = NotificationsManager()
     let threadManager = ThreadManager()
 
@@ -62,9 +60,7 @@ public class AppState {
     func updateManagers(with clientManager: ClientManager?, with appState: AppState?) {
         userManager.appState = self
         profileManager.appState = self
-        trendsManager.appState = self
         postManager.appState = self
-        searchManager.appState = self
         notificationsManager.appState = self
         threadManager.appState = self
     }
@@ -72,7 +68,6 @@ public class AppState {
     func loadAllData() async {
         await updateUserDID()
         await userManager.loadProfile()
-        await trendsManager.loadTrends()
         await postManager.loadPosts()
         await notificationsManager.loadNotifications()
     }

@@ -11,10 +11,16 @@ import SwiftUI
 @Observable
 class Coordinator {
     enum Views {
-        case home, notifications, user, explore
+        case home, notifications, user
+    }
+    enum Sheets {
+        case compose, profile
     }
     
     var currentView: Views = .home
+    var currentSheet: Sheets = .compose
+    var currentProfile: String = ""
+    var showingSheet: Bool = false
 }
 
 // MARK: - VIEW
@@ -75,18 +81,36 @@ extension RouterView {
                 .foregroundStyle(.standardBackground)
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
                 .ignoresSafeArea(.all)
+                .zIndex(-1)
             
-            switch coordinator.currentView {
-            case .home: HomeView()
-            case .user: UserView()
-            case .notifications: NotificationView()
-            default: Text("Hi")
+            Group {
+                switch coordinator.currentView {
+                case .home: HomeView()
+                case .user: UserView()
+                case .notifications: NotificationView()
+                }
             }
+            .blur(radius: coordinator.showingSheet ? 2 : 0)
             
-            TabBarFeature()
+            if !coordinator.showingSheet {
+                TabBarFeature()
+                    .transition(.move(edge: .bottom))
+                    .zIndex(2)
+            }
         }
         .transition(.move(edge: .bottom))
         .zIndex(-1)
+        .sheet(isPresented: Binding(
+            get: { coordinator.showingSheet },
+            set: { coordinator.showingSheet = $0 }
+        )) {
+            switch coordinator.currentSheet {
+            case .compose:
+                ComposeView()
+            case .profile:
+                ProfileView()
+            }
+        }
     }
 }
 

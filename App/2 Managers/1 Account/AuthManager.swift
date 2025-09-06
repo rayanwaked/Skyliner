@@ -80,7 +80,7 @@ public final class AuthManager: @unchecked Sendable {
         self.pendingConfig = config
         
         // Set state to unauthorized immediately when 2FA is expected
-        if pdsURL != "https://bsky.social" {
+        if pdsURL == "https://bsky.social" {
             configState = .unauthorized
             log.debug("Set config state to unauthorized, awaiting authentication")
         }

@@ -23,11 +23,11 @@ public struct PostItem {
 
 // MARK: - POST STATE
 public struct PostState {
-    let isLiked: Bool
-    let isReposted: Bool
-    let likeCount: Int
-    let repostCount: Int
-    let replyCount: Int
+    var isLiked: Bool
+    var isReposted: Bool
+    var likeCount: Int
+    var repostCount: Int
+    var replyCount: Int
 }
 
 // MARK: - VIEW PROTOCOL

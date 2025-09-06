@@ -71,7 +71,7 @@ struct DateHelper {
 
 struct LoadMoreHelper: View {
     enum Location {
-        case home, explore
+        case home
     }
     
     var appState: AppState
@@ -85,7 +85,6 @@ struct LoadMoreHelper: View {
                 Task {
                     switch location {
                     case .home: await appState.postManager.loadPosts()
-                    case .explore: await appState.searchManager.loadMoreResults()
                     }
                 }
             }

@@ -1,5 +1,5 @@
 //
-//  UserView.swift
+//  ProfileView.swift
 //  Skyliner
 //
 //  Created by Rayan Waked on 7/13/25.
@@ -10,7 +10,7 @@ import Glur
 import PostHog
 
 // MARK: - VIEW
-struct UserView: View {
+struct ProfileView: View {
     // MARK: - PROPERTIES
     @Environment(AppState.self) private var appState
     @Environment(Coordinator.self) private var coordinator
@@ -20,21 +20,13 @@ struct UserView: View {
     // MARK: - BODY
     var body: some View {
         ZStack(alignment: .top) {
-            if bannerManager.scrollOffset > Screen.height * 0.3 {
-                ShadowOverlay()
-                    .zIndex(1)
-            }
-            
             parallaxBanner
                 .zIndex(0)
             
             ScrollView {
                 VStack(alignment: .leading, spacing: 0) {
                     subBanner
-                        .padding(
-                            .top,
-                            bannerManager.currentBannerHeight * 2
-                        )
+                        .padding(.top, bannerManager.currentBannerHeight * 2)
                     
                     description
                     
@@ -52,12 +44,9 @@ struct UserView: View {
         }
         .background(.standardBackground)
         .ignoresSafeArea(.all)
-        .scrollIndicators(.never)
+        .scrollIndicators(.hidden)
         .onAppear {
-            Task {
-                await loadUserDataWithAnimation()
-            }
-            PostHogSDK.shared.capture("User View")
+            PostHogSDK.shared.capture("Profile View")
         }
     }
     
@@ -80,27 +69,32 @@ struct UserView: View {
 }
 
 // MARK: - PARALLAX BANNER
-extension UserView {
+extension ProfileView {
     private var parallaxBanner: some View {
         BannerFeature(
             manager: bannerManager,
-            bannerURL: appState.userManager.bannerURL
+            bannerURL: appState.profileManager.state.bannerURL,
+            isUser: false
         )
     }
 }
 
 // MARK: - SUB BANNER
-extension UserView {
+extension ProfileView {
     var subBanner: some View {
         HStack {
             ZStack {
                 Circle()
                     .frame(width: Screen.width * 0.32)
                     .foregroundStyle(Color.standardBackground)
-                ProfilePictureComponent(size: .xlarge)
-                    .scaleEffect(isLoading ? 0.9 : 1.0)
-                    .animation(.spring(response: 0.5, dampingFraction: 0.7), value: appState.userManager.profilePictureURL)
-                    .animation(.spring(response: 0.3, dampingFraction: 0.6), value: isLoading)
+                ProfilePictureComponent(
+                    isUser: false,
+                    profilePictureURL: appState.profileManager.state.profilePictureURL,
+                    size: .xlarge
+                )
+                .scaleEffect(isLoading ? 0.9 : 1.0)
+                .animation(.spring(response: 0.5, dampingFraction: 0.7), value: appState.profileManager.state.profilePictureURL)
+                .animation(.spring(response: 0.3, dampingFraction: 0.6), value: isLoading)
             }
             .padding(.top, -Padding.large * 3)
             
@@ -112,12 +106,12 @@ extension UserView {
 }
 
 // MARK: - PROFILE STATS
-extension UserView {
+extension ProfileView {
     var profileStats: some View {
         HStack {
             Spacer()
             VStack {
-                Text("\(appState.userManager.followers ?? 0)")
+                Text("\(appState.profileManager.state.followers ?? 0)")
                     .bold()
                     .contentTransition(.numericText())
                 Text("followers")
@@ -127,7 +121,7 @@ extension UserView {
                 .frame(maxHeight: Screen.height * 0.03)
             Spacer()
             VStack{
-                Text("\(appState.userManager.follows ?? 0)")
+                Text("\(appState.profileManager.state.follows ?? 0)")
                     .bold()
                     .contentTransition(.numericText())
                 Text("following")
@@ -137,7 +131,7 @@ extension UserView {
                 .frame(maxHeight: Screen.height * 0.03)
             Spacer()
             VStack {
-                Text("\(appState.userManager.posts ?? 0)")
+                Text("\(appState.profileManager.state.posts ?? 0)")
                     .bold()
                     .contentTransition(.numericText())
                 Text("posts")
@@ -151,48 +145,53 @@ extension UserView {
 }
 
 // MARK: - DESCRIPTION
-extension UserView {
+extension ProfileView {
     var description: some View {
         VStack(alignment: .leading) {
             HStack(alignment: .top) {
                 VStack(alignment: .leading) {
-                    Text("\(appState.userManager.name ?? "")")
+                    Text("\(appState.profileManager.state.name ?? "")")
                         .font(.smaller(.title3))
                         .fontWeight(.heavy)
                         .contentTransition(.opacity)
                     
-                    Text("@\(appState.userManager.handle ?? "")")
+                    Text("@\(appState.profileManager.state.handle ?? "")")
                         .font(.smaller(.body))
                         .fontWeight(.light)
                         .padding(.bottom, Padding.tiny / 2)
                         .opacity(Opacity.heavy)
                         .contentTransition(.opacity)
                 }
-                .animation(.easeInOut(duration: 0.4), value: appState.userManager.name)
-                .animation(.easeInOut(duration: 0.4), value: appState.userManager.handle)
+                .animation(
+                    .easeInOut(duration: 0.4),
+                    value: [
+                        appState.profileManager.state.name,
+                        appState.profileManager.state.handle
+                    ]
+                )
                 
                 Spacer()
                 
-                HStack {
-                    ButtonComponent(
-                        "Log out",
-                        variation: .primary,
-                        size: .profile,
-                        haptic: .rigid)
-                    {
-                        Task {
-                            try await appState.authManager.logout()
-                        }
-                    }
-                    .scaleEffect(isLoading ? 0.95 : 1.0)
-                    .animation(.spring(response: 0.4, dampingFraction: 0.7), value: isLoading)
-                }
+                //                ButtonComponent(
+                //                    "Follow",
+                //                    variation: .primary,
+                //                    size: .profile,
+                //                    haptic: .rigid)
+                //                {
+                //                    Task {
+                //                        try await appState.authManager.logout()
+                //                    }
+                //                }
+                //                .padding(.trailing, -Padding.standard)
+                //                .frame(width: Screen.width * 0.225)
+                //                .scaleEffect(isLoading ? 0.95 : 1.0)
+                //                .animation(.spring(response: 0.4, dampingFraction: 0.7), value: isLoading)
             }
             
-            Text("\(appState.userManager.description ?? "")")
+            Text("\(appState.profileManager.state.description ?? "")")
                 .font(.smaller(.body))
                 .contentTransition(.opacity)
-                .animation(.easeInOut(duration: 0.5), value: appState.userManager.description)
+                .animation(.easeInOut(duration: 0.5), value: appState.profileManager.state.description)
         }
         .padding(.bottom, Padding.tiny)
         .padding(.horizontal, Padding.standard)
@@ -201,7 +200,7 @@ extension UserView {
 }
 
 // MARK: - POSTS
-extension UserView {
+extension ProfileView {
     @ViewBuilder
     var posts: some View {
         ArrayButtonComponent<String, Text>(
@@ -214,7 +213,7 @@ extension UserView {
         
         Divider()
         
-        if appState.userManager.userPosts.isEmpty {
+        if appState.profileManager.profilePosts.isEmpty {
             Text("No posts yet.")
                 .font(.smaller(.headline))
                 .opacity(0.6)
@@ -223,7 +222,7 @@ extension UserView {
                 .transition(.scale.combined(with: .opacity))
         } else {
             LazyVStack {
-                FeedFeature(feed: appState.userManager.userPosts)
+                FeedFeature(feed: appState.profileManager.profilePosts)
             }
             .padding(.top, Padding.standard)
             .padding(.bottom, Padding.large * 4)
@@ -237,7 +236,8 @@ extension UserView {
     @Previewable @State var appState = AppState()
     @Previewable @State var coordinator = Coordinator()
     
-    UserView()
+    ProfileView()
         .environment(appState)
         .environment(coordinator)
 }
+

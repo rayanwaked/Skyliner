@@ -19,7 +19,13 @@ struct NotificationView: View {
     
     // MARK: - BODY
     var body: some View {
-        NotificationFeature(notifications: notifications)
+        VStack(alignment: .leading) {
+            Text("Notifications")
+                .font(.smaller(.title).bold())
+                .padding(.leading, Padding.standard)
+            
+            NotificationFeature(notifications: notifications)
+        }
     }
 }
 

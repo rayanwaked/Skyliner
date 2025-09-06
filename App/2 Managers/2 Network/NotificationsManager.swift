@@ -17,6 +17,7 @@ struct NotificationItem: Identifiable, Hashable, Equatable {
     let content: String
     let author: NotificationAuthor
     let timestamp: Date
+    let formattedTimestamp: String
     let isRead: Bool
     let subjectContent: String?
     let subjectURI: String?
@@ -27,6 +28,7 @@ struct NotificationItem: Identifiable, Hashable, Equatable {
         content: String,
         author: NotificationAuthor,
         timestamp: Date,
+        formattedTimestamp: String,
         isRead: Bool,
         subjectContent: String? = nil,
         subjectURI: String? = nil
@@ -37,6 +39,7 @@ struct NotificationItem: Identifiable, Hashable, Equatable {
         self.content = content
         self.author = author
         self.timestamp = timestamp
+        self.formattedTimestamp = formattedTimestamp
         self.isRead = isRead
         self.subjectContent = subjectContent
         self.subjectURI = subjectURI
@@ -177,12 +180,15 @@ private extension NotificationsManager {
         
         let subjectContent = await extractSubjectContent(from: notification, reason: reason)
         
+        let formattedTimestamp = DateHelper.formattedRelativeDate(from: notification.indexedAt)
+        
         return NotificationItem(
             uri: notification.uri,
             reason: reason,
             content: notification.reasonSubjectURI ?? "",
             author: author,
             timestamp: notification.indexedAt,
+            formattedTimestamp: formattedTimestamp,
             isRead: notification.isRead,
             subjectContent: subjectContent,
             subjectURI: notification.reasonSubjectURI

@@ -6,26 +6,30 @@
 //
 
 import SwiftUI
-import NukeUI
 
 // MARK: - VIEW
 struct FeedFeature: View {
     // MARK: - PROPERTIES
     @Environment(AppState.self) private var appState
+    @Environment(Coordinator.self) private var coordinator
     var feed: [PostItem]
     
     // MARK: - BODY
     var body: some View {
         ScrollView {
-            ForEach(feed, id: \.postID) { post in
-                HStack {
-                    postProfilePicture(postData: post)
-                    
-                    VStack {
-                        postAuthor(postData: post)
-                        postMessage(postData: post)
-                        Divider()
-                            .padding(.vertical, Padding.tiny)
+            LazyVStack {
+                ForEach(feed, id: \.postID) { post in
+                    HStack {
+                        postProfilePicture(postData: post)
+                        
+                        VStack {
+                            postAuthor(postData: post)
+                            postMessage(postData: post)
+                            PostEmbeds(embed: post.embed)
+                            PostActions(postID: post.postID)
+                            Divider()
+                                .padding(.vertical, Padding.tiny)
+                        }
                     }
                 }
             }
@@ -42,6 +46,13 @@ extension FeedFeature {
                 isUser: false,
                 profilePictureURL: postData.imageURL
             )
+            .onTapGesture {
+                withAnimation(.easeInOut(duration: 0.35)) {
+                    coordinator.currentProfile = postData.authorDID
+                    coordinator.currentSheet = .profile
+                    coordinator.showingSheet = true
+                }
+            }
             .padding(.leading, Padding.standard)
             
             Spacer()
@@ -61,7 +72,10 @@ extension FeedFeature {
             Text(" · \(postData.time)")
         }
         .frame(maxWidth: .infinity, alignment: .leading)
-        .padding(.horizontal, Padding.tiny)
+        .padding(.leading, Padding.tiny)
+        .padding(.trailing, Padding.standard)
+        .lineLimit(1)
+        .font(.smaller(.body))
     }
 }
 
@@ -70,36 +84,23 @@ extension FeedFeature {
     func postMessage(postData: PostItem) -> some View {
         VStack {
             Text(postData.message)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(.top, 1)
         }
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .padding(.horizontal, Padding.tiny)
+        .padding(.leading, Padding.tiny)
+        .padding(.trailing, Padding.standard)
+        .font(.smaller(.body))
     }
 }
-
-// MARK: - POST IMAGE
-//extension FeedFeature {
-//    func postImage(postData: PostItem) -> some View {
-//        VStack {
-//            if let embed = postData.embed {
-//                
-//                AsyncImage(url: embed) { image in
-//                    image
-//                        .resizable()
-//                        .aspectRatio(contentMode: .fit)
-//                        .frame(maxWidth: .infinity, maxHeight: Screen.height / 4)
-//                } placeholder: {
-//                    ProgressView()
-//                }
-//            }
-//        }
-//    }
-//}
 
 // MARK: - PREVIEW
 #Preview {
     @Previewable @State var appState = AppState()
+    @Previewable @State var coordinator = Coordinator()
     let posts = appState.postManager.homePosts
     
     FeedFeature(feed: posts)
         .environment(appState)
+        .environment(coordinator)
 }
+

@@ -9,6 +9,7 @@ import SwiftUI
 import NukeUI
 internal import Combine
 
+// MARK: - COORDINATOR
 extension Coordinator {
     var selectedTab: Tabs {
         get {
@@ -16,7 +17,6 @@ extension Coordinator {
             case .home: return .home
             case .notifications: return .notifications
             case .user: return .user
-            case .explore: return .explore
             }
         }
         set {
@@ -24,7 +24,6 @@ extension Coordinator {
             case .home: currentView = .home
             case .notifications: currentView = .notifications
             case .user: currentView = .user
-            case .explore: currentView = .explore
             }
         }
     }
@@ -32,14 +31,13 @@ extension Coordinator {
 
 // MARK: - ENUM
 enum Tabs: CaseIterable, Identifiable, Hashable {
-    case home, explore, notifications, user
+    case home, notifications, user
     
     var id: Self { self }
     
     func systemImage(forSelected selected: Bool) -> String {
         switch self {
         case .home: selected ? "bubble.fill" : "bubble"
-        case .explore: selected ? "binoculars.fill" : "binoculars"
         case .notifications: selected ? "bell.fill" : "bell"
         case .user: selected ? "person.crop.circle.fill" : "person"
         }
@@ -52,8 +50,6 @@ struct TabBarFeature: View {
     @Environment(Coordinator.self) private var coordinator
     @Environment(AppState.self) private var appState
     @Environment(\.colorScheme) private var colorScheme
-    @StateObject private var keyboard = KeyboardResponder()
-    @State private var localInput = ""
     
     private var tabBarOpacity: CGFloat {
         if #available(iOS 26, *) { return 0 } else { return 1 }
@@ -65,18 +61,8 @@ struct TabBarFeature: View {
             Spacer()
             
             HStack {
-                HStack {
-                    if coordinator.currentView != .explore {
-                        regularTabBar
-                            .transition(.move(edge: .leading))
-                    } else {
-                        exploreSearchBar
-                            .transition(.asymmetric(
-                                insertion: .move(edge: .trailing),
-                                removal: .move(edge: .trailing).combined(with: .opacity)
-                            ))
-                    }
-                }
+                regularTabBar
+                    .transition(.move(edge: .leading))
                 
                 // Compose Button
                 ButtonComponent(
@@ -84,11 +70,16 @@ struct TabBarFeature: View {
                     variation: .primary,
                     size: .tabBar,
                     haptic: .soft,
-                    action: {}
+                    action: {
+                        withAnimation(.easeInOut(duration: 0.35)) {
+                            coordinator.currentSheet = .compose
+                            coordinator.showingSheet = true
+                        }
+                    }
                 )
             }
             .padding(.horizontal, Padding.standard)
-            .padding(.bottom, keyboard.currentHeight > 0 ? Padding.tiny : -Padding.small)
+            .padding(.bottom, -Padding.small)
         }
         .shadow(
             color: colorScheme == .light ? .white.opacity(0.9) : .black.opacity(0.8),
@@ -136,45 +127,14 @@ extension TabBarFeature {
         Group {
             if appState.userManager.profilePictureURL != nil {
                 ProfilePictureComponent(size: .xsmall)
-                    .padding(.trailing, Screen.width * 0.06)
-                    .padding(.leading, Screen.width * 0.04)
+                    .padding(.trailing, Screen.width * 0.08)
+                    .padding(.leading, Screen.width * 0.06)
             } else {
                 Image(systemName: Tabs.user.systemImage(forSelected: coordinator.selectedTab == .user))
                     .font(.smaller(.title2))
                     .fontWeight(.semibold)
                     .frame(maxWidth: .infinity)
                     .frame(height: Screen.height * 0.05)
-            }
-        }
-    }
-}
-
-// MARK: - EXPLORE SEARCH BAR
-extension TabBarFeature {
-    var exploreSearchBar: some View {
-        HStack(alignment: .center) {
-            ButtonComponent(
-                systemName: "chevron.left",
-                variation: .secondary,
-                size: .compact,
-                haptic: .soft,
-                action: {
-                    withAnimation(.easeInOut(duration: 0.2)) {
-                        dismissKeyboard()
-                        appState.searchManager.clearSearch()
-                        coordinator.currentView = .home
-                    }
-                }
-            )
-            InputFieldComponent(
-                searchBar: true,
-                secure: false,
-                icon: Image(systemName: "magnifyingglass"),
-                title: "Explore the skies",
-                text: $localInput
-            )
-            .onSubmit {
-//                coordinator.exploreSearch = localInput
             }
         }
     }

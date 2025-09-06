@@ -9,6 +9,7 @@ import SwiftUI
 import UIKit
 import WebKit
 
+// MARK: - VIEW
 struct WebViewComponent: UIViewRepresentable {
     let url: URL
     
@@ -23,6 +24,7 @@ struct WebViewComponent: UIViewRepresentable {
 }
 
 
+// MARK: - PREVIEW
 #Preview {
     WebViewComponent(url: URL(string: "https://bsky.social")!)
         .ignoresSafeArea(.all)

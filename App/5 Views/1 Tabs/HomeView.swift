@@ -13,11 +13,19 @@ struct HomeView: View {
     @Environment(AppState.self) private var appState
     @Environment(Coordinator.self) private var coordinator
     
-    var homeFeed: [PostItem] { appState.postManager.homePosts }
-    
+    var homeFeed: [PostItem] {
+        appState.postManager.homePosts
+    }
+
     // MARK: - BODY
     var body: some View {
-        FeedFeature(feed: homeFeed)
+        VStack(alignment: .leading) {
+            Text("Home")
+                .font(.smaller(.title).bold())
+                .padding(.leading, Padding.standard)
+            
+            FeedFeature(feed: homeFeed)
+        }
     }
 }
 

@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+internal import Combine
 
 // MARK: - CARD STYLING
 /// A view modifier that applies a standardized card style to any view, including padding, background, and rounded corners.

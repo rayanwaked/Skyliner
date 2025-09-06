@@ -13,7 +13,7 @@ internal import Combine
 // MARK: - FEATURE
 struct BannerFeature: View {
     @StateObject var manager: BannerPositionManager
-    @State var bannerURL: URL? = URL(string: "")
+    var bannerURL: URL?
     var isUser: Bool = true
     
     // MARK: - BODY
@@ -106,8 +106,10 @@ extension View {
     @Previewable @State var appState = AppState()
     @Previewable @StateObject var manager = BannerPositionManager()
     let profileURL = appState.userManager.profilePictureURL
-    let bannerURL = appState.userManager.bannerURL
+    let bannerURL = appState.userManager.bannerURL ?? URL(string: "https://example.com/banner.png")!
     
-    BannerFeature(manager: manager, bannerURL: bannerURL)
+    BannerFeature(
+        manager: manager,
+        bannerURL: bannerURL
+    )
 }
-
