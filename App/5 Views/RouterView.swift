@@ -39,8 +39,8 @@ struct RouterView: View {
     private var gate: Gate {
         if !splashCompleted { return .splash }
         switch appState.authManager.configState {
-        case .restored: return .authenticated
-        case .failed, .unauthorized: return .unauthenticated
+        case .authenticated: return .authenticated
+        case .failed, .unauthenticated, .pending2FA: return .unauthenticated
         case .empty: return .splash
         }
     }

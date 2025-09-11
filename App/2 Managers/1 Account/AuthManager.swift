@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import SwiftyBeaver
 import ATProtoKit
 import KeychainSwift
 
@@ -20,6 +19,8 @@ public final class AuthManager: @unchecked Sendable {
     
     public private(set) var clientManager: ClientManager?
     public private(set) var configState: ConfigState = .empty
+    public private(set) var authenticationError: String = ""
+    public private(set) var requires2FA: Bool = false
     
     public let clientManagerContinuation: AsyncStream<ClientManager?>.Continuation
     public let clientManagerUpdates: AsyncStream<ClientManager?>
@@ -28,28 +29,24 @@ public final class AuthManager: @unchecked Sendable {
     private var pendingConfig: ATProtocolConfiguration?
     private var signInTask: Task<Void, Never>?
     
-    public enum ConfigState { case restored, unauthorized, failed, empty }
+    public enum ConfigState {
+        case authenticated, unauthenticated, failed, empty, pending2FA
+    }
     
     public init() {
-        log.info("Initializing authentication manager")
         var initConfigState: ConfigState = .empty
         
         if let uuid = keychain.get("session_uuid"), let realUUID = UUID(uuidString: uuid) {
-            log.debug("Found existing session UUID: \(uuid)")
             self.ATProtoKeychain = AppleSecureKeychain(identifier: realUUID)
         } else {
             let newUUID = UUID().uuidString
-            log.debug("Creating new session UUID: \(newUUID)")
             guard keychain.set(newUUID, forKey: "session_uuid"),
                   let realUUID = UUID(uuidString: newUUID) else {
-                log.error("Failed to create or store session_uuid")
                 hapticFeedback(.error)
                 initConfigState = .empty
-                // Initializers cannot throw, so we use preconditionFailure here
-                preconditionFailure("Authentication Manager: Failed to create or store session_uuid.")
+                fatalError("Authentication Manager: Failed to create or store session_uuid.")
             }
             self.ATProtoKeychain = AppleSecureKeychain(identifier: realUUID)
-            log.info("Successfully created and stored new session UUID")
         }
         
         let (stream, continuation) = AsyncStream<ClientManager?>.makeStream(bufferingPolicy: .bufferingNewest(1))
@@ -57,220 +54,192 @@ public final class AuthManager: @unchecked Sendable {
         self.clientManagerContinuation = continuation
         
         self.configState = initConfigState
-        log.info("Initialization complete, starting session restore")
         
         Task { await restoreSession() }
     }
     
-    // MARK: - SIGN IN WITH 2FA
-    /// Start sign-in and let ATProtoKit block internally waiting for code via codeStream.
-    /// Throws AuthError.operationInProgress if a sign-in is already running.
-    /// Throws AuthError.authenticationFailed on failure.
+    /// Start sign-in and let ATProtoKit handle 2FA detection
     public func startSignIn(pdsURL: String, handle: String, password: String) async throws {
-        // Don't kick off another attempt if one is already running.
-        guard signInTask == nil else {
-            log.warning("Attempted to start sign-in while another attempt is already running")
-            throw AuthError.operationInProgress
-        }
+        // Cancel any existing sign-in attempt
+        signInTask?.cancel()
+        signInTask = nil
         
-        log.info("Starting sign-in process for handle: \(handle)")
-        log.debug("Using PDS URL: \(pdsURL)")
+        // Clear previous errors
+        self.authenticationError = ""
+        self.requires2FA = false
         
         let config = ATProtocolConfiguration(pdsURL: pdsURL, keychainProtocol: ATProtoKeychain)
         self.pendingConfig = config
         
-        // Set state to unauthorized immediately when 2FA is expected
+        // Set to unauthenticated to show loading state
         if pdsURL == "https://bsky.social" {
-            configState = .unauthorized
-            log.debug("Set config state to unauthorized, awaiting authentication")
+            self.configState = .unauthenticated
         }
         
-        // Run authenticate in the background; it will suspend on 2FA until we yield a code.
+        // Run authenticate in the background
         signInTask = Task { [weak self] in
             do {
-                log.debug("Beginning authentication process")
                 try await config.authenticate(with: handle, password: password)
-                log.info("Authentication successful")
-                
-                await self?.setClientManager(with: config)
-                await MainActor.run {
-                    self?.configState = .restored
-                    self?.pendingConfig = nil
-                    self?.signInTask = nil
-                }
-                log.info("Sign-in process completed successfully")
+                await self?.handleSuccessfulAuth(config: config)
             } catch {
-                log.error("Authentication failed with error: \(error.localizedDescription)")
-                await MainActor.run {
-                    self?.configState = .failed
-                    self?.pendingConfig = nil
-                    self?.signInTask = nil
-                }
-                self?.clientManagerContinuation.yield(nil)
+                await self?.handleAuthError(error: error)
             }
         }
     }
     
     /// Feed the user's 2FA code into the SAME config that started authenticate()
-    public func submitTwoFactorCode(_ code: String) {
+    public func submitTwoFactorCode(_ code: String) async throws {
         guard let config = pendingConfig else {
-            log.warning("submitTwoFactorCode called with no pending config; ignoring")
-            return
+            throw AuthError.noPendingConfig
         }
-        log.debug("Submitting two-factor authentication code")
-        config.receiveCodeFromUser(code)
+        
+        guard !code.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
+            throw AuthError.emptyCode
+        }
+        
+        // Clear any previous errors
+        self.authenticationError = ""
+        
+        // Submit the code
+        config.receiveCodeFromUser(code.trimmingCharacters(in: .whitespacesAndNewlines))
+        
+        // The background task should complete authentication now
+        // We don't need to do anything else here - the Task will handle success/failure
     }
     
     /// Allow canceling the in-flight attempt if user backs out
     public func cancelPendingSignIn() {
-        log.info("Canceling pending sign-in attempt")
         signInTask?.cancel()
         signInTask = nil
         pendingConfig = nil
-        log.debug("Pending sign-in attempt canceled successfully")
+        self.configState = .failed
+        self.requires2FA = false
+        self.authenticationError = ""
     }
 }
 
 // MARK: - METHODS
 extension AuthManager {
-    // MARK: - LOG OUT
-    /// Throws AuthError.signOutFailed if logout fails.
-    public func logout() async throws {
-        log.info("Starting logout process")
-        do {
-            try await logoutWith(config: clientManager?.credentials)
-            self.clientManager = nil
-            clientManagerContinuation.yield(nil)
-            self.configState = .failed
-            log.info("Logout completed successfully")
-        } catch {
-            log.error("Logout failed: \(error.localizedDescription)")
-            throw AuthError.signOutFailed(error)
+    // MARK: - AUTH HANDLERS
+    private func handleSuccessfulAuth(config: ATProtocolConfiguration) async {
+        await setClientManager(with: config)
+        await MainActor.run {
+            self.configState = .authenticated
+            self.pendingConfig = nil
+            self.signInTask = nil
+            self.requires2FA = false
+            self.authenticationError = ""
+        }
+        print("🍄✅ Authentication Manager: Sign in successful")
+    }
+    
+    private func handleAuthError(error: Error) async {
+        await MainActor.run {
+            let errorDescription = error.localizedDescription.lowercased()
+            
+            // Check if this is a 2FA requirement
+            if errorDescription.contains("two-factor") ||
+                errorDescription.contains("2fa") ||
+                errorDescription.contains("authentication code") ||
+                errorDescription.contains("verify") {
+                self.configState = .pending2FA
+                self.requires2FA = true
+                self.authenticationError = ""
+                print("🍄📱 Authentication Manager: 2FA required")
+            } else {
+                // This is a real failure
+                self.configState = .failed
+                self.pendingConfig = nil
+                self.signInTask = nil
+                self.requires2FA = false
+                self.authenticationError = error.localizedDescription
+                self.clientManagerContinuation.yield(nil)
+                print("🍄❌ Authentication Manager: Sign in failed - \(error.localizedDescription)")
+            }
         }
     }
     
+    // MARK: - LOG OUT
+    public func logout() async throws {
+        try await logoutWith(config: clientManager?.credentials)
+        await MainActor.run {
+            self.clientManager = nil
+            self.configState = .failed
+            self.authenticationError = ""
+            self.requires2FA = false
+        }
+        clientManagerContinuation.yield(nil)
+        print("🍄✅ Authentication Manager: Log out successful")
+    }
+    
     // MARK: - REFRESH
-    /// Refresh current session.
-    /// Catches errors and updates state accordingly.
     public func refresh() async {
-        log.debug("Starting session refresh")
         do {
             let config = try await refreshSession()
             await setClientManager(with: config)
-            self.configState = .restored
-            log.info("Session refresh successful")
+            await MainActor.run {
+                self.configState = .authenticated
+                self.authenticationError = ""
+            }
         } catch {
-            log.error("Session refresh failed: \(error.localizedDescription)")
-            self.clientManager = nil
+            await MainActor.run {
+                self.clientManager = nil
+                self.configState = .failed
+                self.authenticationError = error.localizedDescription
+            }
             clientManagerContinuation.yield(nil)
-            self.configState = .failed
         }
     }
     
     // MARK: - RESTORE SESSION
-    /// Attempt to restore session on startup.
-    /// Handles failures by purging invalid tokens and updating state.
     public func restoreSession() async {
-        log.debug("Attempting to restore session")
         do {
             let config = try await refreshSession()
             await setClientManager(with: config)
-            await MainActor.run { self.configState = .restored }
-            log.info("Session restored successfully")
+            self.configState = .authenticated
+            self.authenticationError = ""
         } catch {
-            log.warning("Session restore failed: \(error.localizedDescription)")
             // Optionally purge invalid tokens
-            do {
-                try await clientManager?.credentials.deleteSession()
-                log.debug("Invalid session tokens purged")
-            } catch {
-                log.error("Failed to purge invalid tokens: \(error.localizedDescription)")
-            }
-            
-            await MainActor.run {
-                self.clientManager = nil
-                clientManagerContinuation.yield(nil)
-                self.configState = .failed
-            }
+            try? await clientManager?.credentials.deleteSession()
+            self.clientManager = nil
+            clientManagerContinuation.yield(nil)
+            self.configState = .failed
         }
     }
     
     // MARK: - HELPER METHODS
     private func setClientManager(with config: ATProtocolConfiguration) async {
-        log.debug("Setting up client manager with authenticated configuration")
         let manager = await ClientManager(credentials: config)
-        self.clientManager = manager
+        await MainActor.run {
+            self.clientManager = manager
+        }
         clientManagerContinuation.yield(manager)
-        log.debug("Client manager setup complete")
     }
     
     private func refreshSession() async throws -> ATProtocolConfiguration {
-        log.debug("Refreshing session configuration")
         let config = ATProtocolConfiguration(keychainProtocol: ATProtoKeychain)
-        do {
-            try await config.refreshSession()
-            log.debug("Session configuration refresh successful")
-            return config
-        } catch {
-            log.error("Session configuration refresh failed: \(error.localizedDescription)")
-            throw AuthError.sessionRefreshFailed(error)
-        }
+        try await config.refreshSession()
+        return config
     }
     
     private func logoutWith(config: ATProtocolConfiguration?) async throws {
-        log.debug("Deleting session from configuration")
-        do {
-            try await config?.deleteSession()
-            log.debug("Session deletion successful")
-        } catch {
-            log.error("Session deletion failed: \(error.localizedDescription)")
-            throw error
-        }
+        try await config?.deleteSession()
     }
 }
 
 // MARK: - ERRORS
-public enum AuthError: LocalizedError, Equatable {
-    case operationInProgress
-    case authenticationFailed(Error)
-    case accountCreationFailed(Error)
-    case signOutFailed(Error)
-    case sessionRefreshFailed(Error)
-    case keychainSetupFailed
-    case invalidCredentials
-    
-    public var errorDescription: String? {
-        switch self {
-        case .operationInProgress:
-            return "Another authentication operation is already in progress"
-        case .authenticationFailed(let error):
-            return "Authentication failed: \(error.localizedDescription)"
-        case .accountCreationFailed(let error):
-            return "Account creation failed: \(error.localizedDescription)"
-        case .signOutFailed(let error):
-            return "Sign out failed: \(error.localizedDescription)"
-        case .sessionRefreshFailed(let error):
-            return "Session refresh failed: \(error.localizedDescription)"
-        case .keychainSetupFailed:
-            return "Failed to setup keychain for secure storage"
-        case .invalidCredentials:
-            return "Invalid credentials provided"
-        }
-    }
-    
-    public static func == (lhs: AuthError, rhs: AuthError) -> Bool {
-        switch (lhs, rhs) {
-        case (.operationInProgress, .operationInProgress),
-            (.keychainSetupFailed, .keychainSetupFailed),
-            (.invalidCredentials, .invalidCredentials):
-            return true
-        case (.authenticationFailed(let lhsError), .authenticationFailed(let rhsError)),
-            (.accountCreationFailed(let lhsError), .accountCreationFailed(let rhsError)),
-            (.signOutFailed(let lhsError), .signOutFailed(let rhsError)),
-            (.sessionRefreshFailed(let lhsError), .sessionRefreshFailed(let rhsError)):
-            return lhsError.localizedDescription == rhsError.localizedDescription
-        default:
-            return false
+extension AuthManager {
+    enum AuthError: LocalizedError {
+        case noPendingConfig
+        case emptyCode
+        
+        var errorDescription: String? {
+            switch self {
+            case .noPendingConfig:
+                return "No authentication in progress"
+            case .emptyCode:
+                return "Please enter a valid authentication code"
+            }
         }
     }
 }

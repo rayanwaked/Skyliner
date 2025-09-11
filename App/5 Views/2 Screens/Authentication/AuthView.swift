@@ -119,7 +119,7 @@ private extension AuthenticationView {
                         password: signinPassword
                     )
                     
-                    if appState.authManager.configState == .unauthorized {
+                    if appState.authManager.configState == .unauthenticated {
                         selectedSection = .authenticationSection
                     }
                     
@@ -160,7 +160,8 @@ private extension AuthenticationView {
         {
             Task {
                 do {
-                    appState.authManager.submitTwoFactorCode(authenticationCode)
+                    try await appState.authManager
+                        .submitTwoFactorCode(authenticationCode)
                     
                     authenticationCode = ""
                     signinHandle = ""
