@@ -19,6 +19,8 @@ public final class AuthManager: @unchecked Sendable {
     
     public private(set) var clientManager: ClientManager?
     public private(set) var configState: ConfigState = .empty
+    public private(set) var authenticationError: String = ""
+    public private(set) var requires2FA: Bool = false
     
     public let clientManagerContinuation: AsyncStream<ClientManager?>.Continuation
     public let clientManagerUpdates: AsyncStream<ClientManager?>
@@ -27,7 +29,9 @@ public final class AuthManager: @unchecked Sendable {
     private var pendingConfig: ATProtocolConfiguration?
     private var signInTask: Task<Void, Never>?
     
-    public enum ConfigState { case restored, unauthorized, failed, empty }
+    public enum ConfigState {
+        case authenticated, unauthenticated, failed, empty, pending2FA
+    }
     
     public init() {
         var initConfigState: ConfigState = .empty
@@ -54,46 +58,53 @@ public final class AuthManager: @unchecked Sendable {
         Task { await restoreSession() }
     }
     
-    
-    /// Start sign-in and let ATProtoKit block internally waiting for code via codeStream.
+    /// Start sign-in and let ATProtoKit handle 2FA detection
     public func startSignIn(pdsURL: String, handle: String, password: String) async throws {
-        // Don't kick off another attempt if one is already running.
-        guard signInTask == nil else { return }
+        // Cancel any existing sign-in attempt
+        signInTask?.cancel()
+        signInTask = nil
+        
+        // Clear previous errors
+        self.authenticationError = ""
+        self.requires2FA = false
         
         let config = ATProtocolConfiguration(pdsURL: pdsURL, keychainProtocol: ATProtoKeychain)
         self.pendingConfig = config
         
-        // Set state to unauthorized immediately when 2FA is expected
-        configState = .unauthorized
+        // Set to unauthenticated to show loading state
+        if pdsURL == "https://bsky.social" {
+            self.configState = .unauthenticated
+        }
         
-        // Run authenticate in the background; it will suspend on 2FA until we yield a code.
+        // Run authenticate in the background
         signInTask = Task { [weak self] in
             do {
                 try await config.authenticate(with: handle, password: password)
-                await self?.setClientManager(with: config)
-                await MainActor.run {
-                    self?.configState = .restored
-                    self?.pendingConfig = nil
-                    self?.signInTask = nil
-                }
+                await self?.handleSuccessfulAuth(config: config)
             } catch {
-                await MainActor.run {
-                    self?.configState = .failed
-                    self?.pendingConfig = nil
-                    self?.signInTask = nil
-                }
-                self?.clientManagerContinuation.yield(nil)
+                await self?.handleAuthError(error: error)
             }
         }
     }
     
     /// Feed the user's 2FA code into the SAME config that started authenticate()
-    public func submitTwoFactorCode(_ code: String) {
+    public func submitTwoFactorCode(_ code: String) async throws {
         guard let config = pendingConfig else {
-            print("⚠️ submitTwoFactorCode called with no pending config; ignoring.")
-            return
+            throw AuthError.noPendingConfig
         }
-        config.receiveCodeFromUser(code)
+        
+        guard !code.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
+            throw AuthError.emptyCode
+        }
+        
+        // Clear any previous errors
+        self.authenticationError = ""
+        
+        // Submit the code
+        config.receiveCodeFromUser(code.trimmingCharacters(in: .whitespacesAndNewlines))
+        
+        // The background task should complete authentication now
+        // We don't need to do anything else here - the Task will handle success/failure
     }
     
     /// Allow canceling the in-flight attempt if user backs out
@@ -101,41 +112,63 @@ public final class AuthManager: @unchecked Sendable {
         signInTask?.cancel()
         signInTask = nil
         pendingConfig = nil
+        self.configState = .failed
+        self.requires2FA = false
+        self.authenticationError = ""
     }
 }
 
 // MARK: - METHODS
 extension AuthManager {
-    // MARK: - AUTHENTICATE
-    // Legacy or direct authentication without 2FA
-    private func authenticateWith(handle: String, password: String, authFactorToken: String? = nil) async throws -> ATProtocolConfiguration {
-        let config = ATProtocolConfiguration(keychainProtocol: ATProtoKeychain)
-        try await config.authenticate(with: handle, password: password)
-        return config
+    // MARK: - AUTH HANDLERS
+    private func handleSuccessfulAuth(config: ATProtocolConfiguration) async {
+        await setClientManager(with: config)
+        await MainActor.run {
+            self.configState = .authenticated
+            self.pendingConfig = nil
+            self.signInTask = nil
+            self.requires2FA = false
+            self.authenticationError = ""
+        }
+        print("🍄✅ Authentication Manager: Sign in successful")
     }
     
-    // MARK: - CREATE ACCOUNT
-    /// Updated: Fix for ATProtoKit registration. Use ATProtoKit's client to create account instead of non-existent config.register.
-    /// Assuming ATProtoKit provides a 'createAccount' method. Adjust parameters if API is different.
-    /// After registration, proceed to authenticate and set up session as normal.
-    public func createAccount(handle: String, password: String) async throws -> Bool {
-        let config = ATProtocolConfiguration(keychainProtocol: ATProtoKeychain)
-        let atproto = await ATProtoKit(sessionConfiguration: config)
-        _ = try await atproto.createAccount(handle: handle, password: password)
-        let authenticatedConfig = try await authenticateWith(handle: handle, password: password)
-        await setClientManager(with: authenticatedConfig)
-        withAnimation(Animation.snappy(duration: 1.5)) {
-            self.configState = .restored
+    private func handleAuthError(error: Error) async {
+        await MainActor.run {
+            let errorDescription = error.localizedDescription.lowercased()
+            
+            // Check if this is a 2FA requirement
+            if errorDescription.contains("two-factor") ||
+                errorDescription.contains("2fa") ||
+                errorDescription.contains("authentication code") ||
+                errorDescription.contains("verify") {
+                self.configState = .pending2FA
+                self.requires2FA = true
+                self.authenticationError = ""
+                print("🍄📱 Authentication Manager: 2FA required")
+            } else {
+                // This is a real failure
+                self.configState = .failed
+                self.pendingConfig = nil
+                self.signInTask = nil
+                self.requires2FA = false
+                self.authenticationError = error.localizedDescription
+                self.clientManagerContinuation.yield(nil)
+                print("🍄❌ Authentication Manager: Sign in failed - \(error.localizedDescription)")
+            }
         }
-        return false
     }
     
     // MARK: - LOG OUT
     public func logout() async throws {
         try await logoutWith(config: clientManager?.credentials)
-        self.clientManager = nil
+        await MainActor.run {
+            self.clientManager = nil
+            self.configState = .failed
+            self.authenticationError = ""
+            self.requires2FA = false
+        }
         clientManagerContinuation.yield(nil)
-        self.configState = .failed
         print("🍄✅ Authentication Manager: Log out successful")
     }
     
@@ -144,11 +177,17 @@ extension AuthManager {
         do {
             let config = try await refreshSession()
             await setClientManager(with: config)
-            self.configState = .restored
+            await MainActor.run {
+                self.configState = .authenticated
+                self.authenticationError = ""
+            }
         } catch {
-            self.clientManager = nil
+            await MainActor.run {
+                self.clientManager = nil
+                self.configState = .failed
+                self.authenticationError = error.localizedDescription
+            }
             clientManagerContinuation.yield(nil)
-            self.configState = .failed
         }
     }
     
@@ -157,23 +196,23 @@ extension AuthManager {
         do {
             let config = try await refreshSession()
             await setClientManager(with: config)
-            await MainActor.run { self.configState = .restored }
+            self.configState = .authenticated
+            self.authenticationError = ""
         } catch {
             // Optionally purge invalid tokens
             try? await clientManager?.credentials.deleteSession()
-            await MainActor.run {
-                self.clientManager = nil
-                clientManagerContinuation.yield(nil)
-                self.configState = .failed
-            }
+            self.clientManager = nil
+            clientManagerContinuation.yield(nil)
+            self.configState = .failed
         }
     }
-    
     
     // MARK: - HELPER METHODS
     private func setClientManager(with config: ATProtocolConfiguration) async {
         let manager = await ClientManager(credentials: config)
-        self.clientManager = manager
+        await MainActor.run {
+            self.clientManager = manager
+        }
         clientManagerContinuation.yield(manager)
     }
     
@@ -185,5 +224,22 @@ extension AuthManager {
     
     private func logoutWith(config: ATProtocolConfiguration?) async throws {
         try await config?.deleteSession()
+    }
+}
+
+// MARK: - ERRORS
+extension AuthManager {
+    enum AuthError: LocalizedError {
+        case noPendingConfig
+        case emptyCode
+        
+        var errorDescription: String? {
+            switch self {
+            case .noPendingConfig:
+                return "No authentication in progress"
+            case .emptyCode:
+                return "Please enter a valid authentication code"
+            }
+        }
     }
 }

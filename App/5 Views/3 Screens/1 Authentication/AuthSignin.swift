@@ -14,40 +14,44 @@ extension AuthenticationView {
         handle: Binding<String>,
         password: Binding<String>,
         error: String,
+        showTwoFactorButton: Bool,
         onSignIn: @escaping () -> Void,
-        onGoBack: @escaping () -> Void) -> some View {
-            VStack(alignment: .leading) {
-                // MARK: HEADER
-                headerSection
-                
-                // MARK: INPUT
-                InputFieldComponent(
-                    icon: Image(systemName: "globe"),
-                    title: "PDS url",
-                    text: pdsURL
-                )
-                .keyboardType(.webSearch)
-                .autocapitalization(.none)
-                
-                // MARK: INPUT
-                InputFieldComponent(
-                    icon: Image(systemName: "at"),
-                    title: "Account handle",
-                    text: handle
-                )
-                .keyboardType(.emailAddress)
-                .autocapitalization(.none)
-                
-                InputFieldComponent(
-                    secure: true,
-                    icon: Image(systemName: "lock"),
-                    title: "Account password",
-                    text: password
-                )
-                .padding(.bottom, Screen.height * 0.02)
-                
+        onGoBack: @escaping () -> Void,
+        onGoToTwoFactor: @escaping () -> Void
+    ) -> some View {
+        VStack(alignment: .leading) {
+            // MARK: - HEADER
+            headerSection
+            
+            // MARK: - INPUT
+            InputFieldComponent(
+                icon: Image(systemName: "globe"),
+                title: "PDS url",
+                text: pdsURL
+            )
+            .keyboardType(.webSearch)
+            .autocapitalization(.none)
+            
+            // MARK: - INPUT
+            InputFieldComponent(
+                icon: Image(systemName: "at"),
+                title: "Account handle",
+                text: handle
+            )
+            .keyboardType(.emailAddress)
+            .autocapitalization(.none)
+            
+            InputFieldComponent(
+                secure: true,
+                icon: Image(systemName: "lock"),
+                title: "Account password",
+                text: password
+            )
+            .padding(.bottom, Screen.height * 0.02)
+            
+            VStack(spacing: Padding.standard) {
                 HStack {
-                    // MARK: GO BACK
+                    // MARK: - GO BACK
                     ButtonComponent(
                         systemName: "chevron.backward",
                         variation: .secondary,
@@ -57,7 +61,7 @@ extension AuthenticationView {
                         onGoBack()
                     }
                     
-                    // MARK: SIGN IN
+                    // MARK: - SIGN IN
                     ButtonComponent(
                         "Sign in",
                         variation: .primary,
@@ -67,17 +71,29 @@ extension AuthenticationView {
                     }
                 }
                 
-                // MARK: ERROR
-                if !error.isEmpty {
-                    Text(error)
-                        .foregroundColor(.red)
-                        .font(.smaller(.footnote))
-                        .padding(.top, 4)
-                        .padding(.leading, 4)
+                // MARK: - TWO FACTOR BUTTON
+                if showTwoFactorButton {
+                    ButtonComponent(
+                        "Enter 2FA Code",
+                        variation: .secondary,
+                        haptic: .soft
+                    ) {
+                        onGoToTwoFactor()
+                    }
                 }
             }
-            .standardCardStyle()
-            .transition(.move(edge: .trailing))
-            .overlay(skylinerIcon, alignment: .topTrailing)
+            
+            // MARK: - ERROR
+            if !error.isEmpty {
+                Text(error)
+                    .foregroundColor(.red)
+                    .font(.smaller(.footnote))
+                    .padding(.top, 4)
+                    .padding(.leading, 4)
+            }
         }
+        .standardCardStyle()
+        .transition(.move(edge: .trailing))
+        .overlay(skylinerIcon, alignment: .topTrailing)
+    }
 }

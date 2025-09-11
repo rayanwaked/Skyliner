@@ -67,8 +67,8 @@ struct RouterView: View {
     private var gate: Gate {
         if !routerCoordinator.splashCompleted { return .splash }
         switch appState.authManager.configState {
-        case .restored: return .authenticated
-        case .failed, .unauthorized: return .unauthenticated
+        case .authenticated: return .authenticated
+        case .failed, .unauthenticated, .pending2FA: return .unauthenticated
         case .empty: return .splash
         }
     }
@@ -133,9 +133,9 @@ extension RouterView {
 
 // MARK: - PREVIEW
 #Preview {
-    @Previewable @State var appState: AppState = .init()
-    @Previewable @State var routerCoordinator: RouterCoordinator = .init()
-    @Previewable @State var headerCoordinator: HeaderCoordinator = .init()
+    @Previewable @State var appState = AppState()
+    @Previewable @State var routerCoordinator = RouterCoordinator()
+    @Previewable @State var headerCoordinator = HeaderCoordinator()
     
     RouterView()
         .environment(appState)

@@ -11,8 +11,7 @@ import PostHog
 // MARK: - WELCOME SECTION
 extension AuthenticationView {
     func welcomeSection(
-        onGoSignIn: @escaping () -> Void,
-        onGoCreateAccount: @escaping () -> Void) -> some View {
+        onGoSignIn: @escaping () -> Void) -> some View {
             VStack(alignment: .leading) {
                 // MARK: HEADER
                 headerSection
@@ -57,19 +56,6 @@ extension AuthenticationView {
                         .font(.smaller(.headline))
                         .padding(.bottom, Padding.standard / 2)
                     Text("Take to the skies with a refined experience for Bluesky")
-                        .padding(.bottom, Padding.standard * 1.5)
-                }
-                
-                // MARK: CREATE ACCOUNT
-            case .createAccountSection:
-                VStack(alignment: .leading) {
-                    Text("Welcome")
-                        .font(.smaller(.title))
-                        .fontWeight(.bold)
-                    Text("let's get you started")
-                        .font(.smaller(.headline))
-                        .padding(.bottom, Padding.standard / 2)
-                    Text("You'll first need to create an account on Bluesky")
                         .padding(.bottom, Padding.standard * 1.5)
                 }
                 

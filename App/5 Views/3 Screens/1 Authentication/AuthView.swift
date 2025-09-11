@@ -13,15 +13,10 @@ extension AuthenticationView {
     @Observable
     class ViewModel {
         public enum AuthenticationSections {
-            case welcomeSection, createAccountSection, signinSection, authenticationSection
+            case welcomeSection, signinSection, authenticationSection
         }
         
         var selectedSection: AuthenticationSections = .welcomeSection
-        
-        var createHandle: String = ""
-        var createPassword: String = ""
-        var createReenteredPassword: String = ""
-        var createError: String = ""
         
         var signinPDSUrl: String = "https://bsky.social"
         var signinHandle: String = ""
@@ -30,6 +25,7 @@ extension AuthenticationView {
         
         var authenticationCode: String = ""
         var authenticationError: String = ""
+        var showTwoFactorButton: Bool = false
     }
 }
 
@@ -83,9 +79,6 @@ private extension AuthenticationView {
         case .welcomeSection:
             Spacer()
             welcomeSectionView
-        case .createAccountSection:
-            Spacer()
-            createAccountSectionView
         case .signinSection:
             Spacer()
             signinSectionView
@@ -100,59 +93,10 @@ private extension AuthenticationView {
 private extension AuthenticationView {
     var welcomeSectionView: some View {
         welcomeSection(
-            onGoSignIn: { viewModel.selectedSection = .signinSection },
-            onGoCreateAccount: { viewModel.selectedSection = .createAccountSection }
+            onGoSignIn: { viewModel.selectedSection = .signinSection }
         )
         .onAppear {
             PostHogSDK.shared.capture("Welcome View")
-        }
-    }
-}
-
-// MARK: - CREATE ACCOUNT SECTION
-private extension AuthenticationView {
-    var createAccountSectionView: some View {
-        createAccountSection(
-            handle: $viewModel.createHandle,
-            password: $viewModel.createPassword,
-            reenteredPassword: $viewModel.createReenteredPassword,
-            error: viewModel.createError,
-            onCreateAccount: createAccountAction,
-            onGoBack: resetCreateAccountSection
-        )
-        .onAppear {
-            PostHogSDK.shared.capture("Create Account View")
-        }
-    }
-    
-    var createAccountAction: () -> Void {
-        {
-            Task {
-                //                do {
-                //                    let requires2FA = try await appState.authManager.createAccount(
-                //                        handle: viewModel.createHandle,
-                //                        password: viewModel.createPassword
-                //                    )
-                //
-                //                    if requires2FA {
-                //                        viewModel.selectedSection = .authenticationSection
-                //                    }
-                //                    dismissKeyboard()
-                //                } catch {
-                //                    viewModel.createError = error.localizedDescription
-                //                    dismissKeyboard()
-                //                }
-            }
-        }
-    }
-    
-    var resetCreateAccountSection: () -> Void {
-        {
-            viewModel.selectedSection = .welcomeSection
-            viewModel.createHandle = ""
-            viewModel.createPassword = ""
-            viewModel.createReenteredPassword = ""
-            viewModel.createError = ""
         }
     }
 }
@@ -165,8 +109,10 @@ private extension AuthenticationView {
             handle: $viewModel.signinHandle,
             password: $viewModel.signinPassword,
             error: viewModel.signinError,
+            showTwoFactorButton: viewModel.showTwoFactorButton,
             onSignIn: signinAction,
-            onGoBack: resetSigninSection
+            onGoBack: resetSigninSection,
+            onGoToTwoFactor: { viewModel.selectedSection = .authenticationSection }
         )
         .onAppear {
             PostHogSDK.shared.capture("Sign In View")
@@ -183,8 +129,8 @@ private extension AuthenticationView {
                         password: viewModel.signinPassword
                     )
                     
-                    if appState.authManager.configState == .unauthorized {
-                        viewModel.selectedSection = .authenticationSection
+                    if appState.authManager.configState == .unauthenticated {
+                        viewModel.showTwoFactorButton = true
                     }
                     
                     viewModel.authenticationCode = ""
@@ -204,6 +150,7 @@ private extension AuthenticationView {
             viewModel.signinHandle = ""
             viewModel.signinPassword = ""
             viewModel.signinError = ""
+            viewModel.showTwoFactorButton = false
         }
     }
 }
@@ -213,6 +160,7 @@ private extension AuthenticationView {
     var authenticationSectionView: some View {
         authenticationSection(
             code: $viewModel.authenticationCode,
+            onGoBack: resetSigninSection,
             onSubmit: authenticationSubmitAction
         )
         .onAppear {
@@ -224,14 +172,13 @@ private extension AuthenticationView {
         {
             Task {
                 do {
-                    appState.authManager.submitTwoFactorCode(viewModel.authenticationCode)
+                    try await appState.authManager
+                        .submitTwoFactorCode(viewModel.authenticationCode)
                     
                     viewModel.authenticationCode = ""
                     viewModel.signinHandle = ""
                     viewModel.signinPassword = ""
-                    viewModel.createHandle = ""
-                    viewModel.createPassword = ""
-                    viewModel.createReenteredPassword = ""
+                    viewModel.showTwoFactorButton = false
                     dismissKeyboard()
                 }
             }
