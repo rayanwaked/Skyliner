@@ -145,12 +145,12 @@ extension ThreadFeature {
     }
 }
 
-// MARK: - THREAD MANAGER EXTENSION
-extension ThreadManager: PostManaging {
-    var displayPosts: [PostItem] {
-        threads.map { $0.post }
-    }
-}
+//// MARK: - THREAD MANAGER EXTENSION
+//extension ThreadManager: PostManaging {
+//    var displayPosts: [PostItem] {
+//        threads.map { $0.post }
+//    }
+//}
 
 // MARK: - PREVIEW
 #Preview {

@@ -112,8 +112,10 @@ struct ThreadPostCell: View {
                     
                     // Actions
                     ThreadActionBar(
+                        appState: _appState,
+                        routerCoordinator: _routerCoordinator,
+                        post: post,
                         manager: manager,
-                        postID: post.postID,
                         isLiked: $isLiked,
                         isReposted: $isReposted,
                         likeCount: $likeCount,

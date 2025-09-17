@@ -76,9 +76,23 @@ extension PostCell {
             
             // MARK: - MENU
             Menu {
-                Button("Copy Link") {
+                Button("Copy Link", systemImage: "document.on.document") {
                     manager.copyPostLink(postID: post.postID)
                 }
+                
+                Button("Report Post", systemImage: "flag") {
+                    routerCoordinator.showingReport = true
+                    routerCoordinator.reportID = post.postID
+                    routerCoordinator.reportDID = post.authorDID
+                }
+                .foregroundStyle(.red)
+                
+                Button("Block User", systemImage: "person.slash") {
+                    Task {
+                        try await blockUser()
+                    }
+                }
+                .foregroundStyle(.red)
             } label: {
                 Image(systemName: "ellipsis")
                     .foregroundStyle(.foreground.opacity(Opacity.heavy))
@@ -87,6 +101,23 @@ extension PostCell {
         .font(.smaller(.subheadline))
         .padding(.top, Padding.small)
         .padding(.trailing, Padding.tiny)
+        .sheet(isPresented: .constant(routerCoordinator.showingReport)) {
+            // TODO: Implement ReportView here (e.g., ReportView(postID: post.postID, authorDID: post.authorDID, manager: manager))
+        }
+    }
+    
+    // MARK: - HELPER METHODS
+    private func blockUser() async throws {
+        // You'll need to cast manager to access moderation methods
+        if let postManager = manager as? PostManager {
+            try await postManager.blockUserFromPost(postID: post.postID)
+        } else if let searchManager = manager as? SearchManager {
+            try await searchManager.blockUserFromPost(postID: post.postID)
+        } else if let userManager = manager as? UserManager {
+            try await userManager.blockUser(authorDID: post.authorDID)
+        }
+        
+        hapticFeedback(.success)
     }
 }
 
@@ -99,3 +130,4 @@ extension PostCell {
             .environment(appState)
     }
 }
+

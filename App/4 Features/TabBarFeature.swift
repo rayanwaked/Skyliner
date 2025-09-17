@@ -73,14 +73,12 @@ struct TabBarFeature: View {
                 routerCoordinator.showingCreate = false
             }) {
                 ComposeView()
-                    .presentationCornerRadius(Radius.glass / 1.6)
             }
             // Thread
             .sheet(isPresented: .constant(routerCoordinator.showingThread), onDismiss: {
                 routerCoordinator.showingThread = false
             }) {
                 ThreadFeature(postURI: routerCoordinator.threadPostURI)
-                    .presentationCornerRadius(Radius.glass / 1.6)
             }
             // Reply
             .sheet(isPresented: .constant(routerCoordinator.showingReply), onDismiss: {
@@ -93,7 +91,6 @@ struct TabBarFeature: View {
                             await appState.postManager.refreshPosts()
                         }
                     }
-                    .presentationCornerRadius(Radius.glass / 1.6)
                 }
             }
             // Profile
@@ -101,14 +98,20 @@ struct TabBarFeature: View {
                 routerCoordinator.showingProfile = false
             }) {
                 ProfileView()
-                    .presentationCornerRadius(Radius.glass / 1.6)
             }
             // Settings
             .sheet(isPresented: .constant(routerCoordinator.showingSettings), onDismiss: {
                 routerCoordinator.showingSettings = false
             }) {
                 SettingsView()
-                    .presentationCornerRadius(Radius.glass / 1.6)
+            }
+            // Report
+            .sheet(isPresented:
+                    .constant(routerCoordinator.showingReport),
+                   onDismiss: {
+                routerCoordinator.showingReport = false
+            }) {
+                ReportView()
             }
         }
         .shadow(

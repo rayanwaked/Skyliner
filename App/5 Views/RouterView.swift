@@ -23,6 +23,9 @@ final class RouterCoordinator {
     var showingProfile: Bool = false
     var showingSettings: Bool = false
     var showingThread: Bool = false
+    var showingReport: Bool = false
+    var reportID: String = ""
+    var reportDID: String = ""
     var threadPostURI: String = ""
     var exploreSearch: String = ""
     var showingReply: Bool = false

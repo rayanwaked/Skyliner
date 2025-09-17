@@ -9,8 +9,12 @@ import SwiftUI
 
 // MARK: - POST ACTION BAR
 struct ThreadActionBar: View {
+    @Environment(AppState.self) var appState
+    @Environment(RouterCoordinator.self) var routerCoordinator
+    
+    let post: PostItem
     let manager: PostManaging
-    let postID: String
+    
     @Binding var isLiked: Bool
     @Binding var isReposted: Bool
     @Binding var likeCount: Int
@@ -40,7 +44,7 @@ struct ThreadActionBar: View {
                     withAnimation(.bouncy()) {
                         repostCount += isReposted ? 1 : -1
                     }
-                    await manager.toggleRepost(postID: postID)
+                    await manager.toggleRepost(postID: post.postID)
                 }
             } label: {
                 HStack(spacing: 4) {
@@ -60,7 +64,7 @@ struct ThreadActionBar: View {
                     withAnimation(.bouncy()) {
                         likeCount += isLiked ? 1 : -1
                     }
-                    await manager.toggleLike(postID: postID)
+                    await manager.toggleLike(postID: post.postID)
                 }
             } label: {
                 HStack(spacing: 4) {
@@ -75,7 +79,7 @@ struct ThreadActionBar: View {
             
             // MARK: - SHARE
             Button {
-                manager.sharePost(postID: postID)
+                manager.sharePost(postID: post.postID)
             } label: {
                 Image(systemName: "square.and.arrow.up")
                     .foregroundStyle(.foreground.opacity(Opacity.heavy))
@@ -85,14 +89,42 @@ struct ThreadActionBar: View {
             
             // MARK: - MENU
             Menu {
-                Button("Copy Link") {
-                    manager.copyPostLink(postID: postID)
+                Button("Copy Link", systemImage: "document.on.document") {
+                    manager.copyPostLink(postID: post.postID)
                 }
+                
+                Button("Report Post", systemImage: "flag") {
+                    routerCoordinator.showingReport = true
+                    routerCoordinator.reportID = post.postID
+                    routerCoordinator.reportDID = post.authorDID
+                }
+                .foregroundStyle(.red)
+                
+                Button("Block User", systemImage: "person.slash") {
+                    Task {
+                        try await blockUser()
+                    }
+                }
+                .foregroundStyle(.red)
             } label: {
                 Image(systemName: "ellipsis")
                     .foregroundStyle(.foreground.opacity(Opacity.heavy))
             }
         }
         .font(.smaller(.subheadline))
+    }
+    
+    // MARK: - HELPER METHODS
+    private func blockUser() async throws {
+        // You'll need to cast manager to access moderation methods
+        if let postManager = manager as? PostManager {
+            try await postManager.blockUserFromPost(postID: post.postID)
+        } else if let searchManager = manager as? SearchManager {
+            try await searchManager.blockUserFromPost(postID: post.postID)
+        } else if let userManager = manager as? UserManager {
+            try await userManager.blockUser(authorDID: post.authorDID)
+        }
+        
+        hapticFeedback(.success)
     }
 }

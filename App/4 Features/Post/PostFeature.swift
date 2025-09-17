@@ -16,6 +16,12 @@ protocol PostManaging {
     func toggleRepost(postID: String) async
     func sharePost(postID: String)
     func copyPostLink(postID: String)
+    func createReply(to parentPost: PostItem, text: String) async throws  // Add this line
+    
+    // MARK: - MODERATION METHODS
+    func reportPost(postID: String, reason: ReportReason, additionalContext: String?) async throws
+    func blockUser(authorDID: String) async throws
+    func blockUserFromPost(postID: String) async throws
 }
 
 // MARK: - MANAGER EXTENSIONS
@@ -29,10 +35,37 @@ extension SearchManager: PostManaging {
 
 extension UserManager: PostManaging {
     var displayPosts: [PostItem] { userPosts }
+    
+    // UserManager needs these methods implemented
+    func reportPost(postID: String, reason: ReportReason, additionalContext: String?) async throws {
+        // UserManager might not have post reporting, or delegate to PostManager
+        throw ModerationError.reportFailed
+    }
+    
+    func blockUserFromPost(postID: String) async throws {
+        // UserManager might not have post-based blocking, or delegate to PostManager
+        throw ModerationError.blockFailed
+    }
 }
 
 extension ProfileManager: PostManaging {
     var displayPosts: [PostItem] { profilePosts }
+    
+    // ProfileManager needs these methods implemented
+    func reportPost(postID: String, reason: ReportReason, additionalContext: String?) async throws {
+        // ProfileManager might not have post reporting, or delegate to PostManager
+        throw ModerationError.reportFailed
+    }
+    
+    func blockUser(authorDID: String) async throws {
+        // ProfileManager might not have user blocking, or delegate to UserManager
+        throw ModerationError.blockFailed
+    }
+    
+    func blockUserFromPost(postID: String) async throws {
+        // ProfileManager might not have post-based blocking, or delegate to PostManager
+        throw ModerationError.blockFailed
+    }
 }
 
 // MARK: - VIEW
