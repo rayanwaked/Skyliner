@@ -36,7 +36,7 @@ This is done with an **MVVM‑C** (Model‑View‑ViewModel‑Coordinator) archi
 - **Centralised state management** via `AppState`, which instantiates managers on demand and coordinates authentication and data loading
 - **Protocol‑oriented design** for post interactions and view models; shared behaviours such as liking or reposting are defined once and reused across managers
 - **Reactive authentication flow** using `AsyncStream` to propagate a new `ClientManager` to all managers when a session is restored or a user logs in
-- **Feature‑first modularity** – features like Post, Weather, Notification, Banner, Header and TabBar live in their own folders under `4 Features` with their own views and managers, making it easy to reason about and extend individual areas of the app
+- **Feature‑first modularity** – features like Post, Notification, Banner, Header and TabBar live in their own folders under `4 Features` with their own views and managers, making it easy to reason about and extend individual areas of the app
 - **Modern iOS UI elements** such as SwiftUI's glass effect, backport helpers for iOS 18+ and asynchronous image loading with NukeUI
 
 > 📖 A more detailed description of the architecture can be found in `2 Managers/1 ARCHITECTURE.md`. That document explains the MVVM‑C approach, the manager patterns and how post interactions are handled uniformly across the app.
@@ -50,7 +50,6 @@ Current functionality includes:
 - **Notifications** – view recent mentions, replies and other alerts in a dedicated tab. Tapping a notification navigates to the relevant post or profile
 - **Profile management** – display and edit your own profile and view other users' profiles. A banner feature allows custom header images with a parallax scroll effect
 - **Composer** – create a new post or reply via a modal sheet. Compose views present as sheets with rounded corners and respect keyboard safe areas
-- **Weather card** *(experimental)* – show a simple weather readout within the app; this demonstrates modular features and data managers
 - **Analytics** – page and interaction events are tracked via PostHog for user‑behaviour insight (requires a valid API key; see configuration below)
 
 Additional features such as threaded conversations, banner effects and reply flows are implemented as dedicated modules in the Features directory. Because of the modular structure, adding a new feature typically involves adding a new manager and a SwiftUI view without touching other parts of the codebase.
