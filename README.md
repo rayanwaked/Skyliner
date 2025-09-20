@@ -96,7 +96,6 @@ Skyliner uses Swift Package Manager (SPM) to pull in external libraries. These p
 | **NukeUI** | Asynchronous image loading for SwiftUI with `LazyImage` |
 | **BezelKit** | Device bezel measurements for consistent radii in glass effects |
 | **Glur** | GPU‑efficient blur effects with configurable radius and direction |
-| **ImagePlayground** | Sheet for image editing on iOS 18.1+ (with backport fallback) |
 | **PostHog** | Analytics library for event metrics capture |
 | **Combine** | Apple's reactive framework for authentication and data streams |
 
