@@ -52,7 +52,6 @@ public final class AuthManager: @unchecked Sendable {
         let (stream, continuation) = AsyncStream<ClientManager?>.makeStream(bufferingPolicy: .bufferingNewest(1))
         self.clientManagerUpdates = stream
         self.clientManagerContinuation = continuation
-        
         self.configState = initConfigState
         
         Task { await restoreSession() }

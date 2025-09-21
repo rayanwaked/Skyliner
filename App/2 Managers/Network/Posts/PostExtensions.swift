@@ -84,55 +84,6 @@ enum PostReplyError: Error, @preconcurrency LocalizedError {
     }
 }
 
-// MARK: - USER MANAGER EXTENSION
-extension UserManager {
-    public func createReply(to parentPost: PostItem, text: String) async throws {
-        guard let clientManager else {
-            throw PostReplyError.noClientManager
-        }
-        
-        guard !text.isEmpty, text.count <= 300 else {
-            throw PostReplyError.invalidReplyText
-        }
-        
-        // Get the post thread
-        let threadResult = try await clientManager.account.getPostThread(
-            from: parentPost.postID,
-            depth: 1,
-            parentHeight: 100
-        )
-        
-        // Extract references
-        guard case .threadViewPost(let threadView) = threadResult.thread else {
-            throw PostReplyError.invalidPostType
-        }
-        
-        let parentRef = ComAtprotoLexicon.Repository.StrongReference(
-            recordURI: threadView.post.uri,
-            cidHash: threadView.post.cid
-        )
-        
-        let rootRef: ComAtprotoLexicon.Repository.StrongReference
-        if let postRecord = threadView.post.record.getRecord(ofType: AppBskyLexicon.Feed.PostRecord.self),
-           let replyRef = postRecord.reply {
-            rootRef = replyRef.root
-        } else {
-            rootRef = parentRef
-        }
-        
-        let replyReference = AppBskyLexicon.Feed.PostRecord.ReplyReference(
-            root: rootRef,
-            parent: parentRef
-        )
-        
-        // Post the reply
-        _ = try await clientManager.bluesky.createPostRecord(
-            text: text,
-            replyTo: replyReference
-        )
-    }
-}
-
 // MARK: - PROFILE MANAGER EXTENSION
 extension ProfileManager {
     public func createReply(to parentPost: PostItem, text: String) async throws {
@@ -181,4 +132,3 @@ extension ProfileManager {
         )
     }
 }
-

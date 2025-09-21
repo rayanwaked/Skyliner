@@ -1,5 +1,5 @@
 //
-//  HomeView.swift
+//  AccountView.swift
 //  Skyliner
 //
 //  Created by Rayan Waked on 9/17/25.
@@ -8,23 +8,28 @@
 import SwiftUI
 
 // MARK: - VIEW
-struct HomeView: View {
+struct AccountView: View {
     @Environment(AppState.self) private var appState
-    private var homeModel: PostManager { appState.postManager }
+    var accountModel = ProfileManager(userDID: "")
+    var accountDID: String
     
     var body: some View {
         NavigationStack {
             ScrollView {
-                LazyVStack {
-                    ForEach(homeModel.homePosts, id: \.postID) { post in
-                        PostFeature(feed: post)
-                    }
+                ForEach(accountModel.profilePosts, id: \.postID) { post in
+                    PostFeature(feed: post)
                 }
                 .padding(.top, Padding.large)
             }
             .background(.standardBackground)
             .scrollIndicators(.never)
-            .navigationTitle("Home")
+            .navigationTitle(Text("Profile"))
+        }
+        .onAppear {
+            Task {
+                accountModel.userDID = accountDID
+                await accountModel.loadProfile()
+            }
         }
     }
 }
@@ -33,6 +38,6 @@ struct HomeView: View {
 #Preview {
     @Previewable @State var appState = AppState()
     
-    HomeView()
+    AccountView(accountDID: "")
         .environment(appState)
 }

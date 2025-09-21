@@ -1,13 +1,13 @@
 {
-  "originHash" : "7ee5faedf5d11f452202e7908b100ef11e122e05774f08af91d41098ba897208",
+  "originHash" : "5991197e8289f9bcd5f1f6e096d3560dcadacfc93bd8b6568378c835342de6c0",
   "pins" : [
     {
       "identity" : "atprotokit",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/rayanwaked/ATProtoKit.git",
+      "location" : "https://github.com/MasterJ93/ATProtoKit",
       "state" : {
-        "branch" : "main",
-        "revision" : "ff4234921197209d1481ff75dd990c488a07603e"
+        "revision" : "5048826586a661168e0a53f6758f562a28b6b0b3",
+        "version" : "0.31.2"
       }
     },
     {

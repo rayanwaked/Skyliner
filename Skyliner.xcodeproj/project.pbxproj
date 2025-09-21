@@ -7,14 +7,14 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		B90AACD42E4E586600C02A4B /* ATMacro in Frameworks */ = {isa = PBXBuildFile; productRef = B90AACD32E4E586600C02A4B /* ATMacro */; };
-		B90AACD62E4E586600C02A4B /* ATProtoKit in Frameworks */ = {isa = PBXBuildFile; productRef = B90AACD52E4E586600C02A4B /* ATProtoKit */; };
 		B916FBDE2E2BCE2600412076 /* BezelKit in Frameworks */ = {isa = PBXBuildFile; productRef = B916FBDD2E2BCE2600412076 /* BezelKit */; };
 		B929236A2E5E65C200E6A106 /* SwiftyBeaver in Frameworks */ = {isa = PBXBuildFile; productRef = B92923692E5E65C200E6A106 /* SwiftyBeaver */; };
 		B9AB600E2E2895F900C6179D /* Glur in Frameworks */ = {isa = PBXBuildFile; productRef = B9AB600D2E2895F900C6179D /* Glur */; };
 		B9C03DD92E248D6400D98A25 /* PostHog in Frameworks */ = {isa = PBXBuildFile; productRef = B9C03DD82E248D6400D98A25 /* PostHog */; };
 		B9C03E102E2496A900D98A25 /* KeychainSwift in Frameworks */ = {isa = PBXBuildFile; productRef = B9C03E0F2E2496A900D98A25 /* KeychainSwift */; };
 		B9C03E9E2E2499C500D98A25 /* NukeUI in Frameworks */ = {isa = PBXBuildFile; productRef = B9C03E9D2E2499C500D98A25 /* NukeUI */; };
+		B9D0FCE12E7BCD7B008311D7 /* ATMacro in Frameworks */ = {isa = PBXBuildFile; productRef = B9D0FCE02E7BCD7B008311D7 /* ATMacro */; };
+		B9D0FCE32E7BCD7B008311D7 /* ATProtoKit in Frameworks */ = {isa = PBXBuildFile; productRef = B9D0FCE22E7BCD7B008311D7 /* ATProtoKit */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -51,11 +51,6 @@
 			path = App;
 			sourceTree = "<group>";
 		};
-		B9CEB9852E37E36000050E4C /* Test */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = Test;
-			sourceTree = "<group>";
-		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -63,14 +58,14 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B90AACD42E4E586600C02A4B /* ATMacro in Frameworks */,
 				B916FBDE2E2BCE2600412076 /* BezelKit in Frameworks */,
 				B9C03DD92E248D6400D98A25 /* PostHog in Frameworks */,
 				B9C03E102E2496A900D98A25 /* KeychainSwift in Frameworks */,
+				B9D0FCE32E7BCD7B008311D7 /* ATProtoKit in Frameworks */,
 				B9AB600E2E2895F900C6179D /* Glur in Frameworks */,
-				B90AACD62E4E586600C02A4B /* ATProtoKit in Frameworks */,
 				B9C03E9E2E2499C500D98A25 /* NukeUI in Frameworks */,
 				B929236A2E5E65C200E6A106 /* SwiftyBeaver in Frameworks */,
+				B9D0FCE12E7BCD7B008311D7 /* ATMacro in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -88,7 +83,6 @@
 			isa = PBXGroup;
 			children = (
 				B9C03D2C2E24850D00D98A25 /* App */,
-				B9CEB9852E37E36000050E4C /* Test */,
 				B9C03D2B2E24850D00D98A25 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -127,9 +121,9 @@
 				B9C03E9D2E2499C500D98A25 /* NukeUI */,
 				B9AB600D2E2895F900C6179D /* Glur */,
 				B916FBDD2E2BCE2600412076 /* BezelKit */,
-				B90AACD32E4E586600C02A4B /* ATMacro */,
-				B90AACD52E4E586600C02A4B /* ATProtoKit */,
 				B92923692E5E65C200E6A106 /* SwiftyBeaver */,
+				B9D0FCE02E7BCD7B008311D7 /* ATMacro */,
+				B9D0FCE22E7BCD7B008311D7 /* ATProtoKit */,
 			);
 			productName = Skyliner;
 			productReference = B9C03D2A2E24850D00D98A25 /* Skyliner.app */;
@@ -147,9 +141,6 @@
 			);
 			dependencies = (
 				B9CEB9892E37E36000050E4C /* PBXTargetDependency */,
-			);
-			fileSystemSynchronizedGroups = (
-				B9CEB9852E37E36000050E4C /* Test */,
 			);
 			name = Test;
 			packageProductDependencies = (
@@ -192,8 +183,8 @@
 				B9C03E9C2E2499C500D98A25 /* XCRemoteSwiftPackageReference "Nuke" */,
 				B9AB600C2E2895F900C6179D /* XCRemoteSwiftPackageReference "Glur" */,
 				B916FBDC2E2BCE2600412076 /* XCRemoteSwiftPackageReference "BezelKit" */,
-				B90AACD22E4E586600C02A4B /* XCRemoteSwiftPackageReference "ATProtoKit" */,
 				B92923682E5E65C200E6A106 /* XCRemoteSwiftPackageReference "SwiftyBeaver" */,
+				B9D0FCDF2E7BCD7B008311D7 /* XCRemoteSwiftPackageReference "ATProtoKit" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = B9C03D2B2E24850D00D98A25 /* Products */;
@@ -383,7 +374,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "App/1\\ Resources/Icon.icon";
 				DEVELOPMENT_TEAM = 6R2E9P9EPV;
 				ENABLE_PREVIEWS = YES;
@@ -402,7 +393,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.0;
+				MARKETING_VERSION = 1.1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = waked.Skyliner;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
@@ -428,7 +419,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "App/1\\ Resources/Icon.icon";
 				DEVELOPMENT_TEAM = 6R2E9P9EPV;
 				ENABLE_PREVIEWS = YES;
@@ -447,7 +438,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.0;
+				MARKETING_VERSION = 1.1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = waked.Skyliner;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
@@ -547,14 +538,6 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		B90AACD22E4E586600C02A4B /* XCRemoteSwiftPackageReference "ATProtoKit" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/rayanwaked/ATProtoKit.git";
-			requirement = {
-				branch = main;
-				kind = branch;
-			};
-		};
 		B916FBDC2E2BCE2600412076 /* XCRemoteSwiftPackageReference "BezelKit" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/markbattistella/BezelKit";
@@ -603,19 +586,17 @@
 				minimumVersion = 12.8.0;
 			};
 		};
+		B9D0FCDF2E7BCD7B008311D7 /* XCRemoteSwiftPackageReference "ATProtoKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/MasterJ93/ATProtoKit";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.31.2;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		B90AACD32E4E586600C02A4B /* ATMacro */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = B90AACD22E4E586600C02A4B /* XCRemoteSwiftPackageReference "ATProtoKit" */;
-			productName = ATMacro;
-		};
-		B90AACD52E4E586600C02A4B /* ATProtoKit */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = B90AACD22E4E586600C02A4B /* XCRemoteSwiftPackageReference "ATProtoKit" */;
-			productName = ATProtoKit;
-		};
 		B916FBDD2E2BCE2600412076 /* BezelKit */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = B916FBDC2E2BCE2600412076 /* XCRemoteSwiftPackageReference "BezelKit" */;
@@ -645,6 +626,16 @@
 			isa = XCSwiftPackageProductDependency;
 			package = B9C03E9C2E2499C500D98A25 /* XCRemoteSwiftPackageReference "Nuke" */;
 			productName = NukeUI;
+		};
+		B9D0FCE02E7BCD7B008311D7 /* ATMacro */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = B9D0FCDF2E7BCD7B008311D7 /* XCRemoteSwiftPackageReference "ATProtoKit" */;
+			productName = ATMacro;
+		};
+		B9D0FCE22E7BCD7B008311D7 /* ATProtoKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = B9D0FCDF2E7BCD7B008311D7 /* XCRemoteSwiftPackageReference "ATProtoKit" */;
+			productName = ATProtoKit;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

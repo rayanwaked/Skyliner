@@ -17,7 +17,6 @@ let log = SwiftyBeaver.self
 struct SkylinerApp: App {
     // MARK: - PROPERTIES
     @State private var appState = AppState()
-    @State private var coordinator = Coordinator()
     
     // MARK: - INITALIZATION
     init() {
@@ -38,7 +37,6 @@ struct SkylinerApp: App {
         WindowGroup {
             RouterView()
                 .environment(appState)
-                .environment(coordinator)
         }
     }
 }

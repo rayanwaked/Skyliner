@@ -38,7 +38,7 @@ public final class ProfileManager {
     private var timelineCursor: String?
     
     // MARK: - IDENTIFIER
-    private let userDID: String
+    var userDID: String
     
     // MARK: - COMPUTED PROPERTIES
     var profilePosts: [PostItem] { profileFeed.posts }

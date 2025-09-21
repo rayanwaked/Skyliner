@@ -16,11 +16,11 @@ public class AppState {
     var clientManager: ClientManager?
     var config: ATProtocolConfiguration?
     let authManager = AuthManager()
-    let userManager = UserManager()
-    let profileManager = ProfileManager(userDID: "")
     let postManager = PostManager()
     let notificationsManager = NotificationsManager()
+    let exploreManager = ExploreManager()
     let threadManager = ThreadManager()
+    let trendsManager = TrendsManager()
 
     private var storedUserDID: String {
         get { UserDefaults.standard.string(forKey: "userDID") ?? "" }
@@ -58,18 +58,18 @@ public class AppState {
 
     // MARK: - METHODS
     func updateManagers(with clientManager: ClientManager?, with appState: AppState?) {
-        userManager.appState = self
-        profileManager.appState = self
         postManager.appState = self
         notificationsManager.appState = self
+        exploreManager.appState = self
         threadManager.appState = self
+        trendsManager.appState = self
     }
 
     func loadAllData() async {
         await updateUserDID()
-        await userManager.loadProfile()
         await postManager.loadPosts()
         await notificationsManager.loadNotifications()
+        await trendsManager.loadTrends()
     }
     
     func updateUserDID() async {

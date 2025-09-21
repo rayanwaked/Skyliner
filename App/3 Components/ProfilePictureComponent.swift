@@ -36,53 +36,12 @@ extension ProfilePictureComponent {
 struct ProfilePictureComponent: View {
     // MARK: - PROPERTIES
     @Environment(AppState.self) private var appState
-    var isUser: Bool? = true
+ 
     var profilePictureURL: URL? = nil
     var size: Size = .medium
     
     // MARK: - BODY
     var body: some View {
-        switch isUser {
-        case true: user
-        case false: others
-        default: user
-        }
-    }
-}
-
-// MARK: - USER
-extension ProfilePictureComponent {
-    var user: some View {
-        Group {
-            if let profilePictureURL = appState.userManager.profilePictureURL {
-                LazyImage(url: profilePictureURL) { state in
-                    if let image = state.image {
-                        image
-                            .resizable()
-                            .aspectRatio(contentMode: .fill)
-                    } else {
-                        Circle()
-                            .fill(Color.secondary.opacity(0.3))
-                    }
-                }
-                .frame(width: size.frame.width, height: size.frame.height)
-                .clipShape(Circle())
-                .backport.glassEffect(.tintedAndInteractive(color: .clear, isEnabled: true), in: Circle())
-            } else {
-                Circle()
-                    .font(.smaller(.title2))
-                    .fontWeight(.semibold)
-                    .frame(maxWidth: .infinity)
-                    .frame(width: size.frame.width, height: size.frame.height)
-                    .backport.glassEffect(.tintedAndInteractive(color: .clear, isEnabled: true))
-            }
-        }
-    }
-}
-
-// MARK: - OTHERS
-extension ProfilePictureComponent {
-    var others: some View {
         Group {
             if (profilePictureURL != nil) {
                 LazyImage(url: profilePictureURL) { state in

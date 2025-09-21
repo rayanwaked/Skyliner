@@ -13,13 +13,12 @@ internal import Combine
 // MARK: - FEATURE
 struct BannerFeature: View {
     @StateObject var manager: BannerPositionManager
-    var bannerURL: URL?
     var isUser: Bool = true
     
     // MARK: - BODY
     var body: some View {
         VStack(spacing: 0) {
-            LazyImage(url: bannerURL) { result in
+            LazyImage(url: manager.bannerURL) { result in
                 result.image?
                     .resizable()
                     .aspectRatio(contentMode: .fill)
@@ -27,7 +26,7 @@ struct BannerFeature: View {
                     .clipped()
             }
             
-            LazyImage(url: bannerURL) { result in
+            LazyImage(url: manager.bannerURL) { result in
                 result.image?
                     .resizable()
                     .aspectRatio(contentMode: .fill)
@@ -56,8 +55,9 @@ struct BannerFeature: View {
 @MainActor
 final class BannerPositionManager: ObservableObject {
     @Published var scrollOffset: CGFloat = 0
-    let bannerHeight: CGFloat = Screen.width / 3
-    var maxStretch: CGFloat { bannerHeight * 1.5 }
+    @Published var bannerURL: URL? = URL(string: "")
+    let bannerHeight: CGFloat = Screen.height * 0.15
+    let maxStretch: CGFloat = Screen.height * 0.25
     
     var currentBannerHeight: CGFloat {
         if scrollOffset < 0 {
@@ -75,41 +75,12 @@ final class BannerPositionManager: ObservableObject {
     }
 }
 
-// MARK: - MODIFIER
-@available(iOS 18.0, *)
-struct ScrollOffsetModifier: ViewModifier {
-    let manager: BannerPositionManager
-    
-    func body(content: Content) -> some View {
-        content
-            .onScrollGeometryChange(for: CGFloat.self) { geo in
-                geo.contentOffset.y
-            } action: { _, newValue in
-                manager.scrollOffset = newValue
-            }
-    }
-}
-
-// MARK: - VIEW EXTENSION
-extension View {
-    func scrollOffset(manager: BannerPositionManager) -> some View {
-        if #available(iOS 18.0, *) {
-            return modifier(ScrollOffsetModifier(manager: manager))
-        } else {
-            return self
-        }
-    }
-}
-
 // MARK: - PREVIEW
 #Preview {
-    @Previewable @State var appState = AppState()
     @Previewable @StateObject var manager = BannerPositionManager()
-    let profileURL = appState.userManager.profilePictureURL
-    let bannerURL = appState.userManager.bannerURL ?? URL(string: "https://example.com/banner.png")!
-    
-    BannerFeature(
-        manager: manager,
-        bannerURL: bannerURL
-    )
+
+    BannerFeature(manager: manager)
+        .onAppear {
+            manager.bannerURL = URL(string: "https://cdn.bsky.app/img/banner/plain/did:plc:fid77rvrx44chjgehhbpduun/bafkreidaqpiitbwjcd4ny3lvkuwetkoz5nrdt2brpdm2cpfkvt4xxbt4zm@jpeg")
+        }
 }
