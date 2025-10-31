@@ -9,12 +9,12 @@
 /* Begin PBXBuildFile section */
 		B90AACD42E4E586600C02A4B /* ATMacro in Frameworks */ = {isa = PBXBuildFile; productRef = B90AACD32E4E586600C02A4B /* ATMacro */; };
 		B90AACD62E4E586600C02A4B /* ATProtoKit in Frameworks */ = {isa = PBXBuildFile; productRef = B90AACD52E4E586600C02A4B /* ATProtoKit */; };
-		B916FBDE2E2BCE2600412076 /* BezelKit in Frameworks */ = {isa = PBXBuildFile; productRef = B916FBDD2E2BCE2600412076 /* BezelKit */; };
 		B929236A2E5E65C200E6A106 /* SwiftyBeaver in Frameworks */ = {isa = PBXBuildFile; productRef = B92923692E5E65C200E6A106 /* SwiftyBeaver */; };
 		B9AB600E2E2895F900C6179D /* Glur in Frameworks */ = {isa = PBXBuildFile; productRef = B9AB600D2E2895F900C6179D /* Glur */; };
 		B9C03DD92E248D6400D98A25 /* PostHog in Frameworks */ = {isa = PBXBuildFile; productRef = B9C03DD82E248D6400D98A25 /* PostHog */; };
 		B9C03E102E2496A900D98A25 /* KeychainSwift in Frameworks */ = {isa = PBXBuildFile; productRef = B9C03E0F2E2496A900D98A25 /* KeychainSwift */; };
 		B9C03E9E2E2499C500D98A25 /* NukeUI in Frameworks */ = {isa = PBXBuildFile; productRef = B9C03E9D2E2499C500D98A25 /* NukeUI */; };
+		B9E0FDC12EB48A3A00A264EF /* BezelKit in Frameworks */ = {isa = PBXBuildFile; productRef = B9E0FDC02EB48A3A00A264EF /* BezelKit */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -64,8 +64,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				B90AACD42E4E586600C02A4B /* ATMacro in Frameworks */,
-				B916FBDE2E2BCE2600412076 /* BezelKit in Frameworks */,
 				B9C03DD92E248D6400D98A25 /* PostHog in Frameworks */,
+				B9E0FDC12EB48A3A00A264EF /* BezelKit in Frameworks */,
 				B9C03E102E2496A900D98A25 /* KeychainSwift in Frameworks */,
 				B9AB600E2E2895F900C6179D /* Glur in Frameworks */,
 				B90AACD62E4E586600C02A4B /* ATProtoKit in Frameworks */,
@@ -89,6 +89,7 @@
 			children = (
 				B9C03D2C2E24850D00D98A25 /* App */,
 				B9CEB9852E37E36000050E4C /* Test */,
+				B9E0FDBE2EB48A0F00A264EF /* Frameworks */,
 				B9C03D2B2E24850D00D98A25 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -100,6 +101,13 @@
 				B9CEB9842E37E36000050E4C /* Test.xctest */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		B9E0FDBE2EB48A0F00A264EF /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -126,10 +134,10 @@
 				B9C03E0F2E2496A900D98A25 /* KeychainSwift */,
 				B9C03E9D2E2499C500D98A25 /* NukeUI */,
 				B9AB600D2E2895F900C6179D /* Glur */,
-				B916FBDD2E2BCE2600412076 /* BezelKit */,
 				B90AACD32E4E586600C02A4B /* ATMacro */,
 				B90AACD52E4E586600C02A4B /* ATProtoKit */,
 				B92923692E5E65C200E6A106 /* SwiftyBeaver */,
+				B9E0FDC02EB48A3A00A264EF /* BezelKit */,
 			);
 			productName = Skyliner;
 			productReference = B9C03D2A2E24850D00D98A25 /* Skyliner.app */;
@@ -191,9 +199,9 @@
 				B9C03E0E2E2496A900D98A25 /* XCRemoteSwiftPackageReference "keychain-swift" */,
 				B9C03E9C2E2499C500D98A25 /* XCRemoteSwiftPackageReference "Nuke" */,
 				B9AB600C2E2895F900C6179D /* XCRemoteSwiftPackageReference "Glur" */,
-				B916FBDC2E2BCE2600412076 /* XCRemoteSwiftPackageReference "BezelKit" */,
 				B90AACD22E4E586600C02A4B /* XCRemoteSwiftPackageReference "ATProtoKit" */,
 				B92923682E5E65C200E6A106 /* XCRemoteSwiftPackageReference "SwiftyBeaver" */,
+				B9E0FDBF2EB48A2A00A264EF /* XCRemoteSwiftPackageReference "BezelKit" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = B9C03D2B2E24850D00D98A25 /* Products */;
@@ -384,7 +392,7 @@
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "App/1\\ Resources/Icon.icon";
+				DEVELOPMENT_ASSET_PATHS = "";
 				DEVELOPMENT_TEAM = 6R2E9P9EPV;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -429,7 +437,7 @@
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "App/1\\ Resources/Icon.icon";
+				DEVELOPMENT_ASSET_PATHS = "";
 				DEVELOPMENT_TEAM = 6R2E9P9EPV;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -555,14 +563,6 @@
 				kind = branch;
 			};
 		};
-		B916FBDC2E2BCE2600412076 /* XCRemoteSwiftPackageReference "BezelKit" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/markbattistella/BezelKit";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 4.0.0;
-			};
-		};
 		B92923682E5E65C200E6A106 /* XCRemoteSwiftPackageReference "SwiftyBeaver" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/SwiftyBeaver/SwiftyBeaver.git";
@@ -603,6 +603,14 @@
 				minimumVersion = 12.8.0;
 			};
 		};
+		B9E0FDBF2EB48A2A00A264EF /* XCRemoteSwiftPackageReference "BezelKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/markbattistella/BezelKit";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 4.1.1;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -615,11 +623,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = B90AACD22E4E586600C02A4B /* XCRemoteSwiftPackageReference "ATProtoKit" */;
 			productName = ATProtoKit;
-		};
-		B916FBDD2E2BCE2600412076 /* BezelKit */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = B916FBDC2E2BCE2600412076 /* XCRemoteSwiftPackageReference "BezelKit" */;
-			productName = BezelKit;
 		};
 		B92923692E5E65C200E6A106 /* SwiftyBeaver */ = {
 			isa = XCSwiftPackageProductDependency;
@@ -645,6 +648,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = B9C03E9C2E2499C500D98A25 /* XCRemoteSwiftPackageReference "Nuke" */;
 			productName = NukeUI;
+		};
+		B9E0FDC02EB48A3A00A264EF /* BezelKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = B9E0FDBF2EB48A2A00A264EF /* XCRemoteSwiftPackageReference "BezelKit" */;
+			productName = BezelKit;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
