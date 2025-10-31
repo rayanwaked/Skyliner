@@ -7,7 +7,7 @@
       "location" : "https://github.com/rayanwaked/ATProtoKit.git",
       "state" : {
         "branch" : "main",
-        "revision" : "ff4234921197209d1481ff75dd990c488a07603e"
+        "revision" : "8bf7fb3709dd69c84ad3e499f3370eda845ec113"
       }
     },
     {
@@ -15,8 +15,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/markbattistella/BezelKit",
       "state" : {
-        "revision" : "bfa3e305a418096ce9d159b178330b49e46699e8",
-        "version" : "4.0.0"
+        "revision" : "a2cb1548f6ae11f3d9b8f63c1b260c6cc75c62bb",
+        "version" : "4.1.1"
       }
     },
     {
@@ -24,8 +24,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/joogps/Glur",
       "state" : {
-        "revision" : "9e00ff79da318f2c78b749b1027e54a9d4de2e33",
-        "version" : "1.0.4"
+        "revision" : "178af6499ed7957c7f91187fdee2b09d322f5b87",
+        "version" : "1.1.0"
       }
     },
     {
@@ -51,8 +51,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/PostHog/posthog-ios",
       "state" : {
-        "revision" : "784145ddd2f7de3a6d6fcce0e50c04f29d33b338",
-        "version" : "3.28.2"
+        "revision" : "ba5dd65d2341ab8ea1949f072594ef67c490af3a",
+        "version" : "3.34.0"
       }
     },
     {

@@ -11,14 +11,21 @@ struct SettingsView: View {
     @Environment(HeaderCoordinator.self) private var headerCoordinator
     
     var body: some View {
-        Toggle(
-            "Show header trends",
-            isOn: Binding(
-                get: { headerCoordinator.showingTrends },
-                set: { headerCoordinator.showingTrends = $0 }
-            )
+        VStack {
+            Text("Settings")
+                .font(.title)
+                .bold()
             
-        )
+            Toggle(
+                "Show header trends",
+                isOn: Binding(
+                    get: { headerCoordinator.showingTrends },
+                    set: { headerCoordinator.showingTrends = $0 }
+                )
+                
+            )
+            Spacer()
+        }
         .padding(.horizontal, Padding.standard)
     }
 }
