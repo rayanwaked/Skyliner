@@ -98,8 +98,8 @@ extension ThreadFeature {
                     .padding(.bottom, Padding.small)
                 }
                 
-                // Thread posts
-                ForEach(Array(threadManager.threads.enumerated()), id: \.element.post.postID) { index, threadItem in
+                // Thread posts (filtered to avoid duplicates with parent post)
+                ForEach(Array(filteredThreadItems.enumerated()), id: \.element.post.postID) { index, threadItem in
                     VStack(spacing: 0) {
                         ThreadPostCell(
                             post: threadItem.post,
@@ -114,6 +114,31 @@ extension ThreadFeature {
 //        .refreshable {
 //            await refreshThread()
 //        }
+    }
+    
+    /// Filters thread items to avoid showing duplicates, especially with the parent post
+    private var filteredThreadItems: [ThreadItem] {
+        let parentPostID = threadManager.parentPost?.postID
+        
+        // Remove duplicates by keeping track of seen post IDs
+        var seenPostIDs = Set<String>()
+        
+        // Add parent post ID to seen set if it exists
+        if let parentPostID = parentPostID {
+            seenPostIDs.insert(parentPostID)
+        }
+        
+        return threadManager.threads.filter { threadItem in
+            let postID = threadItem.post.postID
+            
+            // Only include posts we haven't seen before
+            if seenPostIDs.contains(postID) {
+                return false
+            } else {
+                seenPostIDs.insert(postID)
+                return true
+            }
+        }
     }
     
     private func threadLeadingPadding(for depth: Int) -> CGFloat {

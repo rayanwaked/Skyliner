@@ -68,27 +68,37 @@ public final class ThreadModel {
             }
         }
         
-        // Add parent to threads
+        // Add parent to threads with negative depth
         let item = postModel.performCreatePostItem(from: parentThread.post)
-        let threadItem = ThreadItem(
-            post: item,
-            depth: -1, // Negative depth for parents
-            hasMoreReplies: false,
-            parentAuthor: nil
-        )
-        threads.append(threadItem)
+        
+        // Check if this post is already in our threads array to avoid duplicates
+        let postID = item.postID
+        let alreadyExists = threads.contains { $0.post.postID == postID }
+        
+        if !alreadyExists {
+            let threadItem = ThreadItem(
+                post: item,
+                depth: -1, // Negative depth for parents
+                hasMoreReplies: false,
+                parentAuthor: nil
+            )
+            threads.append(threadItem)
+        }
     }
     
     private func processThreadNode(_ node: AppBskyLexicon.Feed.ThreadViewPostDefinition, depth: Int, parentAuthor: String? = nil) {
-        // Add current post
         let item = postModel.performCreatePostItem(from: node.post)
-        let threadItem = ThreadItem(
-            post: item,
-            depth: depth,
-            hasMoreReplies: (node.replies?.count ?? 0) > 0,
-            parentAuthor: parentAuthor
-        )
-        threads.append(threadItem)
+        
+        // Only add to threads if it's not the main post (depth 0) since main post is stored as parentPost
+        if depth > 0 {
+            let threadItem = ThreadItem(
+                post: item,
+                depth: depth,
+                hasMoreReplies: (node.replies?.count ?? 0) > 0,
+                parentAuthor: parentAuthor
+            )
+            threads.append(threadItem)
+        }
         
         // Process replies recursively
         if let replies = node.replies {
