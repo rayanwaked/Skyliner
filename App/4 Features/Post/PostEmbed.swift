@@ -39,7 +39,6 @@ struct PostEmbed: View {
                     EmptyView()
                 }
             }
-            .id(UUID())
         }
     }
 }
