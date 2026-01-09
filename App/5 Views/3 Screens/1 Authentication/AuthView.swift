@@ -108,7 +108,7 @@ private extension AuthenticationView {
             pdsURL: $viewModel.signinPDSUrl,
             handle: $viewModel.signinHandle,
             password: $viewModel.signinPassword,
-            error: viewModel.signinError,
+            error: appState.authManager.authenticationError ?? viewModel.signinError,
             showTwoFactorButton: viewModel.showTwoFactorButton,
             onSignIn: signinAction,
             onGoBack: resetSigninSection,
@@ -134,7 +134,6 @@ private extension AuthenticationView {
                     }
                     
                     viewModel.authenticationCode = ""
-                    viewModel.authenticationError = ""
                     dismissKeyboard()
                 } catch {
                     viewModel.signinError = error.localizedDescription

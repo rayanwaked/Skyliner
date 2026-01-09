@@ -90,10 +90,10 @@ extension SearchManager {
     }
     
     private func logSuccess(_ message: String) {
-        print("✅ \(message)")
+        print("\(message)")
     }
     
     private func logError(_ message: String) {
-        print("❌ \(message)")
+        print("\(message)")
     }
 }

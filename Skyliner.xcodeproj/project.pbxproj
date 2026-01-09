@@ -7,9 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		B90AACD42E4E586600C02A4B /* ATMacro in Frameworks */ = {isa = PBXBuildFile; productRef = B90AACD32E4E586600C02A4B /* ATMacro */; };
-		B90AACD62E4E586600C02A4B /* ATProtoKit in Frameworks */ = {isa = PBXBuildFile; productRef = B90AACD52E4E586600C02A4B /* ATProtoKit */; };
 		B929236A2E5E65C200E6A106 /* SwiftyBeaver in Frameworks */ = {isa = PBXBuildFile; productRef = B92923692E5E65C200E6A106 /* SwiftyBeaver */; };
+		B944D8412F116E2F005235F2 /* ATProtoKit in Frameworks */ = {isa = PBXBuildFile; productRef = B944D8402F116E2F005235F2 /* ATProtoKit */; };
 		B9AB600E2E2895F900C6179D /* Glur in Frameworks */ = {isa = PBXBuildFile; productRef = B9AB600D2E2895F900C6179D /* Glur */; };
 		B9C03DD92E248D6400D98A25 /* PostHog in Frameworks */ = {isa = PBXBuildFile; productRef = B9C03DD82E248D6400D98A25 /* PostHog */; };
 		B9C03E102E2496A900D98A25 /* KeychainSwift in Frameworks */ = {isa = PBXBuildFile; productRef = B9C03E0F2E2496A900D98A25 /* KeychainSwift */; };
@@ -63,13 +62,12 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B90AACD42E4E586600C02A4B /* ATMacro in Frameworks */,
 				B9C03DD92E248D6400D98A25 /* PostHog in Frameworks */,
 				B9E0FDC12EB48A3A00A264EF /* BezelKit in Frameworks */,
 				B9C03E102E2496A900D98A25 /* KeychainSwift in Frameworks */,
 				B9AB600E2E2895F900C6179D /* Glur in Frameworks */,
-				B90AACD62E4E586600C02A4B /* ATProtoKit in Frameworks */,
 				B9C03E9E2E2499C500D98A25 /* NukeUI in Frameworks */,
+				B944D8412F116E2F005235F2 /* ATProtoKit in Frameworks */,
 				B929236A2E5E65C200E6A106 /* SwiftyBeaver in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -134,10 +132,9 @@
 				B9C03E0F2E2496A900D98A25 /* KeychainSwift */,
 				B9C03E9D2E2499C500D98A25 /* NukeUI */,
 				B9AB600D2E2895F900C6179D /* Glur */,
-				B90AACD32E4E586600C02A4B /* ATMacro */,
-				B90AACD52E4E586600C02A4B /* ATProtoKit */,
 				B92923692E5E65C200E6A106 /* SwiftyBeaver */,
 				B9E0FDC02EB48A3A00A264EF /* BezelKit */,
+				B944D8402F116E2F005235F2 /* ATProtoKit */,
 			);
 			productName = Skyliner;
 			productReference = B9C03D2A2E24850D00D98A25 /* Skyliner.app */;
@@ -174,7 +171,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 2600;
-				LastUpgradeCheck = 2600;
+				LastUpgradeCheck = 2620;
 				TargetAttributes = {
 					B9C03D292E24850D00D98A25 = {
 						CreatedOnToolsVersion = 26.0;
@@ -199,9 +196,9 @@
 				B9C03E0E2E2496A900D98A25 /* XCRemoteSwiftPackageReference "keychain-swift" */,
 				B9C03E9C2E2499C500D98A25 /* XCRemoteSwiftPackageReference "Nuke" */,
 				B9AB600C2E2895F900C6179D /* XCRemoteSwiftPackageReference "Glur" */,
-				B90AACD22E4E586600C02A4B /* XCRemoteSwiftPackageReference "ATProtoKit" */,
 				B92923682E5E65C200E6A106 /* XCRemoteSwiftPackageReference "SwiftyBeaver" */,
 				B9E0FDBF2EB48A2A00A264EF /* XCRemoteSwiftPackageReference "BezelKit" */,
+				B944D83F2F116E14005235F2 /* XCRemoteSwiftPackageReference "ATProtoKit" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = B9C03D2B2E24850D00D98A25 /* Products */;
@@ -318,6 +315,7 @@
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
@@ -377,6 +375,7 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				VALIDATE_PRODUCT = YES;
 			};
@@ -410,7 +409,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.3;
+				MARKETING_VERSION = 1.0.4;
 				PRODUCT_BUNDLE_IDENTIFIER = waked.Skyliner;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
@@ -455,7 +454,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.3;
+				MARKETING_VERSION = 1.0.4;
 				PRODUCT_BUNDLE_IDENTIFIER = waked.Skyliner;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
@@ -555,20 +554,20 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		B90AACD22E4E586600C02A4B /* XCRemoteSwiftPackageReference "ATProtoKit" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/rayanwaked/ATProtoKit.git";
-			requirement = {
-				branch = main;
-				kind = branch;
-			};
-		};
 		B92923682E5E65C200E6A106 /* XCRemoteSwiftPackageReference "SwiftyBeaver" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/SwiftyBeaver/SwiftyBeaver.git";
 			requirement = {
 				kind = upToNextMajorVersion;
 				minimumVersion = 2.1.1;
+			};
+		};
+		B944D83F2F116E14005235F2 /* XCRemoteSwiftPackageReference "ATProtoKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/MasterJ93/ATProtoKit";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.32.5;
 			};
 		};
 		B9AB600C2E2895F900C6179D /* XCRemoteSwiftPackageReference "Glur" */ = {
@@ -614,20 +613,15 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		B90AACD32E4E586600C02A4B /* ATMacro */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = B90AACD22E4E586600C02A4B /* XCRemoteSwiftPackageReference "ATProtoKit" */;
-			productName = ATMacro;
-		};
-		B90AACD52E4E586600C02A4B /* ATProtoKit */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = B90AACD22E4E586600C02A4B /* XCRemoteSwiftPackageReference "ATProtoKit" */;
-			productName = ATProtoKit;
-		};
 		B92923692E5E65C200E6A106 /* SwiftyBeaver */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = B92923682E5E65C200E6A106 /* XCRemoteSwiftPackageReference "SwiftyBeaver" */;
 			productName = SwiftyBeaver;
+		};
+		B944D8402F116E2F005235F2 /* ATProtoKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = B944D83F2F116E14005235F2 /* XCRemoteSwiftPackageReference "ATProtoKit" */;
+			productName = ATProtoKit;
 		};
 		B9AB600D2E2895F900C6179D /* Glur */ = {
 			isa = XCSwiftPackageProductDependency;

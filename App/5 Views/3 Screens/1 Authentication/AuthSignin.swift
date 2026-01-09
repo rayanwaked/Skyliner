@@ -81,15 +81,9 @@ extension AuthenticationView {
                         onGoToTwoFactor()
                     }
                 }
-            }
-            
-            // MARK: - ERROR
-            if !error.isEmpty {
-                Text(error)
-                    .foregroundColor(.red)
-                    .font(.smaller(.footnote))
-                    .padding(.top, 4)
-                    .padding(.leading, 4)
+                if !error.isEmpty {
+                    Text("\(error)")
+                }
             }
         }
         .standardCardStyle()

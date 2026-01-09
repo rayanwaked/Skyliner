@@ -140,7 +140,7 @@ public final class ThreadManager {
     // MARK: - METHODS
     func loadThread(uri: String, depth: Int? = nil, parentHeight: Int? = nil) async {
         guard let clientManager else {
-            print("❌ No valid client manager available for thread loading")
+            print("No valid client manager available for thread loading")
             return
         }
         
@@ -157,10 +157,10 @@ public final class ThreadManager {
             case .threadViewPost(let threadView):
                 self.threadModel.updateThread(from: threadView)
             case .notFoundPost:
-                print("❌ Thread post not found")
+                print("Thread post not found")
                 self.threadModel.clear()
             case .blockedPost:
-                print("❌ Thread post is blocked")
+                print("Thread post is blocked")
                 self.threadModel.clear()
             case .unknown(_, _):
                 break
@@ -177,9 +177,9 @@ public final class ThreadManager {
     private func execute(_ operationName: String, operation: () async throws -> Void) async {
         do {
             try await operation()
-            print("✅ \(operationName) completed successfully")
+            print("\(operationName) completed successfully")
         } catch {
-            print("❌ Failed to \(operationName.lowercased()): \(error.localizedDescription)")
+            print("Failed to \(operationName.lowercased()): \(error.localizedDescription)")
         }
     }
 }
