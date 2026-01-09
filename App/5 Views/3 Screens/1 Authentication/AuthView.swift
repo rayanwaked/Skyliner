@@ -108,7 +108,7 @@ private extension AuthenticationView {
             pdsURL: $viewModel.signinPDSUrl,
             handle: $viewModel.signinHandle,
             password: $viewModel.signinPassword,
-            error: appState.authManager.authenticationError ?? viewModel.signinError,
+            error: appState.authManager.authenticationError,
             showTwoFactorButton: viewModel.showTwoFactorButton,
             onSignIn: signinAction,
             onGoBack: resetSigninSection,
