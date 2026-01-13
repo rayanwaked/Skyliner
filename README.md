@@ -29,8 +29,6 @@
 
 This is done with an **MVVM‑C** (Model‑View‑ViewModel‑Coordinator) architecture with a centralized `AppState` for dependency injection and global state. The goal is a refined, elegant user experience built on a clean, maintainable codebase. Development experience matters just as much as user experience.
 
-<img width="5550" height="2796" alt="Skyliner iOS App Store Images" src="https://github.com/user-attachments/assets/562ed463-cda8-430a-b01d-3f079c7a1ce2" />
-
 ### Key Architectural Highlights
 
 - **Centralised state management** via `AppState`, which instantiates managers on demand and coordinates authentication and data loading
