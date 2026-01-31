@@ -16,10 +16,6 @@
   
 </div>
 
-> ⚠️ **Caution**
-> 
-> This repository represents an early‑stage project. The codebase is evolving rapidly and major refactors are expected. APIs, folder names and internal structures may change without notice. If you build on top of Skyliner today, be prepared to rebase often.
-> 
 <img width="1500" height="250" alt="Skyliner Blue Sky with Clouds Banner" src="https://github.com/user-attachments/assets/89cedce6-e967-4d01-b586-0169b8dd4329" />
 
 
