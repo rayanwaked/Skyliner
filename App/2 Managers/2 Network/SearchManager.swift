@@ -7,20 +7,23 @@
 
 import SwiftUI
 import ATProtoKit
+import os.log
 
 @MainActor
 @Observable
 // MARK: - MANAGER
-public final class SearchManager {
+public final class SearchManager: ManagedByAppState, OperationExecutor {
     // MARK: - PROPERTIES
     @ObservationIgnored
     var appState: AppState?
-    var clientManager: ClientManager? { appState?.clientManager }
     
     public let searchFeed = PostModel()
     
     private var currentCursor: String?
     private var currentQuery: String?
+    
+    // MARK: - PROTOCOL CONFORMANCE
+    var logger: Logger { AppLogger.search }
     
     // MARK: - COMPUTED PROPERTIES
     var searchPosts: [PostItem] { searchFeed.posts }
@@ -46,7 +49,7 @@ extension SearchManager {
                 !query.isEmpty,
               let clientManager else { return }
         
-        await execute("Loading search results") {
+        _ = await executeVoid("Loading search results") {
             let result = try await clientManager.account.searchPosts(
                 matching: query,
                 author: nil,
@@ -77,23 +80,5 @@ extension SearchManager {
         searchFeed.clear()
         currentCursor = nil
         currentQuery = nil
-    }
-    
-    // MARK: - PRIVATE HELPERS
-    private func execute(_ operationName: String, operation: () async throws -> Void) async {
-        do {
-            try await operation()
-            logSuccess("\(operationName) completed successfully")
-        } catch {
-            logError("Failed to \(operationName.lowercased()): \(error.localizedDescription)")
-        }
-    }
-    
-    private func logSuccess(_ message: String) {
-        print("\(message)")
-    }
-    
-    private func logError(_ message: String) {
-        print("\(message)")
     }
 }

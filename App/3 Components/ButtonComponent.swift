@@ -59,45 +59,15 @@ struct ButtonConfig {
 }
 
 // MARK: - COMPONENT
-struct ButtonComponent: View {
+struct ButtonComponent<Content: View>: View {
     let action: () -> Void
     let variation: ButtonConfig.Variation
     let size: ButtonConfig.Size
     let haptic: HapticType
-    let content: AnyView
-    
-    // Text initializer
-    init(
-        _ text: String,
-        variation: ButtonConfig.Variation = .primary,
-        size: ButtonConfig.Size = .standard,
-        haptic: HapticType = .medium,
-        action: @escaping () -> Void
-    ) {
-        self.variation = variation
-        self.size = size
-        self.haptic = haptic
-        self.action = action
-        self.content = AnyView(Text(text))
-    }
-    
-    // System image initializer
-    init(
-        systemName: String,
-        variation: ButtonConfig.Variation = .primary,
-        size: ButtonConfig.Size = .compact,
-        haptic: HapticType = .medium,
-        action: @escaping () -> Void
-    ) {
-        self.variation = variation
-        self.size = size
-        self.haptic = haptic
-        self.action = action
-        self.content = AnyView(Image(systemName: systemName))
-    }
+    let content: Content
     
     // Custom content initializer
-    init<Content: View>(
+    init(
         variation: ButtonConfig.Variation = .primary,
         size: ButtonConfig.Size = .standard,
         haptic: HapticType = .medium,
@@ -108,7 +78,7 @@ struct ButtonComponent: View {
         self.size = size
         self.haptic = haptic
         self.action = action
-        self.content = AnyView(content())
+        self.content = content()
     }
     
     // MARK: BODY
@@ -138,6 +108,41 @@ struct ButtonComponent: View {
         }
         .backport.glassEffect(.interactive(isEnabled: true))
         .fixedSize(horizontal: size != .standard, vertical: false)
+    }
+}
+
+// MARK: - CONVENIENCE INITIALIZERS
+extension ButtonComponent where Content == Text {
+    // Text initializer
+    init(
+        _ text: String,
+        variation: ButtonConfig.Variation = .primary,
+        size: ButtonConfig.Size = .standard,
+        haptic: HapticType = .medium,
+        action: @escaping () -> Void
+    ) {
+        self.variation = variation
+        self.size = size
+        self.haptic = haptic
+        self.action = action
+        self.content = Text(text)
+    }
+}
+
+extension ButtonComponent where Content == Image {
+    // System image initializer
+    init(
+        systemName: String,
+        variation: ButtonConfig.Variation = .primary,
+        size: ButtonConfig.Size = .compact,
+        haptic: HapticType = .medium,
+        action: @escaping () -> Void
+    ) {
+        self.variation = variation
+        self.size = size
+        self.haptic = haptic
+        self.action = action
+        self.content = Image(systemName: systemName)
     }
 }
 

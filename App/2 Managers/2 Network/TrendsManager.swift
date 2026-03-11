@@ -7,25 +7,39 @@
 
 import SwiftUI
 import ATProtoKit
+import os.log
 
 @MainActor
 @Observable
 // MARK: - MANAGER
-public final class TrendsManager {
+public final class TrendsManager: ManagedByAppState {
     // MARK: - PROPERTIES
     @ObservationIgnored
     var appState: AppState?
-    var clientManager: ClientManager? { appState?.clientManager }
     var trends: [String] = []
+    var isLoading = false
+    var lastError: AppError?
 
     // MARK: - METHODS
     public func loadTrends() async {
-        do {
-            let output = try await clientManager?.account.getTrends()
-            trends = output?.trends.map { $0.displayName } ?? []
-        } catch {
-            return print(error.localizedDescription)
+        guard let clientManager else {
+            AppLogger.trends.warning("No clientManager available for loading trends")
+            return
         }
+        
+        isLoading = true
+        lastError = nil
+        
+        do {
+            let output = try await clientManager.account.getTrends()
+            trends = output.trends.map { $0.displayName }
+            AppLogger.trends.info("Loaded \(self.trends.count) trends")
+        } catch {
+            lastError = .network(underlying: error)
+            AppLogger.trends.error("Failed to load trends: \(error.localizedDescription)")
+        }
+        
+        isLoading = false
     }
 }
 

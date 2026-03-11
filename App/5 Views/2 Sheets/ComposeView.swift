@@ -8,6 +8,7 @@
 import SwiftUI
 import ATProtoKit
 import PostHog
+import os.log
 
 // MARK: - VIEW
 struct ComposeView: View {
@@ -15,6 +16,8 @@ struct ComposeView: View {
     @Environment(AppState.self) private var appState
     @Environment(RouterCoordinator.self) private var routerCoordinator
     @State private var postText: String = ""
+    @State private var isPosting: Bool = false
+    @State private var errorMessage: String?
     
     // MARK: - BODY
     var body: some View {
@@ -61,33 +64,62 @@ extension ComposeView {
 // MARK: - ACTIONS
 extension ComposeView {
     var actions: some View {
-        HStack {
-            Spacer()
+        VStack(spacing: Padding.small) {
+            if let errorMessage {
+                Text(errorMessage)
+                    .font(.caption)
+                    .foregroundColor(.red)
+                    .transition(.opacity)
+            }
             
-            ButtonComponent(
-                "Post",
-                haptic: .success,
-                action: {
-                    Task {
-                        do {
-                            _ = try await appState.clientManager?.bluesky.createPostRecord(text: postText)
-                            routerCoordinator.showingCreate.toggle()
-                        } catch {
-                            print("Failed to post: \(error)")
+            HStack {
+                Spacer()
+                
+                ButtonComponent(
+                    isPosting ? "Posting..." : "Post",
+                    haptic: .success,
+                    action: {
+                        Task {
+                            await createPost()
                         }
-                    }
+                    })
+                    .frame(width: Screen.width * 0.65)
+                    .disabled(isPosting || postText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
+                
+                ButtonComponent(
+                    systemName: "xmark" ,
+                    variation: .secondary,
+                    size: .compose,
+                    haptic: .soft,
+                    action: {
+                        routerCoordinator.showingCreate.toggle()
                 })
-                .frame(width: Screen.width * 0.65)
-            
-            ButtonComponent(
-                systemName: "xmark" ,
-                variation: .secondary,
-                size: .compose,
-                haptic: .soft,
-                action: {
-                    routerCoordinator.showingCreate.toggle()
-            })
+                .disabled(isPosting)
+            }
         }
+    }
+    
+    private func createPost() async {
+        guard !postText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
+            return
+        }
+        
+        isPosting = true
+        errorMessage = nil
+        
+        do {
+            _ = try await appState.clientManager?.bluesky.createPostRecord(text: postText)
+            AppLogger.posts.info("Post created successfully")
+            routerCoordinator.showingCreate.toggle()
+        } catch {
+            AppLogger.posts.error("Failed to create post: \(error.localizedDescription)")
+            withAnimation {
+                errorMessage = "Failed to post. Please try again."
+            }
+            hapticFeedback(.error)
+        }
+        
+        isPosting = false
     }
 }
 

@@ -8,6 +8,7 @@
 import SwiftUI
 import ATProtoKit
 import KeychainSwift
+import os.log
 
 @MainActor
 @Observable
@@ -130,7 +131,7 @@ extension AuthManager {
             self.requires2FA = false
             self.authenticationError = ""
         }
-        print("Authentication Manager: Sign in successful")
+        AppLogger.auth.info("Sign in successful")
     }
     
     private func handleAuthError(error: Error) async {
@@ -145,7 +146,7 @@ extension AuthManager {
                 self.configState = .pending2FA
                 self.requires2FA = true
                 self.authenticationError = "2FA Required"
-                print("Authentication Manager: 2FA required")
+                AppLogger.auth.info("2FA required")
             } else {
                 // This is a real failure
                 self.configState = .failed
@@ -154,7 +155,7 @@ extension AuthManager {
                 self.requires2FA = false
                 self.authenticationError = "Password or username incorrect"
                 self.clientManagerContinuation.yield(nil)
-                print("Authentication Manager: Sign in failed - \(error.localizedDescription)")
+                AppLogger.auth.error("Sign in failed: \(error.localizedDescription)")
             }
         }
     }
@@ -169,7 +170,7 @@ extension AuthManager {
             self.requires2FA = false
         }
         clientManagerContinuation.yield(nil)
-        print("Authentication Manager: Log out successful")
+        AppLogger.auth.info("Log out successful")
     }
     
     // MARK: - REFRESH

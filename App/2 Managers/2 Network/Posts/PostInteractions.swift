@@ -7,6 +7,7 @@
 
 import SwiftUI
 import ATProtoKit
+import os.log
 
 // MARK: - PROTOCOL
 protocol PostInteractionCapable: AnyObject {
@@ -27,16 +28,24 @@ extension PostInteractionCapable {
                 try await clientManager?.bluesky.deleteRecord(.recordURI(atURI: likeURI))
             }
         case (.like, nil):
+            guard let cid else {
+                AppLogger.posts.error("Cannot like post: missing CID for URI \(uri)")
+                return
+            }
             await run("Liking post") {
-                _ = try await clientManager?.bluesky.createLikeRecord(.init(recordURI: uri, cidHash: cid!))
+                _ = try await clientManager?.bluesky.createLikeRecord(.init(recordURI: uri, cidHash: cid))
             }
         case (.repost, let repostURI?) :
             await run("Unreposting") {
                 try await clientManager?.bluesky.deleteRecord(.recordURI(atURI: repostURI))
             }
         case (.repost, nil):
+            guard let cid else {
+                AppLogger.posts.error("Cannot repost: missing CID for URI \(uri)")
+                return
+            }
             await run("Reposting") {
-                _ = try await clientManager?.bluesky.createRepostRecord(.init(recordURI: uri, cidHash: cid!))
+                _ = try await clientManager?.bluesky.createRepostRecord(.init(recordURI: uri, cidHash: cid))
             }
         }
     }
@@ -65,9 +74,9 @@ extension PostInteractionCapable {
     private func run(_ title: String, _ operation: () async throws -> Void) async {
         do {
             try await operation()
-            print("✅ \(title) completed successfully")
+            AppLogger.posts.info("\(title) completed successfully")
         } catch {
-            print("❌ Failed to \(title.lowercased()): \(error.localizedDescription)")
+            AppLogger.posts.error("Failed to \(title.lowercased()): \(error.localizedDescription)")
         }
     }
     
@@ -75,7 +84,8 @@ extension PostInteractionCapable {
         guard let postRecord = Mirror(reflecting: record).children
             .first(where: { $0.label == "record" })?
             .value as? AppBskyLexicon.Feed.PostRecord else {
-            return "Unable to parse content"
+            AppLogger.posts.warning("Unable to parse post content from record")
+            return ""
         }
         return postRecord.text
     }
@@ -116,7 +126,7 @@ extension PostInteractionCapable where Self: PostFinder {
     
     func toggleLike(postID: String) async {
         guard let post = findPost(by: postID) else {
-            print("❌ Post not found for toggle like")
+            AppLogger.posts.warning("Post not found for toggle like: \(postID)")
             return
         }
         await toggleInteraction(.like, uri: post.uri, cid: post.cid, existingURI: post.viewer?.likeURI)
@@ -124,7 +134,7 @@ extension PostInteractionCapable where Self: PostFinder {
     
     func toggleRepost(postID: String) async {
         guard let post = findPost(by: postID) else {
-            print("❌ Post not found for toggle repost")
+            AppLogger.posts.warning("Post not found for toggle repost: \(postID)")
             return
         }
         await toggleInteraction(.repost, uri: post.uri, cid: post.cid, existingURI: post.viewer?.repostURI)
@@ -132,7 +142,7 @@ extension PostInteractionCapable where Self: PostFinder {
     
     func sharePost(postID: String) {
         guard let post = findPost(by: postID) else {
-            print("❌ Post not found for sharing")
+            AppLogger.posts.warning("Post not found for sharing: \(postID)")
             return
         }
         sharePost(authorName: post.author.displayName, handle: post.author.actorHandle, content: extractMessage(from: post.record))
@@ -140,7 +150,7 @@ extension PostInteractionCapable where Self: PostFinder {
     
     func copyPostLink(postID: String) {
         guard let post = findPost(by: postID) else {
-            print("❌ Post not found for copying link")
+            AppLogger.posts.warning("Post not found for copying link: \(postID)")
             return
         }
         copyPostLink(uri: post.uri)

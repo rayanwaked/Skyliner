@@ -29,10 +29,8 @@ struct HomeView: View {
                 )
             }
             .refreshable {
-                Task {
-                    await appState.postManager.refreshPosts()
-                    hapticFeedback(.success)
-                }
+                await appState.postManager.refreshPosts()
+                hapticFeedback(.success)
             }
             .defaultScrollAnchor(.top)
             .scrollIndicators(.hidden)

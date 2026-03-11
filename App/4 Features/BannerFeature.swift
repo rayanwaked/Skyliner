@@ -17,22 +17,25 @@ struct BannerFeature: View {
     
     // MARK: - BODY
     var body: some View {
-        VStack(spacing: 0) {
-            LazyImage(url: manager.bannerURL) { result in
-                result.image?
-                    .resizable()
-                    .aspectRatio(contentMode: .fill)
-                    .frame(width: Screen.width, height: manager.currentBannerHeight)
-                    .clipped()
-            }
-            
-            LazyImage(url: manager.bannerURL) { result in
-                result.image?
-                    .resizable()
-                    .aspectRatio(contentMode: .fill)
-                    .frame(width: Screen.width, height: manager.currentBannerHeight)
-                    .clipped()
-                    .scaleEffect(y: -1)
+        // Single image load, reused for both banner and reflection
+        LazyImage(url: manager.bannerURL) { state in
+            if let image = state.image {
+                VStack(spacing: 0) {
+                    // Main banner
+                    image
+                        .resizable()
+                        .aspectRatio(contentMode: .fill)
+                        .frame(width: Screen.width, height: manager.currentBannerHeight)
+                        .clipped()
+                    
+                    // Reflection (reuses same loaded image)
+                    image
+                        .resizable()
+                        .aspectRatio(contentMode: .fill)
+                        .frame(width: Screen.width, height: manager.currentBannerHeight)
+                        .clipped()
+                        .scaleEffect(y: -1)
+                }
             }
         }
         .glur(radius: Radius.small, offset: 0.45, interpolation: 1.0, direction: .down)

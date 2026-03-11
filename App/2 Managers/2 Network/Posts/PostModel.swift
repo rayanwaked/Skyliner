@@ -62,40 +62,86 @@ extension AppBskyLexicon.Feed.FeedViewPostDefinition: PostViewProtocol {
 @MainActor
 @Observable
 public final class PostModel {
+    // MARK: - CONSTANTS
+    private static let maxPostsInMemory = 500
+    
     // MARK: - PROPERTIES
     private(set) var posts: [PostItem] = []
     private var rawPosts: [any PostViewProtocol] = []
+    // Cached set for O(1) duplicate lookups
+    private var postURISet: Set<String> = []
+    // Cached dictionary for O(1) post lookups by ID
+    private var postsByURI: [String: any PostViewProtocol] = [:]
     
     // MARK: - METHODS
     func updatePosts<T: PostViewProtocol>(_ newPosts: [T]) {
         rawPosts = newPosts
         posts = newPosts.map { createPostItem(from: $0) }
+        rebuildCaches()
     }
     
     func appendPosts<T: PostViewProtocol>(_ newPosts: [T]) {
         let newItems = newPosts.map { createPostItem(from: $0) }
         rawPosts.append(contentsOf: newPosts)
         posts.append(contentsOf: newItems)
+        
+        // Update caches incrementally
+        for post in newPosts {
+            postURISet.insert(post.uri)
+            postsByURI[post.uri] = post
+        }
+        
+        trimIfNeeded()
     }
     
     func appendPostsWithDuplicateCheck<T: PostViewProtocol>(_ newPosts: [T]) {
-        let existingURIs = Set(rawPosts.map { $0.uri })
-        let uniqueNewPosts = newPosts.filter { !existingURIs.contains($0.uri) }
+        // O(1) lookup using cached set instead of O(n) iteration
+        let uniqueNewPosts = newPosts.filter { !postURISet.contains($0.uri) }
         
         guard !uniqueNewPosts.isEmpty else { return }
         
         let newItems = uniqueNewPosts.map { createPostItem(from: $0) }
         rawPosts.append(contentsOf: uniqueNewPosts)
         posts.append(contentsOf: newItems)
+        
+        // Update caches incrementally
+        for post in uniqueNewPosts {
+            postURISet.insert(post.uri)
+            postsByURI[post.uri] = post
+        }
+        
+        trimIfNeeded()
     }
     
     func clear() {
         posts = []
         rawPosts = []
+        postURISet = []
+        postsByURI = [:]
     }
     
     func findPost(by postID: String) -> (any PostViewProtocol)? {
-        rawPosts.first { $0.uri == postID }
+        // O(1) lookup using dictionary instead of O(n) iteration
+        postsByURI[postID]
+    }
+    
+    // MARK: - PRIVATE HELPERS
+    private func rebuildCaches() {
+        postURISet = Set(rawPosts.map { $0.uri })
+        // Use reduce to handle potential duplicates (keep last occurrence)
+        postsByURI = rawPosts.reduce(into: [:]) { dict, post in
+            dict[post.uri] = post
+        }
+    }
+    
+    private func trimIfNeeded() {
+        // Prevent unbounded memory growth by keeping only recent posts
+        guard posts.count > Self.maxPostsInMemory else { return }
+        
+        let excess = posts.count - Self.maxPostsInMemory
+        posts.removeFirst(excess)
+        rawPosts.removeFirst(excess)
+        rebuildCaches()
     }
     
     func getPostState(postID: String) -> PostState {
@@ -120,8 +166,8 @@ public final class PostModel {
             imageURL: post.author.avatarImageURL,
             name: post.author.displayName ?? post.author.actorHandle,
             handle: post.author.actorHandle,
-            time: DateHelper.formattedRelativeDate(from: extractDate(from: post.record)),
-            message: extractMessage(from: post.record),
+            time: DateHelper.formattedRelativeDate(from: PostRecordParser.extractDate(from: post.record)),
+            message: PostRecordParser.extractText(from: post.record),
             embed: post.embed,
             rawPost: post
         )
@@ -129,24 +175,6 @@ public final class PostModel {
 
     internal func performCreatePostItem(from post: any PostViewProtocol) -> PostItem {
         createPostItem(from: post)
-    }
-    
-    private func extractMessage(from record: UnknownType) -> String {
-        guard let postRecord = Mirror(reflecting: record).children
-            .first(where: { $0.label == "record" })?
-            .value as? AppBskyLexicon.Feed.PostRecord
-        else { return "Unable to parse content" }
-        
-        return postRecord.text
-    }
-    
-    private func extractDate(from record: UnknownType) -> Date {
-        guard let postRecord = Mirror(reflecting: record).children
-            .first(where: { $0.label == "record" })?
-            .value as? AppBskyLexicon.Feed.PostRecord
-        else { return Date() }
-        
-        return postRecord.createdAt
     }
 }
 

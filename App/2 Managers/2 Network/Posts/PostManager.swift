@@ -12,6 +12,10 @@ import ATProtoKit
 @Observable
 // MARK: - MANAGER
 public final class PostManager {
+    // MARK: - CONSTANTS
+    private static let defaultPageSize = 30
+    private static let maxPageSize = 50
+    
     // MARK: - PROPERTIES
     @ObservationIgnored
     var appState: AppState?
@@ -23,6 +27,8 @@ public final class PostManager {
     
     private var homeCursor: String?
     private var authorCursor: String?
+    private var isLoadingHome = false
+    private var isLoadingAuthor = false
     
     // MARK: - COMPUTED PROPERTIES
     var homePosts: [PostItem] { homeFeed.posts }
@@ -33,6 +39,9 @@ public final class PostManager {
 extension PostManager {
     // MARK: - LOAD POSTS
     func loadPosts() async {
+        // Prevent concurrent loads
+        guard !isLoadingHome else { return }
+        
         guard let userDID, !userDID.isEmpty else {
             logError("No valid userDID available")
             return
@@ -42,8 +51,15 @@ extension PostManager {
             return
         }
         
+        isLoadingHome = true
+        defer { isLoadingHome = false }
+        
         await execute("Loading posts") {
-            let feedResult = try await clientManager.account.getTimeline(using: userDID, cursor: homeCursor)
+            let feedResult = try await clientManager.account.getTimeline(
+                using: userDID,
+                limit: Self.defaultPageSize,
+                cursor: homeCursor
+            )
             
             // Update cursor for next pagination
             homeCursor = feedResult.cursor
@@ -59,15 +75,21 @@ extension PostManager {
     
     // MARK: - GET AUTHOR POSTS
     public func loadAuthorPosts(shouldIncludePins: Bool) async {
+        // Prevent concurrent loads
+        guard !isLoadingAuthor else { return }
+        
         guard let clientManager else {
             logError("No valid client manager available")
             return
         }
         
+        isLoadingAuthor = true
+        defer { isLoadingAuthor = false }
+        
         await execute("Getting author feed") {
             let feedResult = try await clientManager.account.getAuthorFeed(
                 by: appState?.userDID ?? "",
-                limit: nil,
+                limit: Self.defaultPageSize,
                 cursor: authorCursor,
                 postFilter: nil,
                 shouldIncludePins: shouldIncludePins

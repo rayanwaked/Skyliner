@@ -46,18 +46,16 @@ struct UserView: View {
                 bannerManager.scrollOffset = newValue
             }
             .refreshable {
-                Task {
-                    await loadUserDataWithAnimation()
-                }
+                await loadUserDataWithAnimation()
             }
         }
         .background(.standardBackground)
         .ignoresSafeArea(.all)
         .scrollIndicators(.hidden)
+        .task {
+            await loadUserDataWithAnimation()
+        }
         .onAppear {
-            Task {
-                await loadUserDataWithAnimation()
-            }
             PostHogSDK.shared.capture("User View")
         }
     }
@@ -69,8 +67,6 @@ struct UserView: View {
         }
         
         await appState.userManager.refreshProfile()
-        
-        try? await Task.sleep(nanoseconds: 100_000_000)
         
         withAnimation(.spring(response: 0.6, dampingFraction: 0.8)) {
             bannerManager.bannerURL = appState.userManager.bannerURL

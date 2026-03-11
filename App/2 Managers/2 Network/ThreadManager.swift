@@ -7,6 +7,7 @@
 
 import SwiftUI
 import ATProtoKit
+import os.log
 
 // MARK: - THREAD ITEM
 public struct ThreadItem {
@@ -20,6 +21,11 @@ public struct ThreadItem {
 @MainActor
 @Observable
 public final class ThreadModel {
+    // MARK: - CONSTANTS
+    private static let maxDepth = 20
+    private static let maxRepliesPerLevel = 50
+    private static let maxParentDepth = 10
+    
     // MARK: - PROPERTIES
     private(set) var threads: [ThreadItem] = []
     private(set) var parentPost: PostItem?
@@ -55,12 +61,18 @@ public final class ThreadModel {
     }
     
     // MARK: - PRIVATE HELPERS
-    private func processParentThread(_ parentThread: AppBskyLexicon.Feed.ThreadViewPostDefinition) {
+    private func processParentThread(_ parentThread: AppBskyLexicon.Feed.ThreadViewPostDefinition, currentDepth: Int = 0) {
+        // Limit parent traversal depth to prevent stack overflow
+        guard currentDepth < Self.maxParentDepth else {
+            AppLogger.thread.debug("Max parent depth reached, stopping traversal")
+            return
+        }
+        
         // Recursively process parents
         if let grandParent = parentThread.parent {
             switch grandParent {
             case .threadViewPost(let grandParentPost):
-                processParentThread(grandParentPost)
+                processParentThread(grandParentPost, currentDepth: currentDepth + 1)
             case .notFoundPost, .blockedPost:
                 break
             case .unknown(_, _):
@@ -87,6 +99,12 @@ public final class ThreadModel {
     }
     
     private func processThreadNode(_ node: AppBskyLexicon.Feed.ThreadViewPostDefinition, depth: Int, parentAuthor: String? = nil) {
+        // Limit recursion depth to prevent stack overflow
+        guard depth <= Self.maxDepth else {
+            AppLogger.thread.debug("Max thread depth reached at \(depth), stopping")
+            return
+        }
+        
         let item = postModel.performCreatePostItem(from: node.post)
         
         // Only add to threads if it's not the main post (depth 0) since main post is stored as parentPost
@@ -100,9 +118,12 @@ public final class ThreadModel {
             threads.append(threadItem)
         }
         
-        // Process replies recursively
+        // Process replies recursively with limits
         if let replies = node.replies {
-            for reply in replies {
+            // Limit number of replies processed per level
+            let limitedReplies = replies.prefix(Self.maxRepliesPerLevel)
+            
+            for reply in limitedReplies {
                 switch reply {
                 case .threadViewPost(let threadPost):
                     processThreadNode(
@@ -124,13 +145,15 @@ public final class ThreadModel {
 // MARK: - THREAD MANAGER
 @MainActor
 @Observable
-public final class ThreadManager {
+public final class ThreadManager: ManagedByAppState, OperationExecutor {
     // MARK: - PROPERTIES
     @ObservationIgnored
     var appState: AppState?
-    var clientManager: ClientManager? { appState?.clientManager }
     
     public let threadModel = ThreadModel()
+    
+    // MARK: - PROTOCOL CONFORMANCE
+    var logger: Logger { AppLogger.thread }
     
     // MARK: - COMPUTED PROPERTIES
     var threads: [ThreadItem] { threadModel.threads }
@@ -140,12 +163,11 @@ public final class ThreadManager {
     // MARK: - METHODS
     func loadThread(uri: String, depth: Int? = nil, parentHeight: Int? = nil) async {
         guard let clientManager else {
-            print("No valid client manager available for thread loading")
+            logger.warning("No valid client manager available for thread loading")
             return
         }
         
-        await execute("Loading thread") {
-            // Following the pattern from getAuthorFeed in PostManager
+        _ = await executeVoid("Loading thread") {
             let threadResult = try await clientManager.account.getPostThread(
                 from: uri,
                 depth: depth,
@@ -157,10 +179,10 @@ public final class ThreadManager {
             case .threadViewPost(let threadView):
                 self.threadModel.updateThread(from: threadView)
             case .notFoundPost:
-                print("Thread post not found")
+                AppLogger.thread.warning("Thread post not found: \(uri)")
                 self.threadModel.clear()
             case .blockedPost:
-                print("Thread post is blocked")
+                AppLogger.thread.warning("Thread post is blocked: \(uri)")
                 self.threadModel.clear()
             case .unknown(_, _):
                 break
@@ -171,16 +193,6 @@ public final class ThreadManager {
     func refreshThread(uri: String, depth: Int? = nil, parentHeight: Int? = nil) async {
         threadModel.clear()
         await loadThread(uri: uri, depth: depth, parentHeight: parentHeight)
-    }
-    
-    // MARK: - HELPERS
-    private func execute(_ operationName: String, operation: () async throws -> Void) async {
-        do {
-            try await operation()
-            print("\(operationName) completed successfully")
-        } catch {
-            print("Failed to \(operationName.lowercased()): \(error.localizedDescription)")
-        }
     }
 }
 

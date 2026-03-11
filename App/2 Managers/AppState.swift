@@ -23,9 +23,19 @@ class AppState {
     let notificationsManager = NotificationsManager()
     let threadManager = ThreadManager()
 
+    // Cached DataCoordinator - created lazily and retained
+    private var _dataCoordinator: DataCoordinator?
     var dataCoordinator: DataCoordinator {
-        DataCoordinator(appState: self)
+        if let existing = _dataCoordinator {
+            return existing
+        }
+        let coordinator = DataCoordinator(appState: self)
+        _dataCoordinator = coordinator
+        return coordinator
     }
+    
+    // Task handle for cancellation (nonisolated for deinit access)
+    private nonisolated(unsafe) var clientManagerTask: Task<Void, Never>?
 
     private var storedUserDID: String {
         get { UserDefaults.standard.string(forKey: "userDID") ?? "" }
@@ -47,18 +57,26 @@ class AppState {
 
     // MARK: - INITIALIZATION
     init() {
-        Task { @MainActor in
-            for await clientManager in authManager.clientManagerUpdates {
+        // Capture authManager before task to avoid self reference issues
+        let authUpdates = authManager.clientManagerUpdates
+        
+        clientManagerTask = Task { @MainActor [weak self] in
+            for await clientManager in authUpdates {
+                guard let self, !Task.isCancelled else { return }
                 self.clientManager = clientManager
                 self.config = clientManager?.credentials
-                updateManagers(with: clientManager, with: self)
+                self.updateManagers(with: clientManager, with: self)
 
                 // MARK: - FETCH ON LAUNCH
                 if clientManager != nil {
-                    await dataCoordinator.loadAllData()
+                    await self.dataCoordinator.loadAllData()
                 }
             }
         }
+    }
+    
+    deinit {
+        clientManagerTask?.cancel()
     }
 
     // MARK: - METHODS

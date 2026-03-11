@@ -7,6 +7,7 @@
 
 import SwiftUI
 import ATProtoKit
+import os.log
 
 // MARK: - ITEM
 struct NotificationItem: Identifiable, Hashable, Equatable {
@@ -44,119 +45,96 @@ final class NotificationsManager {
 
 // MARK: - METHODS
 extension NotificationsManager {
+    private static let maxConcurrentFetches = 10
+    private static let batchSize = 25
+    
     func loadNotifications() async {
         do {
             guard let fetched = try await appState?.clientManager?.account.listNotifications(
                 with: reasons,
                 limit: 50,
                 isPriority: priority
-            ) else { return }
+            ) else {
+                AppLogger.notifications.warning("No clientManager available for loading notifications")
+                return
+            }
             
             rawNotifications = fetched
             
-            // Convert ATProtoKit notifications to wrapper types
-            notifications = await withTaskGroup(of: NotificationItem?.self) { group in
-                for notification in fetched.notifications {
-                    group.addTask {
-                        await self.createNotificationItem(from: notification)
-                    }
-                }
-                
-                var items: [NotificationItem] = []
-                for await item in group {
-                    if let item = item {
-                        items.append(item)
-                    }
-                }
-                return items.sorted { $0.timestamp > $1.timestamp }
+            // Collect all subject URIs that need fetching (batch them)
+            let subjectURIs = fetched.notifications.compactMap { notification -> String? in
+                guard notification.reason.rawValue != "follow",
+                      let uri = notification.reasonSubjectURI else { return nil }
+                return uri
             }
-        } catch {
-            print("Error loading notifications: \(error)")
-        }
-    }
-    
-    // MARK: - PRIVATE HELPERS
-    private func createNotificationItem(from notification: AppBskyLexicon.Notification.Notification) async -> NotificationItem? {
-        // Extract subject content based on notification type
-        let subjectContent = await extractSubjectContent(from: notification)
-        
-        return NotificationItem(
-            uri: notification.uri,
-            reason: extractReason(from: notification.reason),
-            content: notification.reasonSubjectURI ?? "",
-            authorName: extractAuthor(from: notification.author),
-            authorDID: extractAuthorDID(from: notification.author),
-            authorPictureURL: extractAuthorImageURL(from: notification.author),
-            timestamp: notification.indexedAt,
-            isRead: notification.isRead,
-            subjectContent: subjectContent,
-            subjectURI: notification.reasonSubjectURI
-        )
-    }
-    
-    private func extractSubjectContent(from notification: AppBskyLexicon.Notification.Notification) async -> String? {
-        // For likes, reposts, and replies, we need to fetch the subject post
-        if let subjectURI = notification.reasonSubjectURI,
-           notification.reason.rawValue != "follow" { // Follows don't have subject content
             
-            do {
-                // Use getPosts with the AT URI to fetch the post
-                let postsResponse = try await clientManager?.account.getPosts([subjectURI])
-                
-                // Extract text from the first post in the response
-                if let firstPost = postsResponse?.posts.first {
-                    // Use reflection to extract text from the post record
-                    return extractTextFromUnknownType(firstPost.record)
+            // Batch fetch all subject posts at once
+            let subjectContents = await batchFetchSubjectContents(uris: subjectURIs)
+            
+            // Create notification items without additional network calls
+            var items: [NotificationItem] = []
+            for notification in fetched.notifications {
+                let subjectContent: String?
+                if notification.reason.rawValue == "mention" {
+                    subjectContent = extractTextFromUnknownType(notification.record)
+                } else if let uri = notification.reasonSubjectURI {
+                    subjectContent = subjectContents[uri]
+                } else {
+                    subjectContent = nil
                 }
                 
-                return nil
+                let item = NotificationItem(
+                    uri: notification.uri,
+                    reason: extractReason(from: notification.reason),
+                    content: notification.reasonSubjectURI ?? "",
+                    authorName: extractAuthor(from: notification.author),
+                    authorDID: extractAuthorDID(from: notification.author),
+                    authorPictureURL: extractAuthorImageURL(from: notification.author),
+                    timestamp: notification.indexedAt,
+                    isRead: notification.isRead,
+                    subjectContent: subjectContent,
+                    subjectURI: notification.reasonSubjectURI
+                )
+                items.append(item)
+            }
+            
+            notifications = items.sorted { $0.timestamp > $1.timestamp }
+            AppLogger.notifications.info("Loaded \(self.notifications.count) notifications")
+        } catch {
+            AppLogger.notifications.error("Error loading notifications: \(error.localizedDescription)")
+        }
+    }
+    
+    // MARK: - BATCH FETCHING
+    private func batchFetchSubjectContents(uris: [String]) async -> [String: String] {
+        guard !uris.isEmpty else { return [:] }
+        
+        var results: [String: String] = [:]
+        let uniqueURIs = Array(Set(uris)) // Deduplicate URIs
+        
+        // Process in batches to avoid overwhelming the API
+        for batch in uniqueURIs.chunked(into: Self.batchSize) {
+            do {
+                guard let postsResponse = try await clientManager?.account.getPosts(batch) else {
+                    continue
+                }
                 
+                for post in postsResponse.posts {
+                    if let text = extractTextFromUnknownType(post.record) {
+                        results[post.uri] = text
+                    }
+                }
             } catch {
-                print("Error fetching subject content: \(error)")
-                return nil
+                AppLogger.notifications.debug("Error batch fetching posts: \(error.localizedDescription)")
             }
         }
         
-        // For mentions, the content might be in the notification record itself
-        if notification.reason.rawValue == "mention" {
-            // Try to extract text from the record
-            return extractTextFromUnknownType(notification.record)
-        }
-        
-        return nil
+        return results
     }
     
     private func extractTextFromUnknownType(_ record: UnknownType) -> String? {
-        // Use reflection to safely extract text from various record types
-        let mirror = Mirror(reflecting: record)
-        
-        // Look for text property directly
-        for child in mirror.children {
-            if child.label == "text",
-               let text = child.value as? String {
-                return text
-            }
-        }
-        
-        // Look for nested record with text
-        for child in mirror.children {
-            let nestedMirror = child.value
-            let innerMirror = Mirror(reflecting: nestedMirror)
-            for innerChild in innerMirror.children {
-                if innerChild.label == "text",
-                   let text = innerChild.value as? String {
-                    return text
-                }
-            }
-        }
-        
-        // Debug: print structure to understand the record format
-        print("Record structure:")
-        for child in mirror.children {
-            print("- \(child.label ?? "unknown"): \(type(of: child.value))")
-        }
-        
-        return nil
+        // Use the centralized parser for consistent extraction
+        return PostRecordParser.extractTextFromAnyRecord(record)
     }
     
     private func extractReason(from reason: AppBskyLexicon.Notification.Notification.Reason) -> String {
@@ -187,9 +165,17 @@ extension NotificationsManager {
     }
 }
 
-// MARK: - COLLECTION EXTENSION
+// MARK: - COLLECTION EXTENSIONS
 private extension Collection {
     subscript(safe index: Index) -> Element? {
         indices.contains(index) ? self[index] : nil
+    }
+}
+
+private extension Array {
+    func chunked(into size: Int) -> [[Element]] {
+        stride(from: 0, to: count, by: size).map {
+            Array(self[$0 ..< Swift.min($0 + size, count)])
+        }
     }
 }
